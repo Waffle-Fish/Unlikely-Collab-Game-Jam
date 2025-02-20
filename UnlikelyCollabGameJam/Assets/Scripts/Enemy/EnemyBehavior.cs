@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal.Internal;
 
 public class EnemyBehavior : MonoBehaviour
 {
@@ -16,6 +19,7 @@ public class EnemyBehavior : MonoBehaviour
          - on low health run from player
     
     */
+    Rigidbody2D rigidbody2D;
 
     [Header("Vision Settings")]
     public float rayLength = 10f;         // How far each ray will check for the player.
@@ -24,26 +28,40 @@ public class EnemyBehavior : MonoBehaviour
 
     [Header("Detection Settings")]
     public LayerMask detectionLayer;      // Use this to limit the rays to specific layers (e.g., the player).
-    
+
+    private Vector2 forwardDir;
 
     private enum enemyStates {Patrol, Pursue, Attack, Retreat};
 
-    enemyStates enemyState;
+    public List<GameObject> patrolPoints = new();
 
-    private float enemySpeed = 0f;
+    private enemyStates enemyState;
+
+    private float enemySpeed = 1f;
     private float enemyHealth = 100f;
 
     void Awake()
     {
+        forwardDir = transform.right;
+        rigidbody2D = GetComponent<Rigidbody2D>();
         enemyState = enemyStates.Patrol;
     }
 
     void Update()
     {
+        SetForwardDirection();
+
         if (enemyState == enemyStates.Patrol)
         {
             //Patrol
-            CastVisionRays();
+            // add movement left and right (maybe up and down? random jumping?)
+
+            bool CanSeePlayer = CastRays();
+
+            if (CanSeePlayer)
+            {
+                // enemyState = enemyStates.Pursue;
+            }
         }
         else if (enemyState == enemyStates.Pursue)
         {
@@ -60,11 +78,17 @@ public class EnemyBehavior : MonoBehaviour
 
     }
 
-    void CastVisionRays()
+    private void SetForwardDirection()
     {
-        Vector2 origin = transform.position;
-        // Assume the enemy faces to the right (i.e. transform.right is its forward direction)
-        Vector2 forwardDir = transform.right;
+        if (Math.Abs(rigidbody2D.linearVelocity.x) > 0.1)
+        {
+            forwardDir = rigidbody2D.linearVelocity.x > 0 ? transform.right : -transform.right;
+        }
+    }
+
+    bool CastRays()
+    {
+        Vector2 origin = transform.position + new Vector3(0f, .5f, 0f);
         float halfAngle = spreadAngle / 2f;
 
         for (int i = 0; i < numberOfRays; i++)
@@ -74,17 +98,16 @@ public class EnemyBehavior : MonoBehaviour
             // Rotate the forward direction by the current angle
             Vector2 rayDirection = Quaternion.Euler(0, 0, angle) * forwardDir;
 
-            // Cast a ray in the calculated direction
             RaycastHit2D hit = Physics2D.Raycast(origin, rayDirection, rayLength, detectionLayer);
-            Debug.DrawRay(origin, rayDirection * rayLength, Color.red);  // For visual debugging in the Scene view
+            Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
 
-            // Check if we hit something, and if it has the "Player" tag
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
-                Debug.Log("Player detected!");
-                // You can add additional logic here (e.g., alert the enemy, change behavior, etc.)
+                Debug.Log("Player Detected!");
+                return true;
             }
         }
+        return false;
     }
 
 
