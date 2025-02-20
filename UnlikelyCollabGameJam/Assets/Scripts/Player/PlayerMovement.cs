@@ -8,11 +8,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float moveForce = 0f;
     [SerializeField] float jumpForce = 0f;
     [SerializeField] float fallForce = 0f;
+    [Tooltip("How much to reduce the final velocity of the player after releasing move buttons")]
+    [SerializeField][Range(0f,1f)] float finalXVelocityReduction = 0f;
 
     InputSystem_Actions inputActions;
     Rigidbody2D rb2D;
     PlayerStateManager playerStateManager;   
     SpriteRenderer spriteRenderer;
+    Animator animator;
     float originalGravScale = 1;
 
     void Awake()
@@ -22,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Player.Jump.performed += ProcessJump;
         playerStateManager = GetComponent<PlayerStateManager>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     private void Start() {
@@ -47,9 +51,14 @@ public class PlayerMovement : MonoBehaviour
     private void Move()
     {
         Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
-        if (dir.x == 0f) return;
+        if (dir.x == 0f) {
+            if(inputActions.Player.Move.WasReleasedThisFrame()) rb2D.linearVelocity = new(rb2D.linearVelocityX * finalXVelocityReduction, rb2D.linearVelocityY);
+            animator.SetBool("Run", false);
+            return;
+        }
         rb2D.AddForce(new Vector2(dir.x * moveForce, 0f));
         spriteRenderer.flipX = dir.x < 0f;
+        animator.SetBool("Run", true);
     }
 
     private void ProcessJump(InputAction.CallbackContext context)
