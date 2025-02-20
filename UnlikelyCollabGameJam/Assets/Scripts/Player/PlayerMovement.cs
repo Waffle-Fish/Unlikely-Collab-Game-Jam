@@ -41,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
         if (dir.x != 0f) rb2D.AddForce(new Vector2(dir.x * moveForce, 0f));
         GroundDetector();
+        FallDetector();
     }
 
     private void ProcessJump(InputAction.CallbackContext context)
@@ -50,8 +51,11 @@ public class PlayerMovement : MonoBehaviour
         playerStateManager.CurrentState = PlayerStateManager.State.Jumping;
     }
 
-
     private void GroundDetector() {
         if (Mathf.Approximately(rb2D.linearVelocityY, 0f)) playerStateManager.CurrentState = PlayerStateManager.State.Grounded;
+    }
+
+    private void FallDetector() {
+        if (rb2D.linearVelocityY < 0 && !Mathf.Approximately(rb2D.linearVelocityY, 0f)) playerStateManager.CurrentState = PlayerStateManager.State.Falling;
     }
 }
