@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerStateManager))]
 public class PlayerMovement : MonoBehaviour
 {
     InputSystem_Actions inputActions;
@@ -10,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     float moveForce = 0f;
     [SerializeField]
     float jumpForce = 0f;
-
+    PlayerStateManager playerStateManager;
     
     private int jumpCount = 1;
 
@@ -19,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
         inputActions = new();
         rb2D = GetComponent<Rigidbody2D>();
         inputActions.Player.Jump.performed += ProcessJump;
+        playerStateManager = GetComponent<PlayerStateManager>();
     }
 
     private void Start() {
@@ -43,11 +45,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void ProcessJump(InputAction.CallbackContext context)
     {
+        if (playerStateManager.CurrentState != PlayerStateManager.State.Grounded) return;
         rb2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
-        // CurrentMoveState = MoveStates.Jumping;
+        playerStateManager.CurrentState = PlayerStateManager.State.Jumping;
     }
 
+
     private void GroundDetector() {
-        // if (Mathf.Approximately(rb2D.linearVelocityY, 0f)) { CurrentMoveState = MoveStates.Grounded; }
+        if (Mathf.Approximately(rb2D.linearVelocityY, 0f)) playerStateManager.CurrentState = PlayerStateManager.State.Grounded;
     }
 }
