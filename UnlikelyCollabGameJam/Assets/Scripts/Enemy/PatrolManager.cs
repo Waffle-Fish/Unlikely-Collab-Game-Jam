@@ -17,15 +17,19 @@ public class PatrolManager : MonoBehaviour
     private GameObject ppObject;
 
 
+    private LineRenderer lr;
+
+
     public void Awake()
     {
         detectionLayer = LayerMask.GetMask("Default");
-        InitializePatrolPoints(-10, 10, 20, 8);
+        lr = GetComponent<LineRenderer>();
+        InitializePatrolPoints(-10, 10, 60, 8);
     }
 
     private void InitializePatrolPoints(int xStart, int yStart, int width, int height)
     {
-        for (int i = xStart; i < width + xStart; i += 2)
+        for (int i = xStart; i < width + xStart; i += 1)
         {
             for (int j = yStart; j > yStart - height; j -= 2)
             {
@@ -189,6 +193,23 @@ private Vector2 FindClosestPatrolPoint(Vector2 enemyLocation)
         return totalPath;
     }
 
+    public void DrawDebugPath(Vector2 enemyLocation)
+    {
+        // If the path is null or has fewer than 2 points, nothing to draw
+        if (path == null || path.Count < 2) return;
+
+        // Convert Vector2 list to Vector3 array
+        List<Vector3> pathV3 = path.Select(v2 => (Vector3)v2).ToList();
+
+        pathV3.Insert(0, (Vector3)enemyLocation);
+        // Make sure the LineRenderer has the correct number of positions
+        lr.positionCount = pathV3.Count;
+
+        // Set the positions once
+        lr.SetPositions(pathV3.ToArray());
+
+    }
+
     // Returns the next patrol point in the computed path.
     public Vector2 GetNextPatrolPointInPath(Vector2 enemyLocation)
     {
@@ -197,6 +218,7 @@ private Vector2 FindClosestPatrolPoint(Vector2 enemyLocation)
         {
             Vector2 nextPoint = path[0];
             path.RemoveAt(0);
+            DrawDebugPath(enemyLocation);
             Debug.Log("Going to: "+nextPoint);
             return nextPoint;
         }

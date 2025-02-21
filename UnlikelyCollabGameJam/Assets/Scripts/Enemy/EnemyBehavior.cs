@@ -64,6 +64,7 @@ public class EnemyBehavior : MonoBehaviour
         forwardDir = transform.right;
         rb = GetComponent<Rigidbody2D>();
         enemyState = EnemyStates.Patrol;
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), 0, true);
     }
 
     // private void SelectRandomPatrolPointFromList()
@@ -74,6 +75,7 @@ public class EnemyBehavior : MonoBehaviour
 
     void Update()
     {
+        // Debug.Log("Velocity: "+rb.linearVelocity);
         SetForwardDirection();
 
 
@@ -143,18 +145,40 @@ public class EnemyBehavior : MonoBehaviour
 
     private bool isAtTarget()
     {
-        return transform.position.x < target.x + 0.5f && transform.position.x > target.x - 0.5f &&
-                       transform.position.y < target.y + 0.5f && transform.position.y > target.y - 0.5f;
+        return transform.position.x < target.x + 1f && transform.position.x > target.x - 1f &&
+                       transform.position.y < target.y + 1f && transform.position.y > target.y - 1f;
     }
 
     private void NavigateToTarget()
     {
         // if should jump -> jump
-        if (Math.Abs(rb.linearVelocityY) < .01f && target.y > transform.position.y + enemyJumpThreshold) 
+        if (rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && (target.x - transform.position.x) < 6f) 
         {
-            rb.AddForce(new Vector2(0f, enemyJumpForce), ForceMode2D.Impulse);
+            // Debug.Log("Trying to Jump with force: "+enemyJumpForce);
+
+            enemyJumpForce = (target.y - transform.position.y) * 5 + 15;
+            
+            rb.AddForceY(enemyJumpForce, ForceMode2D.Impulse);
+
+            // when jump go to "Phase Layer"
+            gameObject.layer = LayerMask.NameToLayer("Ignore Collision");
+            
         }
-        rb.linearVelocity = new Vector2(enemySpeed, 0f) * (target - (Vector2)transform.position).normalized;
+        // if(rb.linearVelocityX == 0 || rb.linearVelocityX == 0 && rb.linearVelocityY == 0) // if stuck
+        // {
+        //     // rb.linearVelocityX = Random.Range(0, 2) == 0 ? enemySpeed*2f : -enemySpeed*2f;
+        //     // enemyJumpForce = (target.y - transform.position.y) * 5f;
+        //     // rb.AddForceY(enemyJumpForce, ForceMode2D.Impulse);
+        // }
+        // else{
+
+        // }
+            rb.linearVelocityX = enemySpeed * (target - (Vector2)transform.position).normalized.x;
+
+            if(gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.1f)
+            {
+                gameObject.layer = LayerMask.NameToLayer("Enemy");
+            }
     }
 
     private void SetForwardDirection()
@@ -182,7 +206,7 @@ public class EnemyBehavior : MonoBehaviour
 
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
-                Debug.Log("Player Detected!");
+                // Debug.Log("Player Detected!");
                 player = hit.collider.gameObject;
                 return true;
             }
