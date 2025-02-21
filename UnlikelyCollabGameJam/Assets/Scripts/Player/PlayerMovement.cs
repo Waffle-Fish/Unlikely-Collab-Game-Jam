@@ -89,8 +89,13 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void DetectState() {
-        if (Mathf.Approximately(rb2D.linearVelocityY, 0f)) psm.CurrentState = PlayerStateManager.State.Grounded;
-        if (rb2D.linearVelocityY < 0 && !Mathf.Approximately(rb2D.linearVelocityY, 0f)) psm.CurrentState = PlayerStateManager.State.Falling;
+        if (Mathf.Approximately(rb2D.linearVelocityY, 0f)) {
+            rb2D.gravityScale = originalGravScale;
+            psm.CurrentState = PlayerStateManager.State.Grounded;
+        }
+        if (rb2D.linearVelocityY < 0 && !Mathf.Approximately(rb2D.linearVelocityY, 0f)) {
+            psm.CurrentState = PlayerStateManager.State.Falling;
+        }
     }
 
     private void ProcessFastFalling() {
@@ -100,10 +105,11 @@ public class PlayerMovement : MonoBehaviour
                 // rb2D.linearVelocity = new(rb2D.linearVelocityX, 0f);
                 rb2D.gravityScale = fallForce;
             }
-        } else if (inputActions.Player.FastFall.WasReleasedThisFrame() || psm.CurrentState == PlayerStateManager.State.Grounded) {
-            rb2D.linearVelocity = new(rb2D.linearVelocityX, 0f);
-            rb2D.gravityScale = originalGravScale;
-        }
+        } 
+        // else if (inputActions.Player.FastFall.WasReleasedThisFrame() || psm.CurrentState == PlayerStateManager.State.Grounded) {
+        //     rb2D.linearVelocity = new(rb2D.linearVelocityX, 0f);
+        //     rb2D.gravityScale = originalGravScale;
+        // }
     }
 
     private void ProcessJump(InputAction.CallbackContext context)
