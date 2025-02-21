@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Threading;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,27 +8,43 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerStateManager))]
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Horizontal Movement")]
     [SerializeField] float moveForce = 0f;
-    [SerializeField] float jumpForce = 0f;
-    [SerializeField] float fallForce = 0f;
     [Tooltip("How much to reduce the final velocity of the player after releasing move buttons")]
     [SerializeField][Range(0f,1f)] float finalXVelocityReduction = 0f;
-    
+
+    [Header("Dash")]
+    [Tooltip("How far player goes in a single dash")]
+    [SerializeField] float DashDistance = 0f;
+    [Tooltip("Time between dashes")]
+    [SerializeField] float DashCooldown = 0f;
+    [Tooltip("Time it takes to dash")]
+    [SerializeField][Min(0.0000001f)] float DashDuration = 1f;
+    float timeDashUsed = 0;
+
+    [Header("Vertical Movement")]
+    [SerializeField] float jumpForce = 0f;
+    [SerializeField] float fallForce = 0f;
+    float originalGravScale = 1;
+
+    [Header("Components")]
     InputSystem_Actions inputActions;
     Rigidbody2D rb2D;
-    PlayerStateManager playerStateManager;   
+    PlayerStateManager psm;   
     SpriteRenderer spriteRenderer;
     Animator animator;
-    float originalGravScale = 1;
+    
 
     void Awake()
     {
-        inputActions = new();
         rb2D = GetComponent<Rigidbody2D>();
-        inputActions.Player.Jump.performed += ProcessJump;
-        playerStateManager = GetComponent<PlayerStateManager>();
+        psm = GetComponent<PlayerStateManager>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
+        inputActions = new();
+        inputActions.Player.Jump.performed += ProcessJump;
+        inputActions.Player.Dash.performed += ProcessDash;
     }
 
     private void Start() {
@@ -45,18 +63,21 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         Move();
-        StateDetector();
+        DetectState();
         ProcessFastFalling();
+        if(!inputActions.Player.Move.WasPerformedThisFrame() && psm.CurrentState == PlayerStateManager.State.Grounded) rb2D.linearVelocityX *= finalXVelocityReduction;
+        
     }
 
     private void Move()
     {
+        if (psm.CurrentState == PlayerStateManager.State.Dashing) return;
         Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
         if (dir.x == 0f) {
-            if(inputActions.Player.Move.WasReleasedThisFrame()) rb2D.linearVelocity = new(rb2D.linearVelocityX * finalXVelocityReduction, rb2D.linearVelocityY);
             animator.SetBool("Run", false);
             return;
         }
+
         // Force Movement
         // rb2D.AddForce(new Vector2(dir.x * moveForce, 0f));
 
@@ -67,28 +88,50 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("Run", true);
     }
 
-    private void ProcessJump(InputAction.CallbackContext context)
-    {
-        if (playerStateManager.CurrentState != PlayerStateManager.State.Grounded) return;
-        rb2D.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
-        playerStateManager.CurrentState = PlayerStateManager.State.Jumping;
+    private void DetectState() {
+        if (Mathf.Approximately(rb2D.linearVelocityY, 0f)) psm.CurrentState = PlayerStateManager.State.Grounded;
+        if (rb2D.linearVelocityY < 0 && !Mathf.Approximately(rb2D.linearVelocityY, 0f)) psm.CurrentState = PlayerStateManager.State.Falling;
     }
 
     private void ProcessFastFalling() {
         if(inputActions.Player.FastFall.WasPerformedThisFrame()) {
             Debug.Log("Falling fast");
-            if (playerStateManager.CurrentState == PlayerStateManager.State.Falling || playerStateManager.CurrentState == PlayerStateManager.State.Jumping) {
+            if (psm.CurrentState == PlayerStateManager.State.Falling || psm.CurrentState == PlayerStateManager.State.Jumping) {
                 // rb2D.linearVelocity = new(rb2D.linearVelocityX, 0f);
                 rb2D.gravityScale = fallForce;
             }
-        } else if (inputActions.Player.FastFall.WasReleasedThisFrame() || playerStateManager.CurrentState == PlayerStateManager.State.Grounded) {
+        } else if (inputActions.Player.FastFall.WasReleasedThisFrame() || psm.CurrentState == PlayerStateManager.State.Grounded) {
             rb2D.linearVelocity = new(rb2D.linearVelocityX, 0f);
             rb2D.gravityScale = originalGravScale;
         }
     }
 
-    private void StateDetector() {
-        if (Mathf.Approximately(rb2D.linearVelocityY, 0f)) playerStateManager.CurrentState = PlayerStateManager.State.Grounded;
-        if (rb2D.linearVelocityY < 0 && !Mathf.Approximately(rb2D.linearVelocityY, 0f)) playerStateManager.CurrentState = PlayerStateManager.State.Falling;
+    private void ProcessJump(InputAction.CallbackContext context)
+    {
+        if (psm.CurrentState != PlayerStateManager.State.Grounded) return;
+        rb2D.AddForceY(jumpForce, ForceMode2D.Impulse);
+        psm.CurrentState = PlayerStateManager.State.Jumping;
+    }
+
+    private void ProcessDash(InputAction.CallbackContext context)
+    {
+        IEnumerator Dash(float xDir) {
+            Vector3 goalPos = new(transform.position.x + (xDir * DashDistance), transform.position.y);
+            Vector2 curVelocity = rb2D.linearVelocity;
+            float timer = 0f;
+            while (timer < DashDuration) {
+                transform.position = Vector2.SmoothDamp(transform.position, goalPos, ref curVelocity, DashDuration);
+                timer += Time.deltaTime;
+                yield return null;
+            }
+            psm.CurrentState = PlayerStateManager.State.Grounded;
+        }
+        if (Time.time < timeDashUsed + DashCooldown) return;
+        float xDir = inputActions.Player.Move.ReadValue<Vector2>().x;
+        if (Mathf.Approximately(xDir, 0)) return;
+
+        psm.CurrentState = PlayerStateManager.State.Dashing;
+        timeDashUsed = Time.time;
+        StartCoroutine(Dash(xDir));
     }
 }
