@@ -115,8 +115,29 @@ public class PlayerMovement : MonoBehaviour
 
     private void ProcessDash(InputAction.CallbackContext context)
     {
-        IEnumerator Dash(float xDir) {
-            Vector3 goalPos = new(transform.position.x + (xDir * DashDistance), transform.position.y);
+        // Horizontal Dash
+        // IEnumerator Dash(float xDir) {
+        //     // Vector3 goalPos = new(transform.position.x + (xDir * DashDistance), transform.position.y);
+        //     Vector2 curVelocity = rb2D.linearVelocity;
+        //     float timer = 0f;
+        //     while (timer < DashDuration) {
+        //         transform.position = Vector2.SmoothDamp(transform.position, goalPos, ref curVelocity, DashDuration);
+        //         timer += Time.deltaTime;
+        //         yield return null;
+        //     }
+        //     psm.CurrentState = PlayerStateManager.State.Grounded;
+        // }
+        // if (Time.time < timeDashUsed + DashCooldown) return;
+        // float xDir = inputActions.Player.Move.ReadValue<Vector2>().x;
+        // if (Mathf.Approximately(xDir, 0)) return;
+
+        // psm.CurrentState = PlayerStateManager.State.Dashing;
+        // timeDashUsed = Time.time;
+        // StartCoroutine(Dash(xDir));
+
+        // Directional Dash
+        IEnumerator Dash(Vector2 dir) {
+            Vector2 goalPos = (Vector2)transform.position + dir * DashDistance;
             Vector2 curVelocity = rb2D.linearVelocity;
             float timer = 0f;
             while (timer < DashDuration) {
@@ -126,12 +147,21 @@ public class PlayerMovement : MonoBehaviour
             }
             psm.CurrentState = PlayerStateManager.State.Grounded;
         }
+
         if (Time.time < timeDashUsed + DashCooldown) return;
-        float xDir = inputActions.Player.Move.ReadValue<Vector2>().x;
-        if (Mathf.Approximately(xDir, 0)) return;
+        Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
+        if (dir == Vector2.zero) return;
 
         psm.CurrentState = PlayerStateManager.State.Dashing;
         timeDashUsed = Time.time;
-        StartCoroutine(Dash(xDir));
+        StartCoroutine(Dash(dir));
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.rigidbody) {
+            collision.rigidbody.AddForce(rb2D.linearVelocity);
+            collision.rigidbody.AddForceY(0.2f);
+        }
     }
 }
