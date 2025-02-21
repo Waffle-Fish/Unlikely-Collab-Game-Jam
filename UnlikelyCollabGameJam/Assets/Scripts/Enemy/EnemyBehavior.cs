@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 public class EnemyBehavior : MonoBehaviour
@@ -20,93 +21,147 @@ public class EnemyBehavior : MonoBehaviour
          - on low health run from player
     
     */
-    Rigidbody2D rigidbody2D;
+    Rigidbody2D rb;
+
+    PatrolManager pm;
 
     [Header("Vision Settings")]
-    public float rayLength = 10f;         // How far each ray will check for the player.
-    public float spreadAngle = 45f;       // Total angle (in degrees) of the vision cone.
-    public int numberOfRays = 10;         // How many rays to cast across the cone.
+    public float rayLength = 10f;
+    public float spreadAngle = 45f;
+    public int numberOfRays = 10;
 
     [Header("Detection Settings")]
-    public LayerMask detectionLayer;      // Use this to limit the rays to specific layers (e.g., the player).
+    public LayerMask detectionLayer;
+
+    [Header("Patrol & Movement Settings")]
+    // public List<GameObject> patrolPoints = new();
+    private Vector2 target;
+    private enum EnemyStates { Patrol, Pursue, Attack, Retreat, Dead }
+    private EnemyStates enemyState;
+
+    [SerializeField]
+    private float enemySpeed = 5f;
+    
+    [Header("Jump Settings")]
+    public float enemyJumpForce = 50f;
+    private float enemyJumpThreshold = 1f;
 
     private Vector2 forwardDir;
 
-    private enum enemyStates {Patrol, Pursue, Attack, Retreat};
-
-    public List<GameObject> patrolPoints = new();
-
-    private Vector2 target;
-
-    private enemyStates enemyState;
-
-    private float enemySpeed = 1f;
-    private float enemyJumpForce = 5f;
+    [SerializeField]
+    private float maxEnemyHealth = 100f;
     private float enemyHealth = 100f;
+
+    private GameObject player;
+
+    private float enemyAttackDamage = 5f;
 
     void Awake()
     {
-        SelectRandomPatrolPointFromList();
+        pm = GameObject.Find("PatrolManager").GetComponent<PatrolManager>();
+        // SelectRandomPatrolPointFromList(); 
+        target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
         forwardDir = transform.right;
-        rigidbody2D = GetComponent<Rigidbody2D>();
-        enemyState = enemyStates.Patrol;
+        rb = GetComponent<Rigidbody2D>();
+        enemyState = EnemyStates.Patrol;
     }
 
-    private void SelectRandomPatrolPointFromList()
-    {
-        int randPatrolPointIndex = Random.Range(0, patrolPoints.Count);
-        target = new Vector2(patrolPoints[randPatrolPointIndex].transform.position.x, patrolPoints[randPatrolPointIndex].transform.position.y);
-    }
+    // private void SelectRandomPatrolPointFromList()
+    // {
+    //     int randPatrolPointIndex = Random.Range(0, patrolPoints.Count);
+    //     target = new Vector2(patrolPoints[randPatrolPointIndex].transform.position.x, patrolPoints[randPatrolPointIndex].transform.position.y);
+    // }
 
     void Update()
     {
         SetForwardDirection();
 
-        if (enemyState == enemyStates.Patrol)
+
+
+
+        if (enemyState == EnemyStates.Patrol)
         {
             //Patrol
             // add movement left and right (maybe up and down? random jumping?)
-            if (Math.Abs(rigidbody2D.linearVelocityX) < 3f) // 3 is arbitrary number idk
-            {
-                rigidbody2D.AddForce(new Vector2(enemySpeed, 0f) * target.normalized, ForceMode2D.Force);
-            }
+            // hacky movement code (only works in x atm)
+
+            NavigateToTarget();
+
 
             // if near a patrol point, select a new one
-            if(transform.position.x < target.x+1 && transform.position.x > target.x-1 &&
-               transform.position.y < target.y+1 && transform.position.y > target.y-1)
-               {
-                    SelectRandomPatrolPointFromList();
-               }
-
-            
+            // this will eventually get next patrol point in path, 
+            // if at last patrol point select a random one and get a new list of patrol points
+            if (isAtTarget())
+            {
+                target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
+            }
 
             bool CanSeePlayer = CastRays();
 
             if (CanSeePlayer)
             {
-                // enemyState = enemyStates.Pursue;
+                // target = (Vector2)player.transform.position;
+                // enemyState = EnemyStates.Pursue;
             }
         }
-        else if (enemyState == enemyStates.Pursue)
+        else if (enemyState == EnemyStates.Pursue)
         {
             // Pursue
+            target = (Vector2)player.transform.position;
+            NavigateToTarget();
+            if((player.transform.position - transform.position).magnitude < 1f)
+            {
+                enemyState = EnemyStates.Attack;
+            }
+            else if((player.transform.position - transform.position).magnitude > 20f)
+            {
+                enemyState = EnemyStates.Patrol;
+            }
+            else if(enemyHealth < 10f)
+            {
+                enemyState = EnemyStates.Retreat;
+            }
         }
-        else if (enemyState == enemyStates.Attack)
+        else if (enemyState == EnemyStates.Attack)
         {
             // Attack
+            player.GetComponent<PlayerHealth>().TakeDamage(enemyAttackDamage);
+            enemyState = EnemyStates.Pursue;
         }
-        else if (enemyState == enemyStates.Retreat)
+        else if (enemyState == EnemyStates.Retreat)
         {
             // RETREATTT
+            // TODO: pick a patrol point FAR from player and increase speed temporarily and heal up?
+        }
+        else if(enemyState == EnemyStates.Dead)
+        {
+            // play death animation?
+            gameObject.SetActive(false);
         }
 
     }
 
+    private bool isAtTarget()
+    {
+        return transform.position.x < target.x + 0.5f && transform.position.x > target.x - 0.5f &&
+                       transform.position.y < target.y + 0.5f && transform.position.y > target.y - 0.5f;
+    }
+
+    private void NavigateToTarget()
+    {
+        // if should jump -> jump
+        if (Math.Abs(rb.linearVelocityY) < .01f && target.y > transform.position.y + enemyJumpThreshold) 
+        {
+            rb.AddForce(new Vector2(0f, enemyJumpForce), ForceMode2D.Impulse);
+        }
+        rb.linearVelocity = new Vector2(enemySpeed, 0f) * (target - (Vector2)transform.position).normalized;
+    }
+
     private void SetForwardDirection()
     {
-        if (Math.Abs(rigidbody2D.linearVelocity.x) > 0.1)
+        if (Math.Abs(rb.linearVelocity.x) > 0.1)
         {
-            forwardDir = rigidbody2D.linearVelocity.x > 0 ? transform.right : -transform.right;
+            forwardDir = rb.linearVelocity.x > 0 ? transform.right : -transform.right;
         }
     }
 
@@ -128,11 +183,23 @@ public class EnemyBehavior : MonoBehaviour
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
                 Debug.Log("Player Detected!");
+                player = hit.collider.gameObject;
                 return true;
             }
         }
         return false;
     }
+
+
+    public void TakeDamage(float amount)
+    {
+        enemyHealth -= amount;
+        if(enemyHealth <= 0)
+        {
+            enemyState = EnemyStates.Dead;
+        }
+    }
+    
 
 
 
