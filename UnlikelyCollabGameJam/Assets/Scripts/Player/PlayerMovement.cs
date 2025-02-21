@@ -71,19 +71,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if (psm.CurrentState == PlayerStateManager.State.Dashing) return;
         Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
-        if (dir.x == 0f) {
-            animator.SetBool("Run", false);
-            return;
-        }
-
+        animator.SetBool("Run", dir.x != 0f);
+        if (dir.x == 0f) return;
         // Force Movement
         // rb2D.AddForce(new Vector2(dir.x * moveForce, 0f));
 
         // Velocity Movement
         rb2D.linearVelocityX = dir.x * moveForce;
-
         spriteRenderer.flipX = dir.x < 0f;
-        
     }
 
     private void DetectState() {
@@ -162,10 +157,8 @@ public class PlayerMovement : MonoBehaviour
     } 
 
     private void UpdateAnimation() {
-        animator.SetBool("Run", psm.CurrentState == PlayerStateManager.State.Dashing);
         animator.SetBool("Fall", psm.CurrentState == PlayerStateManager.State.Falling);
         animator.SetBool("Jump", psm.CurrentState == PlayerStateManager.State.Jumping);
-        Debug.Log("Linear Velocity: " + rb2D.linearVelocity);
         animator.SetBool("Peak", psm.CurrentState == PlayerStateManager.State.Jumping && rb2D.linearVelocityY < 5 && rb2D.linearVelocityY > 0);
     }
 }
