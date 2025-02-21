@@ -1001,6 +1001,10 @@ PrefabInstance:
       propertyPath: DashDuration
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 4021471978568411561, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 3529081094811229296, guid: 06d752107ea6f814b93e874189249351, type: 3}
     - target: {fileID: 4362588724417458548, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_Name
       value: Player
