@@ -33,7 +33,6 @@ public class PlayerMovement : MonoBehaviour
     PlayerStateManager psm;   
     SpriteRenderer spriteRenderer;
     Animator animator;
-    
 
     void Awake()
     {
@@ -49,14 +48,23 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Player.Dash.performed += ProcessDash;
         originalGravScale = rb2D.gravityScale;
     }
-    // Update is called once per frame
+
     void Update()
     {
         Move();
         DetectState();
         ProcessFastFalling();
+        UpdateAnimation();
         if(!inputActions.Player.Move.WasPerformedThisFrame() && psm.CurrentState == PlayerStateManager.State.Grounded) rb2D.linearVelocityX *= finalXVelocityReduction;
-        
+        animator.SetBool("Fall", psm.CurrentState == PlayerStateManager.State.Falling);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.rigidbody) {
+            collision.rigidbody.AddForce(rb2D.linearVelocity);
+            collision.rigidbody.AddForceY(0.2f);
+        }
     }
 
     private void Move()
@@ -75,7 +83,7 @@ public class PlayerMovement : MonoBehaviour
         rb2D.linearVelocityX = dir.x * moveForce;
 
         spriteRenderer.flipX = dir.x < 0f;
-        animator.SetBool("Run", true);
+        
     }
 
     private void DetectState() {
@@ -89,6 +97,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void ProcessFastFalling() {
+        
         if(inputActions.Player.FastFall.WasPerformedThisFrame()) {
             if (psm.CurrentState == PlayerStateManager.State.Falling || psm.CurrentState == PlayerStateManager.State.Jumping) {
                 // rb2D.linearVelocity = new(rb2D.linearVelocityX, 0f);
@@ -150,13 +159,13 @@ public class PlayerMovement : MonoBehaviour
         psm.CurrentState = PlayerStateManager.State.Dashing;
         timeDashUsed = Time.time;
         StartCoroutine(Dash(dir));
-    }
+    } 
 
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.rigidbody) {
-            collision.rigidbody.AddForce(rb2D.linearVelocity);
-            collision.rigidbody.AddForceY(0.2f);
-        }
+    private void UpdateAnimation() {
+        animator.SetBool("Run", psm.CurrentState == PlayerStateManager.State.Dashing);
+        animator.SetBool("Fall", psm.CurrentState == PlayerStateManager.State.Falling);
+        animator.SetBool("Jump", psm.CurrentState == PlayerStateManager.State.Jumping);
+        Debug.Log("Linear Velocity: " + rb2D.linearVelocity);
+        animator.SetBool("Peak", psm.CurrentState == PlayerStateManager.State.Jumping && rb2D.linearVelocityY < 2 && rb2D.linearVelocityY > 0);
     }
 }
