@@ -7,22 +7,7 @@ using Random = UnityEngine.Random;
 
 public class EnemyBehavior : MonoBehaviour
 {
-
-    /*
-    behaviors
-     patrol
-         - enemy moves around specific location in search of player
-         - raycast a 2D cone
-     pursue
-         - navigate to player
-     attack
-         - hurrr durr attack
-     MAYBE retreat
-         - on low health run from player
-    
-    */
     Rigidbody2D rb;
-
     PatrolManager pm;
 
     [Header("Vision Settings")]
@@ -34,7 +19,6 @@ public class EnemyBehavior : MonoBehaviour
     public LayerMask detectionLayer;
 
     [Header("Patrol & Movement Settings")]
-    // public List<GameObject> patrolPoints = new();
     private Vector2 target;
     private enum EnemyStates { Patrol, Pursue, Attack, Retreat, Dead }
     private EnemyStates enemyState;
@@ -54,93 +38,118 @@ public class EnemyBehavior : MonoBehaviour
 
     private GameObject player;
 
+    [SerializeField]
     private float enemyAttackDamage = 5f;
+
+    [SerializeField]
+    private int enemyAttackCoolDown = 10;
+    private int enemyAttackTimer = 0;
 
     void Awake()
     {
         pm = GameObject.Find("PatrolManager").GetComponent<PatrolManager>();
-        // SelectRandomPatrolPointFromList(); 
         target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
         forwardDir = transform.right;
         rb = GetComponent<Rigidbody2D>();
         enemyState = EnemyStates.Patrol;
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), 0, true);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), LayerMask.NameToLayer("Player"), true);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), true);
     }
-
-    // private void SelectRandomPatrolPointFromList()
-    // {
-    //     int randPatrolPointIndex = Random.Range(0, patrolPoints.Count);
-    //     target = new Vector2(patrolPoints[randPatrolPointIndex].transform.position.x, patrolPoints[randPatrolPointIndex].transform.position.y);
-    // }
 
     void Update()
     {
-        // Debug.Log("Velocity: "+rb.linearVelocity);
         SetForwardDirection();
-
-
-
 
         if (enemyState == EnemyStates.Patrol)
         {
-            //Patrol
-            // add movement left and right (maybe up and down? random jumping?)
-            // hacky movement code (only works in x atm)
-
-            NavigateToTarget();
-
-
-            // if near a patrol point, select a new one
-            // this will eventually get next patrol point in path, 
-            // if at last patrol point select a random one and get a new list of patrol points
-            if (isAtTarget())
-            {
-                target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
-            }
-
-            bool CanSeePlayer = CastRays();
-
-            if (CanSeePlayer)
-            {
-                // target = (Vector2)player.transform.position;
-                // enemyState = EnemyStates.Pursue;
-            }
+            Patrol();
         }
         else if (enemyState == EnemyStates.Pursue)
         {
-            // Pursue
-            target = (Vector2)player.transform.position;
-            NavigateToTarget();
-            if((player.transform.position - transform.position).magnitude < 1f)
-            {
-                enemyState = EnemyStates.Attack;
-            }
-            else if((player.transform.position - transform.position).magnitude > 20f)
-            {
-                enemyState = EnemyStates.Patrol;
-            }
-            else if(enemyHealth < 10f)
-            {
-                enemyState = EnemyStates.Retreat;
-            }
+            Pursue();
         }
         else if (enemyState == EnemyStates.Attack)
         {
-            // Attack
-            player.GetComponent<PlayerHealth>().TakeDamage(enemyAttackDamage);
-            enemyState = EnemyStates.Pursue;
+            Attack();
         }
         else if (enemyState == EnemyStates.Retreat)
         {
             // RETREATTT
             // TODO: pick a patrol point FAR from player and increase speed temporarily and heal up?
+            enemyState = EnemyStates.Pursue;
         }
         else if(enemyState == EnemyStates.Dead)
         {
-            // play death animation?
-            gameObject.SetActive(false);
+            Die();
         }
 
+    }
+
+    private void Die()
+    {
+        // play death animation?
+        gameObject.SetActive(false);
+    }
+
+    private void Patrol()
+    {
+        //Patrol
+        NavigateToTarget();
+
+        if (isAtTarget())
+        {
+            target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
+        }
+
+        bool CanSeePlayer = CastRays();
+
+        if (CanSeePlayer)
+        {
+            target = (Vector2)player.transform.position;
+            enemyState = EnemyStates.Pursue;
+        }
+    }
+
+    private void Attack()
+    {
+        // Attack
+        if (enemyAttackTimer <= 0)
+        {
+            player.GetComponent<PlayerHealth>().TakeDamage(enemyAttackDamage);
+            enemyAttackTimer = enemyAttackCoolDown;
+        }
+        // SCUFFED timer -> need better implementation
+        enemyAttackTimer--;
+        enemyState = EnemyStates.Pursue;
+    }
+
+    private void Pursue()
+    {
+        // Pursue
+        NavigateToTarget();
+
+        // FIXME: in situation where enemy is above player on a platform they will not navigate downward
+        // if(target.y < transform.position.y && rb.linearVelocityX == 0)
+        // {
+        //     target = new Vector2(target.x + 5, target.y);
+        // }
+        // else{
+            target = (Vector2)player.transform.position;
+        // }
+
+        if ((player.transform.position - transform.position).magnitude < 1f)
+        {
+            enemyState = EnemyStates.Attack;
+        }
+        else if ((player.transform.position - transform.position).magnitude > 20f)
+        {
+            enemyState = EnemyStates.Patrol;
+        }
+        else if (enemyHealth < 10f)
+        {
+            enemyState = EnemyStates.Retreat;
+        }
     }
 
     private bool isAtTarget()
