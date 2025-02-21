@@ -166,6 +166,6 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("Fall", psm.CurrentState == PlayerStateManager.State.Falling);
         animator.SetBool("Jump", psm.CurrentState == PlayerStateManager.State.Jumping);
         Debug.Log("Linear Velocity: " + rb2D.linearVelocity);
-        animator.SetBool("Peak", psm.CurrentState == PlayerStateManager.State.Jumping && rb2D.linearVelocityY < 2 && rb2D.linearVelocityY > 0);
+        animator.SetBool("Peak", psm.CurrentState == PlayerStateManager.State.Jumping && rb2D.linearVelocityY < 5 && rb2D.linearVelocityY > 0);
     }
 }
