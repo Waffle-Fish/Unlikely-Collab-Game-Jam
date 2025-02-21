@@ -2,17 +2,18 @@ using UnityEngine;
 
 public class PlayerStateManager : MonoBehaviour
 {
-    public enum State { Jumping, Falling, Grounded, Dashing }
+    public enum State { Jumping, Falling, Grounded, Dashing, Attacking }
     public State CurrentState = State.Grounded;
+    public InputSystem_Actions InputActions {get; private set;}
 
-    void Start()
-    {
-        
+    private void Awake() {
+        InputActions = new();
+    }
+    private void OnEnable() {
+        InputActions.Enable();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private void OnDisable() {
+        InputActions.Disable();
     }
 }

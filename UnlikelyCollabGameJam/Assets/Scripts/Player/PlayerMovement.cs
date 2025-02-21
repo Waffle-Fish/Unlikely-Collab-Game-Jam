@@ -41,24 +41,14 @@ public class PlayerMovement : MonoBehaviour
         psm = GetComponent<PlayerStateManager>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-
-        inputActions = new();
-        inputActions.Player.Jump.performed += ProcessJump;
-        inputActions.Player.Dash.performed += ProcessDash;
     }
 
     private void Start() {
+        inputActions = psm.InputActions;
+        inputActions.Player.Jump.performed += ProcessJump;
+        inputActions.Player.Dash.performed += ProcessDash;
         originalGravScale = rb2D.gravityScale;
     }
-
-    private void OnEnable() {
-        inputActions.Enable();
-    }
-
-    private void OnDisable() {
-        inputActions.Disable();
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -100,7 +90,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void ProcessFastFalling() {
         if(inputActions.Player.FastFall.WasPerformedThisFrame()) {
-            Debug.Log("Falling fast");
             if (psm.CurrentState == PlayerStateManager.State.Falling || psm.CurrentState == PlayerStateManager.State.Jumping) {
                 // rb2D.linearVelocity = new(rb2D.linearVelocityX, 0f);
                 rb2D.gravityScale = fallForce;
