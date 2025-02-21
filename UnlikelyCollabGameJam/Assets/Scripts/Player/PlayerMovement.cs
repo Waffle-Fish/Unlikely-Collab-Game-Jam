@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float fallForce = 0f;
     [Tooltip("How much to reduce the final velocity of the player after releasing move buttons")]
     [SerializeField][Range(0f,1f)] float finalXVelocityReduction = 0f;
-
+    
     InputSystem_Actions inputActions;
     Rigidbody2D rb2D;
     PlayerStateManager playerStateManager;   
@@ -56,7 +57,12 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("Run", false);
             return;
         }
-        rb2D.AddForce(new Vector2(dir.x * moveForce, 0f));
+        // Force Movement
+        // rb2D.AddForce(new Vector2(dir.x * moveForce, 0f));
+
+        // Velocity Movement
+        rb2D.linearVelocityX = dir.x * moveForce;
+
         spriteRenderer.flipX = dir.x < 0f;
         animator.SetBool("Run", true);
     }
