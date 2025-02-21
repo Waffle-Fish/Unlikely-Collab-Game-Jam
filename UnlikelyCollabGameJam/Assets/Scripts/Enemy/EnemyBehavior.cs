@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
-using UnityEngine.Rendering.Universal.Internal;
+using Random = UnityEngine.Random;
 
 public class EnemyBehavior : MonoBehaviour
 {
@@ -35,16 +36,26 @@ public class EnemyBehavior : MonoBehaviour
 
     public List<GameObject> patrolPoints = new();
 
+    private Vector2 target;
+
     private enemyStates enemyState;
 
     private float enemySpeed = 1f;
+    private float enemyJumpForce = 5f;
     private float enemyHealth = 100f;
 
     void Awake()
     {
+        SelectRandomPatrolPointFromList();
         forwardDir = transform.right;
         rigidbody2D = GetComponent<Rigidbody2D>();
         enemyState = enemyStates.Patrol;
+    }
+
+    private void SelectRandomPatrolPointFromList()
+    {
+        int randPatrolPointIndex = Random.Range(0, patrolPoints.Count);
+        target = new Vector2(patrolPoints[randPatrolPointIndex].transform.position.x, patrolPoints[randPatrolPointIndex].transform.position.y);
     }
 
     void Update()
@@ -55,6 +66,19 @@ public class EnemyBehavior : MonoBehaviour
         {
             //Patrol
             // add movement left and right (maybe up and down? random jumping?)
+            if (Math.Abs(rigidbody2D.linearVelocityX) < 3f) // 3 is arbitrary number idk
+            {
+                rigidbody2D.AddForce(new Vector2(enemySpeed, 0f) * target.normalized, ForceMode2D.Force);
+            }
+
+            // if near a patrol point, select a new one
+            if(transform.position.x < target.x+1 && transform.position.x > target.x-1 &&
+               transform.position.y < target.y+1 && transform.position.y > target.y-1)
+               {
+                    SelectRandomPatrolPointFromList();
+               }
+
+            
 
             bool CanSeePlayer = CastRays();
 
@@ -99,7 +123,7 @@ public class EnemyBehavior : MonoBehaviour
             Vector2 rayDirection = Quaternion.Euler(0, 0, angle) * forwardDir;
 
             RaycastHit2D hit = Physics2D.Raycast(origin, rayDirection, rayLength, detectionLayer);
-            Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
+            // Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
 
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
