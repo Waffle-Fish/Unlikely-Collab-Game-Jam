@@ -162,7 +162,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3b1ee4345f3073d468a4264661d08908, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -296,7 +296,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3b1ee4345f3073d468a4264661d08908, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -414,6 +414,43 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!70 &474279384
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474279374}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.3, y: 0.5}
+  m_Direction: 0
 --- !u!1 &593701228
 GameObject:
   m_ObjectHideFlags: 0
@@ -497,7 +534,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -4.6, z: 0}
-  m_LocalScale: {x: 29.5, y: 1, z: 1}
+  m_LocalScale: {x: 50, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1114343192}
@@ -512,7 +549,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3b1ee4345f3073d468a4264661d08908, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -627,7 +664,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3b1ee4345f3073d468a4264661d08908, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -761,7 +798,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 3b1ee4345f3073d468a4264661d08908, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -866,7 +903,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3111527635850736269, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: fallForce
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3111527635850736269, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: jumpForce
@@ -879,7 +916,7 @@ PrefabInstance:
     - target: {fileID: 3834293882225499734, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_Material
       value: 
-      objectReference: {fileID: 6200000, guid: 3b1ee4345f3073d468a4264661d08908, type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 3834293882225499734, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_UseAutoMass
       value: 0
@@ -969,6 +1006,10 @@ PrefabInstance:
       value: 0.55
       objectReference: {fileID: 0}
     - target: {fileID: 8776275667213645155, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8776275667213645155, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 6200000, guid: 3b1ee4345f3073d468a4264661d08908, type: 2}
@@ -984,6 +1025,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4362588724417458548, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 474279384}
     - targetCorrespondingSourceObject: {fileID: 4362588724417458548, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       insertIndex: -1
       addedObject: {fileID: 474279383}
