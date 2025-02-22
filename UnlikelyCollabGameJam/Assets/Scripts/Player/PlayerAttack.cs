@@ -20,6 +20,8 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] Collider2D weaponCollider;
     int comboCount;
     float weaponTimer = 0f;
+    float Attack1Duration;
+
 
     [Header("Special Attack")]
     [SerializeField] Collider2D screamCollider;
@@ -43,8 +45,10 @@ public class PlayerAttack : MonoBehaviour
 
     private void ProcessAttack(InputAction.CallbackContext context)
     {
+        if (psm.CurrentAttackState == PlayerStateManager.AttackState.Attacking) return;
         psm.CurrentAttackState = PlayerStateManager.AttackState.Attacking;
         animator.SetBool("Attack", true);
+        animator.SetBool("Attack", false);
     }
 
     public void AttackEnemy() {
