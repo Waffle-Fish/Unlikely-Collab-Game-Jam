@@ -38,8 +38,8 @@ public class PlayerMovement : MonoBehaviour
     {
         rb2D = GetComponent<Rigidbody2D>();
         psm = GetComponent<PlayerStateManager>();
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        animator = GetComponentInChildren<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     private void Start() {
@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
         DetectState();
         ProcessFastFalling();
         UpdateAnimation();
-        if(!inputActions.Player.Move.WasPerformedThisFrame() && psm.CurrentState == PlayerStateManager.State.Grounded) rb2D.linearVelocityX *= finalXVelocityReduction;
+        if(!inputActions.Player.Move.WasPerformedThisFrame() && psm.CurrentMoveState == PlayerStateManager.MoveState.Grounded) rb2D.linearVelocityX *= finalXVelocityReduction;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -68,7 +68,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        if (psm.CurrentState == PlayerStateManager.State.Dashing) return;
+        if (psm.CurrentMoveState == PlayerStateManager.MoveState.Dashing || psm.CurrentAttackState == PlayerStateManager.AttackState.Attacking) return;
         Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
         animator.SetBool("Run", dir.x != 0f);
         if (dir.x == 0f) return;
@@ -83,17 +83,17 @@ public class PlayerMovement : MonoBehaviour
     private void DetectState() {
         if (Mathf.Approximately(rb2D.linearVelocityY, 0f)) {
             rb2D.gravityScale = originalGravScale;
-            psm.CurrentState = PlayerStateManager.State.Grounded;
+            psm.CurrentMoveState = PlayerStateManager.MoveState.Grounded;
         }
         if (rb2D.linearVelocityY < -0.1f) {
-            psm.CurrentState = PlayerStateManager.State.Falling;
+            psm.CurrentMoveState = PlayerStateManager.MoveState.Falling;
         }
     }
 
     private void ProcessFastFalling() {
         
         if(inputActions.Player.FastFall.WasPerformedThisFrame()) {
-            if (psm.CurrentState == PlayerStateManager.State.Falling || psm.CurrentState == PlayerStateManager.State.Jumping) {
+            if (psm.CurrentMoveState == PlayerStateManager.MoveState.Falling || psm.CurrentMoveState == PlayerStateManager.MoveState.Jumping) {
                 // rb2D.linearVelocity = new(rb2D.linearVelocityX, 0f);
                 rb2D.gravityScale = fallForce;
             }
@@ -106,9 +106,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void ProcessJump(InputAction.CallbackContext context)
     {
-        if (psm.CurrentState != PlayerStateManager.State.Grounded) return;
+        if (psm.CurrentMoveState != PlayerStateManager.MoveState.Grounded) return;
         rb2D.AddForceY(jumpForce, ForceMode2D.Impulse);
-        psm.CurrentState = PlayerStateManager.State.Jumping;
+        psm.CurrentMoveState = PlayerStateManager.MoveState.Jumping;
     }
 
     private void ProcessDash(InputAction.CallbackContext context)
@@ -143,21 +143,21 @@ public class PlayerMovement : MonoBehaviour
                 timer += Time.deltaTime;
                 yield return null;
             }
-            psm.CurrentState = PlayerStateManager.State.Grounded;
+            psm.CurrentMoveState = PlayerStateManager.MoveState.Grounded;
         }
 
         if (Time.time < timeDashUsed + DashCooldown) return;
         Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
         if (dir == Vector2.zero) return;
 
-        psm.CurrentState = PlayerStateManager.State.Dashing;
+        psm.CurrentMoveState = PlayerStateManager.MoveState.Dashing;
         timeDashUsed = Time.time;
         StartCoroutine(Dash(dir));
     } 
 
     private void UpdateAnimation() {
-        animator.SetBool("Fall", psm.CurrentState == PlayerStateManager.State.Falling);
-        animator.SetBool("Jump", psm.CurrentState == PlayerStateManager.State.Jumping);
-        animator.SetBool("Peak", psm.CurrentState == PlayerStateManager.State.Jumping && rb2D.linearVelocityY < 5 && rb2D.linearVelocityY > 0);
+        animator.SetBool("Fall", psm.CurrentMoveState == PlayerStateManager.MoveState.Falling);
+        animator.SetBool("Jump", psm.CurrentMoveState == PlayerStateManager.MoveState.Jumping);
+        animator.SetBool("Peak", psm.CurrentMoveState == PlayerStateManager.MoveState.Jumping && rb2D.linearVelocityY < 5 && rb2D.linearVelocityY > 0);
     }
 }

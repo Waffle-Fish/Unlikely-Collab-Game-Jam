@@ -43,8 +43,8 @@ public class PlayerAttack : MonoBehaviour
 
     private void ProcessAttack(InputAction.CallbackContext context)
     {
-        // animator.setTrigger("Attacking");
-        
+        psm.CurrentAttackState = PlayerStateManager.AttackState.Attacking;
+        animator.SetBool("Attack", true);
     }
 
     public void AttackEnemy() {
@@ -60,6 +60,8 @@ public class PlayerAttack : MonoBehaviour
         {
             Debug.Log(enemy.name);
         }
+        psm.CurrentAttackState = PlayerStateManager.AttackState.Idle;
+        animator.SetBool("Attack", false);
     }
 
     public void EnableWeapon() {
@@ -87,10 +89,10 @@ public class PlayerAttack : MonoBehaviour
                 yield return null;
             }
             screamCollider.gameObject.SetActive(false);
-            psm.CurrentState = PlayerStateManager.State.Grounded;
+            psm.CurrentAttackState = PlayerStateManager.AttackState.Idle;
         }
 
-        psm.CurrentState = PlayerStateManager.State.Screaming;
+        psm.CurrentAttackState = PlayerStateManager.AttackState.Screaming;
         screamCollider.gameObject.SetActive(true);
         Debug.Log("Screaming");
         StartCoroutine(Scream());
