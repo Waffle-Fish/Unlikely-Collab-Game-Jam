@@ -83,7 +83,7 @@ public class PlayerAttack : MonoBehaviour
                     // // Remove not enemies
                     // if (!enemy.CompareTag("Enemy")) EnemiesInRange.Remove(enemy);
                     Debug.Log("Screamed at: " + enemy.name);
-                    // enemy.GetComponent<EnemyHealth>().TakeDamage(screamDamage * Time.deltaTime);
+                    enemy.GetComponent<EnemyBehavior>().TakeDamage(screamDamage * Time.deltaTime);
                 }
                 yield return null;
             }
