@@ -18,9 +18,8 @@ public class PlayerAttack : MonoBehaviour
     [Tooltip("Short cooldown between attacks. Prevents spam")]
     [SerializeField][Range(0.0000001f, 1f)] float attackCooldown;
     [SerializeField] Collider2D weaponCollider;
-    int comboCount;
+    int comboCount = 0;
     float weaponTimer = 0f;
-    float Attack1Duration;
 
 
     [Header("Special Attack")]
@@ -43,16 +42,35 @@ public class PlayerAttack : MonoBehaviour
         inputActions.Player.Special.performed += ProcessSpecialAttack;
     }
 
+    private void Update()
+    {
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) {psm.CurrentAttackState = PlayerStateManager.AttackState.Idle;}
+        // if (psm.CurrentAttackState == PlayerStateManager.AttackState.Idle) {
+        //     animator.ResetTrigger("Attack2");
+        //     animator.ResetTrigger("Attack3");
+        //     ResetComboCount(0);
+        // }
+    }
+
     private void ProcessAttack(InputAction.CallbackContext context)
     {
-        if (psm.CurrentAttackState == PlayerStateManager.AttackState.Attacking) return;
-        if (psm.CurrentMoveState != PlayerStateManager.MoveState.Grounded) return;
-        psm.CurrentAttackState = PlayerStateManager.AttackState.Attacking;
-        animator.SetBool("Attack", true);
-        // animator.SetBool("Attack", false);
+        switch (comboCount) {
+            case 0:
+                animator.SetTrigger("Attack1");
+            break;
+            case 1:
+                animator.SetTrigger("Attack2");
+            break;
+            case 2:
+                animator.SetTrigger("Attack3");
+            break;
+            default:
+            break;
+        }
     }
 
     public void AttackEnemy() {
+        psm.CurrentAttackState = PlayerStateManager.AttackState.Attacking;
         List<Collider2D> OverlapResults = new();
         EnableWeapon();
         weaponCollider.Overlap(OverlapResults);
@@ -65,8 +83,21 @@ public class PlayerAttack : MonoBehaviour
         {
             Debug.Log(enemy.name);
         }
-        psm.CurrentAttackState = PlayerStateManager.AttackState.Idle;
-        animator.SetBool("Attack", false);
+    }
+
+    public void IncrementComboCount() {
+        StopCoroutine(nameof(DelayComboCount));
+        comboCount++;
+    }
+
+    public void ResetComboCount(float frameDelay){
+        StartCoroutine(DelayComboCount(frameDelay));
+    }
+
+    private IEnumerator DelayComboCount(float numFrames)
+    {
+        yield return new WaitForSeconds(numFrames * Time.deltaTime);
+        comboCount = 0;
     }
 
     public void EnableWeapon() {
