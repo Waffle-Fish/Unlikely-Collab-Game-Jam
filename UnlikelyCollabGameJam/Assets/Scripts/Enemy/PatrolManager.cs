@@ -14,13 +14,19 @@ public class PatrolManager : MonoBehaviour
     [SerializeField]
     private GameObject ppObject;
 
+    [Header("Initialize Patrol Points")]
+    [SerializeField] int xStart = -10;
+    [SerializeField] int yStart = 10;
+    [SerializeField] int width = 60;
+    [SerializeField] int height = 12;
+
     private LineRenderer lr;
 
     public void Awake()
     {
         detectionLayer = LayerMask.GetMask("Default");
         lr = GetComponent<LineRenderer>();
-        InitializePatrolPoints(-10, 10, 60, 12);
+        InitializePatrolPoints(xStart, yStart, width, height);
     }
 
     private void InitializePatrolPoints(int xStart, int yStart, int width, int height)
@@ -36,8 +42,9 @@ public class PatrolManager : MonoBehaviour
                     point = hit.point;
                     if (!patrolPoints.Contains(point))
                     {
-                        Instantiate(ppObject, point, Quaternion.identity);
                         patrolPoints.Add(point);
+                        // Just for visualization purposes
+                        // Instantiate(ppObject, point, Quaternion.identity);
                     }
                 }
             }

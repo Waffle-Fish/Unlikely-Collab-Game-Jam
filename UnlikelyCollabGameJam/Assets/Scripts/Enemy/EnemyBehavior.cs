@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
@@ -107,8 +106,8 @@ public class EnemyBehavior : MonoBehaviour
 
         if (CanSeePlayer)
         {
-            // target = (Vector2)player.transform.position;
-            // enemyState = EnemyStates.Pursue;
+            target = (Vector2)player.transform.position;
+            enemyState = EnemyStates.Pursue;
         }
     }
 
@@ -212,7 +211,7 @@ public class EnemyBehavior : MonoBehaviour
             Vector2 rayDirection = Quaternion.Euler(0, 0, angle) * forwardDir;
 
             RaycastHit2D hit = Physics2D.Raycast(origin, rayDirection, rayLength, detectionLayer);
-            // Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
+            Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
 
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
