@@ -20,7 +20,7 @@ public class PatrolManager : MonoBehaviour
     {
         detectionLayer = LayerMask.GetMask("Default");
         lr = GetComponent<LineRenderer>();
-        InitializePatrolPoints(-10, 10, 60, 8);
+        InitializePatrolPoints(-10, 10, 60, 12);
     }
 
     private void InitializePatrolPoints(int xStart, int yStart, int width, int height)
@@ -199,7 +199,7 @@ public class PatrolManager : MonoBehaviour
 
     public void DrawDebugPath(Vector2 enemyLocation)
     {
-        if (path == null || path.Count < 2) return;
+        // if (path == null || path.Count < 2) return;
 
         // Convert Vector2 list to Vector3 list and add enemyLocation as start.
         List<Vector3> pathV3 = path.Select(v2 => (Vector3)v2).ToList();
@@ -217,7 +217,7 @@ public class PatrolManager : MonoBehaviour
         {
             Vector2 nextPoint = path[0];
             path.RemoveAt(0);
-            DrawDebugPath(enemyLocation);
+            // DrawDebugPath(enemyLocation);
             Debug.Log("Going to: " + nextPoint);
             return nextPoint;
         }

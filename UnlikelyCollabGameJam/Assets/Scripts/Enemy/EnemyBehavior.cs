@@ -84,6 +84,7 @@ public class EnemyBehavior : MonoBehaviour
             Die();
         }
 
+        pm.DrawDebugPath((Vector2)transform.position);
     }
 
     private void Die()
@@ -161,7 +162,7 @@ public class EnemyBehavior : MonoBehaviour
     private void NavigateToTarget()
     {
         // if should jump -> jump
-        if (rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && (target.x - transform.position.x) < 3f) 
+        if (rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && Mathf.Abs(target.x - transform.position.x) < 3f) 
         {
             // Debug.Log("Trying to Jump with force: "+enemyJumpForce); 
 

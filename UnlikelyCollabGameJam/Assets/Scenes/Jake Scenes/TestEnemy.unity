@@ -1884,6 +1884,10 @@ PrefabInstance:
       propertyPath: ppObject
       value: 
       objectReference: {fileID: 530069511}
+    - target: {fileID: 381780077727501080, guid: a0845c039d49988429f19d1fd539928b, type: 3}
+      propertyPath: neighborThreshold
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 6754372955188559906, guid: a0845c039d49988429f19d1fd539928b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -12.31
