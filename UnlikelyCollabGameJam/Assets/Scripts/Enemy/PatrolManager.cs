@@ -3,10 +3,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using System.Linq;
 
-
 public class PatrolManager : MonoBehaviour
 {
-
     private List<Vector2> patrolPoints = new List<Vector2>();
     private List<Vector2> path = new List<Vector2>();
 
@@ -16,9 +14,7 @@ public class PatrolManager : MonoBehaviour
     [SerializeField]
     private GameObject ppObject;
 
-
     private LineRenderer lr;
-
 
     public void Awake()
     {
@@ -34,9 +30,7 @@ public class PatrolManager : MonoBehaviour
             for (int j = yStart; j > yStart - height; j -= 2)
             {
                 Vector2 point = new Vector2(i, j);
-
                 RaycastHit2D hit = Physics2D.Raycast(point, Vector2.down, 30f, detectionLayer);
-                
                 if (hit.collider != null)
                 {
                     point = hit.point;
@@ -48,35 +42,66 @@ public class PatrolManager : MonoBehaviour
                 }
             }
         }
-
-        Debug.Log("PatrolPoints Count: "+patrolPoints.Count);
+        Debug.Log("PatrolPoints Count: " + patrolPoints.Count);
     }
 
+    // NEW: Choose a start that's "close" to the enemy, but not necessarily the absolute closest.
+    private Vector2 FindRandomClosePatrolPoint(Vector2 enemyLocation, float threshold = 5f)
+    {
+        List<Vector2> closePoints = patrolPoints.Where(p => Vector2.Distance(enemyLocation, p) <= threshold).ToList();
+        if (closePoints.Count > 0)
+        {
+            return closePoints[Random.Range(0, closePoints.Count)];
+        }
+        else
+        {
+            return FindClosestPatrolPoint(enemyLocation);
+        }
+    }
+
+    // The old absolute closest method (used as a fallback).
+    private Vector2 FindClosestPatrolPoint(Vector2 enemyLocation)
+    {
+        Vector2 closest = patrolPoints[0];
+        float minDist = Vector2.Distance(enemyLocation, closest);
+        foreach (Vector2 point in patrolPoints)
+        {
+            float dist = Vector2.Distance(enemyLocation, point);
+            if (dist < minDist)
+            {
+                closest = point;
+                minDist = dist;
+            }
+        }
+        return closest;
+    }
+
+    // Modified SetNextPatrolPath that does not force an ascending route.
     public void SetNextPatrolPath(Vector2 enemyLocation)
     {
         path = new List<Vector2>();
 
-        // 1. Use the closest patrol point as the start.
-        Vector2 start = FindClosestPatrolPoint(enemyLocation);
+        // 1. Pick a starting point from those that are "close" to the enemy.
+        Vector2 start = FindRandomClosePatrolPoint(enemyLocation, 5f);
 
-        // 2. Choose a goal among points that are sufficiently above the start.
-        List<Vector2> higherPoints = patrolPoints.FindAll(p => p.y > start.y + 1f);
+        // 2. Choose a goal randomly among patrol points that are a little farther from start.
+        List<Vector2> candidateGoals = patrolPoints.Where(p => Vector2.Distance(p, start) > 3f).ToList();
         Vector2 goal;
-        if (higherPoints.Count > 0)
+        if (candidateGoals.Count > 0)
         {
-            goal = higherPoints[Random.Range(0, higherPoints.Count)];
+            goal = candidateGoals[Random.Range(0, candidateGoals.Count)];
         }
         else
         {
-            // Fallback: choose the highest patrol point available.
-            goal = patrolPoints.OrderBy(p => p.y).Last();
+            // Fallback: choose any random patrol point different from start.
+            List<Vector2> otherPoints = patrolPoints.Where(p => p != start).ToList();
+            goal = otherPoints.Count > 0 ? otherPoints[Random.Range(0, otherPoints.Count)] : start;
         }
 
         // Initialize dictionaries for A*.
         Dictionary<Vector2, float> gScore = new Dictionary<Vector2, float>();
         Dictionary<Vector2, float> fScore = new Dictionary<Vector2, float>();
         Dictionary<Vector2, Vector2> cameFrom = new Dictionary<Vector2, Vector2>();
-
         List<Vector2> openSet = new List<Vector2>();
 
         foreach (var point in patrolPoints)
@@ -88,8 +113,8 @@ public class PatrolManager : MonoBehaviour
         fScore[start] = HeuristicCostEstimate(start, goal);
         openSet.Add(start);
 
-        // Factor to penalize downward moves.
-        float verticalPenaltyFactor = 10f;
+        // Lower vertical penalty to allow downward movement.
+        float verticalPenaltyFactor = 0f; // Set to 0 to remove bias toward ascending
 
         while (openSet.Count > 0)
         {
@@ -116,65 +141,44 @@ public class PatrolManager : MonoBehaviour
             {
                 // Calculate the movement cost.
                 float transitionCost = Vector2.Distance(current, neighbor);
-                // Add penalty if the neighbor is lower than the current node.
+                // Optionally add vertical penalty if desired; here we remove it.
                 if (neighbor.y < current.y)
-            {
-                transitionCost += (current.y - neighbor.y) * verticalPenaltyFactor;
-            }
-            float tentativeGScore = gScore[current] + transitionCost;
-
-            if (tentativeGScore < gScore[neighbor])
-            {
-                cameFrom[neighbor] = current;
-                gScore[neighbor] = tentativeGScore;
-                fScore[neighbor] = tentativeGScore + HeuristicCostEstimate(neighbor, goal);
-                if (!openSet.Contains(neighbor))
                 {
-                    openSet.Add(neighbor);
+                    transitionCost += (current.y - neighbor.y) * verticalPenaltyFactor;
+                }
+                float tentativeGScore = gScore[current] + transitionCost;
+
+                if (tentativeGScore < gScore[neighbor])
+                {
+                    cameFrom[neighbor] = current;
+                    gScore[neighbor] = tentativeGScore;
+                    fScore[neighbor] = tentativeGScore + HeuristicCostEstimate(neighbor, goal);
+                    if (!openSet.Contains(neighbor))
+                    {
+                        openSet.Add(neighbor);
+                    }
                 }
             }
         }
+
+        Debug.LogWarning("No patrol path found between " + start + " and " + goal);
     }
 
-    Debug.LogWarning("No patrol path found between " + start + " and " + goal);
-}
-
-// Helper function to find the closest patrol point.
-private Vector2 FindClosestPatrolPoint(Vector2 enemyLocation)
-{
-    Vector2 closest = patrolPoints[0];
-    float minDist = Vector2.Distance(enemyLocation, closest);
-    foreach (Vector2 point in patrolPoints)
-    {
-        float dist = Vector2.Distance(enemyLocation, point);
-        if (dist < minDist)
-        {
-            closest = point;
-            minDist = dist;
-        }
-    }
-    return closest;
-}
-
-
-    // Heuristic function: Euclidean distance between two patrol points.
+    // Heuristic function: Euclidean distance.
     private float HeuristicCostEstimate(Vector2 a, Vector2 b)
     {
         return Vector2.Distance(a, b);
     }
 
-    // Returns all patrol points that are within the neighborThreshold distance.
+    // Returns neighbors within a set threshold.
     private List<Vector2> GetNeighbors(Vector2 point)
     {
         List<Vector2> neighbors = new List<Vector2>();
         foreach (var other in patrolPoints)
         {
-            if (other != point)
+            if (other != point && Vector2.Distance(point, other) <= neighborThreshold)
             {
-                if (Vector2.Distance(point, other) <= neighborThreshold)
-                {
-                    neighbors.Add(other);
-                }
+                neighbors.Add(other);
             }
         }
         return neighbors;
@@ -195,31 +199,26 @@ private Vector2 FindClosestPatrolPoint(Vector2 enemyLocation)
 
     public void DrawDebugPath(Vector2 enemyLocation)
     {
-        // If the path is null or has fewer than 2 points, nothing to draw
         if (path == null || path.Count < 2) return;
 
-        // Convert Vector2 list to Vector3 array
+        // Convert Vector2 list to Vector3 list and add enemyLocation as start.
         List<Vector3> pathV3 = path.Select(v2 => (Vector3)v2).ToList();
-
         pathV3.Insert(0, (Vector3)enemyLocation);
-        // Make sure the LineRenderer has the correct number of positions
+
         lr.positionCount = pathV3.Count;
-
-        // Set the positions once
         lr.SetPositions(pathV3.ToArray());
-
     }
 
     // Returns the next patrol point in the computed path.
     public Vector2 GetNextPatrolPointInPath(Vector2 enemyLocation)
     {
-        Debug.Log("PATH LENGTH:"+path.Count);
+        Debug.Log("PATH LENGTH:" + path.Count);
         if (path != null && path.Count > 0)
         {
             Vector2 nextPoint = path[0];
             path.RemoveAt(0);
             DrawDebugPath(enemyLocation);
-            Debug.Log("Going to: "+nextPoint);
+            Debug.Log("Going to: " + nextPoint);
             return nextPoint;
         }
         else
@@ -227,6 +226,5 @@ private Vector2 FindClosestPatrolPoint(Vector2 enemyLocation)
             SetNextPatrolPath(enemyLocation);
             return GetNextPatrolPointInPath(enemyLocation);
         }
-        // return new Vector2(0f, 0f);
     }
 }

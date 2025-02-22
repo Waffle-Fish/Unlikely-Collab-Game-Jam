@@ -106,8 +106,8 @@ public class EnemyBehavior : MonoBehaviour
 
         if (CanSeePlayer)
         {
-            target = (Vector2)player.transform.position;
-            enemyState = EnemyStates.Pursue;
+            // target = (Vector2)player.transform.position;
+            // enemyState = EnemyStates.Pursue;
         }
     }
 
@@ -161,11 +161,11 @@ public class EnemyBehavior : MonoBehaviour
     private void NavigateToTarget()
     {
         // if should jump -> jump
-        if (rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && (target.x - transform.position.x) < 6f) 
+        if (rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && (target.x - transform.position.x) < 3f) 
         {
             // Debug.Log("Trying to Jump with force: "+enemyJumpForce);
 
-            enemyJumpForce = (target.y - transform.position.y) * 5 + 15;
+            enemyJumpForce = (target.y - transform.position.y) * 5 + 12;
             
             rb.AddForceY(enemyJumpForce, ForceMode2D.Impulse);
 
@@ -173,21 +173,21 @@ public class EnemyBehavior : MonoBehaviour
             gameObject.layer = LayerMask.NameToLayer("Ignore Collision");
             
         }
-        // if(rb.linearVelocityX == 0 || rb.linearVelocityX == 0 && rb.linearVelocityY == 0) // if stuck
+
+        // This is hacky fix to enemy getting stuck
+        // if(rb.linearVelocityX == 0 && rb.linearVelocityY == 0 && target.y < transform.position.y) // if stuck
         // {
-        //     // rb.linearVelocityX = Random.Range(0, 2) == 0 ? enemySpeed*2f : -enemySpeed*2f;
-        //     // enemyJumpForce = (target.y - transform.position.y) * 5f;
-        //     // rb.AddForceY(enemyJumpForce, ForceMode2D.Impulse);
+        //     rb.linearVelocityX = Random.Range(0, 2) == 0 ? enemySpeed*2f : -enemySpeed*2f;
+        //     enemyJumpForce = (target.y - transform.position.y) * 5f;
+        //     rb.AddForceY(enemyJumpForce, ForceMode2D.Impulse);
         // }
-        // else{
+        
+        rb.linearVelocityX = enemySpeed * (target - (Vector2)transform.position).normalized.x;
 
-        // }
-            rb.linearVelocityX = enemySpeed * (target - (Vector2)transform.position).normalized.x;
-
-            if(gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.1f)
-            {
-                gameObject.layer = LayerMask.NameToLayer("Enemy");
-            }
+        if(gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.1f)
+        {
+            gameObject.layer = LayerMask.NameToLayer("Enemy");
+        }
     }
 
     private void SetForwardDirection()
@@ -232,9 +232,5 @@ public class EnemyBehavior : MonoBehaviour
             enemyState = EnemyStates.Dead;
         }
     }
-    
-
-
-
     
 }
