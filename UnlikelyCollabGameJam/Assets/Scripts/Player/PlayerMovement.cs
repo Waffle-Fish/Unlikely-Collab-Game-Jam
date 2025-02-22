@@ -56,7 +56,6 @@ public class PlayerMovement : MonoBehaviour
         ProcessFastFalling();
         UpdateAnimation();
         if(!inputActions.Player.Move.WasPerformedThisFrame() && psm.CurrentState == PlayerStateManager.State.Grounded) rb2D.linearVelocityX *= finalXVelocityReduction;
-        animator.SetBool("Fall", psm.CurrentState == PlayerStateManager.State.Falling);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -86,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
             rb2D.gravityScale = originalGravScale;
             psm.CurrentState = PlayerStateManager.State.Grounded;
         }
-        if (rb2D.linearVelocityY < 0 && !Mathf.Approximately(rb2D.linearVelocityY, 0f)) {
+        if (rb2D.linearVelocityY < -0.01f) {
             psm.CurrentState = PlayerStateManager.State.Falling;
         }
     }
