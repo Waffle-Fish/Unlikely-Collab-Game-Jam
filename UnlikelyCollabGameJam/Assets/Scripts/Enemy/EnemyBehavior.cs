@@ -163,7 +163,7 @@ public class EnemyBehavior : MonoBehaviour
         // if should jump -> jump
         if (rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && (target.x - transform.position.x) < 3f) 
         {
-            // Debug.Log("Trying to Jump with force: "+enemyJumpForce);
+            // Debug.Log("Trying to Jump with force: "+enemyJumpForce); 
 
             enemyJumpForce = (target.y - transform.position.y) * 5 + 12;
             
