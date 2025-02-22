@@ -77,7 +77,9 @@ public class PlayerAttack : MonoBehaviour
             float finalTime = Time.time + screamDuration;
             while (Time.time < finalTime) {
                 // ToDo only overlap in EnemyCollider
-                screamCollider.Overlap(EnemiesInRange);
+                ContactFilter2D screamFilter = new ContactFilter2D();
+                screamFilter.SetLayerMask(LayerMask.GetMask("Enemy"));
+                screamCollider.Overlap(screamFilter, EnemiesInRange);
                 foreach (var enemy in EnemiesInRange)
                 {
                     // // Remove not enemies

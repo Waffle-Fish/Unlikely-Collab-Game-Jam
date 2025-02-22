@@ -1914,6 +1914,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 739538300645771396, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: screamDamage
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1704214239909700748, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_Color.b
       value: 0
