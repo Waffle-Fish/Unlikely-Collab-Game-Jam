@@ -1,28 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 public class EnemyBehavior : MonoBehaviour
 {
-
-    /*
-    behaviors
-     patrol
-         - enemy moves around specific location in search of player
-         - raycast a 2D cone
-     pursue
-         - navigate to player
-     attack
-         - hurrr durr attack
-     MAYBE retreat
-         - on low health run from player
-    
-    */
     Rigidbody2D rb;
-
     PatrolManager pm;
 
     [Header("Vision Settings")]
@@ -34,7 +18,6 @@ public class EnemyBehavior : MonoBehaviour
     public LayerMask detectionLayer;
 
     [Header("Patrol & Movement Settings")]
-    // public List<GameObject> patrolPoints = new();
     private Vector2 target;
     private enum EnemyStates { Patrol, Pursue, Attack, Retreat, Dead }
     private EnemyStates enemyState;
@@ -54,107 +37,159 @@ public class EnemyBehavior : MonoBehaviour
 
     private GameObject player;
 
+    [SerializeField]
     private float enemyAttackDamage = 5f;
+
+    [SerializeField]
+    private int enemyAttackCoolDown = 10;
+    private int enemyAttackTimer = 0;
 
     void Awake()
     {
         pm = GameObject.Find("PatrolManager").GetComponent<PatrolManager>();
-        // SelectRandomPatrolPointFromList(); 
         target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
         forwardDir = transform.right;
         rb = GetComponent<Rigidbody2D>();
         enemyState = EnemyStates.Patrol;
-    }
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), 0, true);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), LayerMask.NameToLayer("Player"), true);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), true);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), true);
 
-    // private void SelectRandomPatrolPointFromList()
-    // {
-    //     int randPatrolPointIndex = Random.Range(0, patrolPoints.Count);
-    //     target = new Vector2(patrolPoints[randPatrolPointIndex].transform.position.x, patrolPoints[randPatrolPointIndex].transform.position.y);
-    // }
+    }
 
     void Update()
     {
         SetForwardDirection();
 
-
-
-
         if (enemyState == EnemyStates.Patrol)
         {
-            //Patrol
-            // add movement left and right (maybe up and down? random jumping?)
-            // hacky movement code (only works in x atm)
-
-            NavigateToTarget();
-
-
-            // if near a patrol point, select a new one
-            // this will eventually get next patrol point in path, 
-            // if at last patrol point select a random one and get a new list of patrol points
-            if (isAtTarget())
-            {
-                target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
-            }
-
-            bool CanSeePlayer = CastRays();
-
-            if (CanSeePlayer)
-            {
-                // target = (Vector2)player.transform.position;
-                // enemyState = EnemyStates.Pursue;
-            }
+            Patrol();
         }
         else if (enemyState == EnemyStates.Pursue)
         {
-            // Pursue
-            target = (Vector2)player.transform.position;
-            NavigateToTarget();
-            if((player.transform.position - transform.position).magnitude < 1f)
-            {
-                enemyState = EnemyStates.Attack;
-            }
-            else if((player.transform.position - transform.position).magnitude > 20f)
-            {
-                enemyState = EnemyStates.Patrol;
-            }
-            else if(enemyHealth < 10f)
-            {
-                enemyState = EnemyStates.Retreat;
-            }
+            Pursue();
         }
         else if (enemyState == EnemyStates.Attack)
         {
-            // Attack
-            player.GetComponent<PlayerHealth>().TakeDamage(enemyAttackDamage);
-            enemyState = EnemyStates.Pursue;
+            Attack();
         }
         else if (enemyState == EnemyStates.Retreat)
         {
             // RETREATTT
             // TODO: pick a patrol point FAR from player and increase speed temporarily and heal up?
+            enemyState = EnemyStates.Pursue;
         }
         else if(enemyState == EnemyStates.Dead)
         {
-            // play death animation?
-            gameObject.SetActive(false);
+            Die();
         }
 
+        pm.DrawDebugPath((Vector2)transform.position);
+    }
+
+    private void Die()
+    {
+        // play death animation?
+        gameObject.SetActive(false);
+    }
+
+    private void Patrol()
+    {
+        //Patrol
+        NavigateToTarget();
+
+        if (isAtTarget())
+        {
+            target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
+        }
+
+        bool CanSeePlayer = CastRays();
+
+        if (CanSeePlayer)
+        {
+            target = (Vector2)player.transform.position;
+            enemyState = EnemyStates.Pursue;
+        }
+    }
+
+    private void Attack()
+    {
+        // Attack
+        if (enemyAttackTimer <= 0)
+        {
+            player.GetComponent<PlayerHealth>().TakeDamage(enemyAttackDamage);
+            enemyAttackTimer = enemyAttackCoolDown;
+        }
+        // SCUFFED timer -> need better implementation
+        enemyAttackTimer--;
+        enemyState = EnemyStates.Pursue;
+    }
+
+    private void Pursue()
+    {
+        // Pursue
+        NavigateToTarget();
+
+        // FIXME: in situation where enemy is above player on a platform they will not navigate downward
+        // if(target.y < transform.position.y && rb.linearVelocityX == 0)
+        // {
+        //     target = new Vector2(target.x + 5, target.y);
+        // }
+        // else{
+            target = (Vector2)player.transform.position;
+        // }
+
+        if ((player.transform.position - transform.position).magnitude < 1f)
+        {
+            enemyState = EnemyStates.Attack;
+        }
+        else if ((player.transform.position - transform.position).magnitude > 20f)
+        {
+            enemyState = EnemyStates.Patrol;
+        }
+        else if (enemyHealth < 10f)
+        {
+            enemyState = EnemyStates.Retreat;
+        }
     }
 
     private bool isAtTarget()
     {
-        return transform.position.x < target.x + 0.5f && transform.position.x > target.x - 0.5f &&
-                       transform.position.y < target.y + 0.5f && transform.position.y > target.y - 0.5f;
+        return transform.position.x < target.x + 1f && transform.position.x > target.x - 1f &&
+                       transform.position.y < target.y + 1f && transform.position.y > target.y - 1f;
     }
 
     private void NavigateToTarget()
     {
         // if should jump -> jump
-        if (Math.Abs(rb.linearVelocityY) < .01f && target.y > transform.position.y + enemyJumpThreshold) 
+        if (rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && Mathf.Abs(target.x - transform.position.x) < 3f) 
         {
-            rb.AddForce(new Vector2(0f, enemyJumpForce), ForceMode2D.Impulse);
+            // Debug.Log("Trying to Jump with force: "+enemyJumpForce); 
+
+            enemyJumpForce = (target.y - transform.position.y) * 5 + 12;
+            
+            rb.AddForceY(enemyJumpForce, ForceMode2D.Impulse);
+
+            // when jump go to "Phase Layer"
+            gameObject.layer = LayerMask.NameToLayer("Ignore Collision");
+            
         }
-        rb.linearVelocity = new Vector2(enemySpeed, 0f) * (target - (Vector2)transform.position).normalized;
+
+        // This is hacky fix to enemy getting stuck
+        // if(rb.linearVelocityX == 0 && rb.linearVelocityY == 0 && target.y < transform.position.y) // if stuck
+        // {
+        //     rb.linearVelocityX = Random.Range(0, 2) == 0 ? enemySpeed*2f : -enemySpeed*2f;
+        //     enemyJumpForce = (target.y - transform.position.y) * 5f;
+        //     rb.AddForceY(enemyJumpForce, ForceMode2D.Impulse);
+        // }
+        
+        rb.linearVelocityX = enemySpeed * (target - (Vector2)transform.position).normalized.x;
+
+        if(gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.1f)
+        {
+            gameObject.layer = LayerMask.NameToLayer("Enemy");
+        }
     }
 
     private void SetForwardDirection()
@@ -178,11 +213,11 @@ public class EnemyBehavior : MonoBehaviour
             Vector2 rayDirection = Quaternion.Euler(0, 0, angle) * forwardDir;
 
             RaycastHit2D hit = Physics2D.Raycast(origin, rayDirection, rayLength, detectionLayer);
-            // Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
+            Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
 
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
-                Debug.Log("Player Detected!");
+                // Debug.Log("Player Detected!");
                 player = hit.collider.gameObject;
                 return true;
             }
@@ -199,9 +234,5 @@ public class EnemyBehavior : MonoBehaviour
             enemyState = EnemyStates.Dead;
         }
     }
-    
-
-
-
     
 }
