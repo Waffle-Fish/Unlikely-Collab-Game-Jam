@@ -85,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
             rb2D.gravityScale = originalGravScale;
             psm.CurrentState = PlayerStateManager.State.Grounded;
         }
-        if (rb2D.linearVelocityY < -0.01f) {
+        if (rb2D.linearVelocityY < -0.1f) {
             psm.CurrentState = PlayerStateManager.State.Falling;
         }
     }
