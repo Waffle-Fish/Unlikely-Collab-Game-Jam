@@ -76,14 +76,11 @@ public class PlayerAttack : MonoBehaviour
             List<Collider2D> EnemiesInRange = new();
             float finalTime = Time.time + screamDuration;
             while (Time.time < finalTime) {
-                // ToDo only overlap in EnemyCollider
-                ContactFilter2D screamFilter = new ContactFilter2D();
+                ContactFilter2D screamFilter = new();
                 screamFilter.SetLayerMask(LayerMask.GetMask("Enemy"));
                 screamCollider.Overlap(screamFilter, EnemiesInRange);
                 foreach (var enemy in EnemiesInRange)
                 {
-                    // // Remove not enemies
-                    // if (!enemy.CompareTag("Enemy")) EnemiesInRange.Remove(enemy);
                     Debug.Log("Screamed at: " + enemy.name);
                     enemy.GetComponent<EnemyBehavior>().TakeDamage(screamDamage * Time.deltaTime);
                 }
