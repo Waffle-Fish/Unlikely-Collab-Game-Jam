@@ -19,14 +19,15 @@ public class EnemyBehavior : MonoBehaviour
 
     [Header("Patrol & Movement Settings")]
     private Vector2 target;
-    private enum EnemyStates { Patrol, Pursue, Attack, Retreat, Dead }
+    private enum EnemyStates { Patrol, Pursue, Attack, Retreat, Dead, ImStuck }
     private EnemyStates enemyState;
 
     [SerializeField]
-    private float enemySpeed = 5f;
+    private float enemySpeed = 4.5f;
     
     [Header("Jump Settings")]
-    public float enemyJumpForce = 50f;
+    public float enemyJumpForce = 55f;
+    private float dynamicJumpForce;
     private float enemyJumpThreshold = 1f;
 
     private Vector2 forwardDir;
@@ -44,6 +45,9 @@ public class EnemyBehavior : MonoBehaviour
     private int enemyAttackCoolDown = 10;
     private int enemyAttackTimer = 0;
 
+    private int randomStuckDirection;
+    private float initialStuckY;
+
     void Awake()
     {
         pm = GameObject.Find("PatrolManager").GetComponent<PatrolManager>();
@@ -55,7 +59,11 @@ public class EnemyBehavior : MonoBehaviour
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), LayerMask.NameToLayer("Player"), true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), true);
+    }
 
+    void Start()
+    {
+        enemyHealth = maxEnemyHealth;
     }
 
     void Update()
@@ -69,6 +77,10 @@ public class EnemyBehavior : MonoBehaviour
         else if (enemyState == EnemyStates.Pursue)
         {
             Pursue();
+        }
+        else if (enemyState == EnemyStates.ImStuck)
+        {
+            GetUnStuck();
         }
         else if (enemyState == EnemyStates.Attack)
         {
@@ -85,12 +97,23 @@ public class EnemyBehavior : MonoBehaviour
             Die();
         }
 
-        pm.DrawDebugPath((Vector2)transform.position);
+        // DRAW DEBUG PATH
+        // pm.DrawDebugPath((Vector2)transform.position);
+    }
+
+    private void GetUnStuck()
+    {
+        rb.linearVelocityX = enemySpeed * randomStuckDirection;
+
+        if (initialStuckY > transform.position.y)
+        {
+            enemyState = EnemyStates.Pursue;
+        }
     }
 
     private void Die()
     {
-        // play death animation?
+        // ANIMATION - Death Animation
         gameObject.SetActive(false);
     }
 
@@ -100,6 +123,15 @@ public class EnemyBehavior : MonoBehaviour
         NavigateToTarget();
 
         if (isAtTarget())
+        {
+            target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
+        }
+        // if target is directly below me -> get next point in path
+        if (target.y < transform.position.y && transform.position.x < target.x + 2f && transform.position.x > target.x - 2f)
+        {
+            target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
+        }
+        else if (target.y > transform.position.y + 5.5f && transform.position.x < target.x + 2f && transform.position.x > target.x - 2f)
         {
             target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
         }
@@ -118,6 +150,7 @@ public class EnemyBehavior : MonoBehaviour
         // Attack
         if (enemyAttackTimer <= 0)
         {
+            // ANIMATION - Attack goes here
             player.GetComponent<PlayerHealth>().TakeDamage(enemyAttackDamage);
             enemyAttackTimer = enemyAttackCoolDown;
         }
@@ -131,20 +164,13 @@ public class EnemyBehavior : MonoBehaviour
         // Pursue
         NavigateToTarget();
 
-        // FIXME: in situation where enemy is above player on a platform they will not navigate downward
-        // if(target.y < transform.position.y && rb.linearVelocityX == 0)
-        // {
-        //     target = new Vector2(target.x + 5, target.y);
-        // }
-        // else{
-            target = (Vector2)player.transform.position;
-        // }
+        target = (Vector2)player.transform.position;
 
-        if ((player.transform.position - transform.position).magnitude < 1f)
+        if (isNearPlayer())
         {
             enemyState = EnemyStates.Attack;
         }
-        else if ((player.transform.position - transform.position).magnitude > 20f)
+        else if (isFarFromPlayer())
         {
             enemyState = EnemyStates.Patrol;
         }
@@ -152,6 +178,28 @@ public class EnemyBehavior : MonoBehaviour
         {
             enemyState = EnemyStates.Retreat;
         }
+
+        if (isStuck())
+        {
+            randomStuckDirection = Random.Range(0, 2) > 0 ? 1 : -1;
+            initialStuckY = transform.position.y;
+            enemyState = EnemyStates.ImStuck;
+        }
+    }
+
+    private bool isFarFromPlayer()
+    {
+        return (player.transform.position - transform.position).magnitude > 20f;
+    }
+
+    private bool isNearPlayer()
+    {
+        return (player.transform.position - transform.position).magnitude < 1f;
+    }
+
+    private bool isStuck()
+    {
+        return target.y < transform.position.y && (int)Math.Abs(rb.linearVelocity.magnitude) == 0;
     }
 
     private bool isAtTarget()
@@ -162,34 +210,49 @@ public class EnemyBehavior : MonoBehaviour
 
     private void NavigateToTarget()
     {
-        // if should jump -> jump
-        if (rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && Mathf.Abs(target.x - transform.position.x) < 3f) 
+        if (ShouldJump())
         {
-            // Debug.Log("Trying to Jump with force: "+enemyJumpForce); 
-
-            enemyJumpForce = (target.y - transform.position.y) * 5 + 12;
-            
-            rb.AddForceY(enemyJumpForce, ForceMode2D.Impulse);
-
-            // when jump go to "Phase Layer"
-            gameObject.layer = LayerMask.NameToLayer("Ignore Collision");
-            
+            // ANIMATION - JUMP
+            Jump();
         }
 
-        // This is hacky fix to enemy getting stuck
-        // if(rb.linearVelocityX == 0 && rb.linearVelocityY == 0 && target.y < transform.position.y) // if stuck
-        // {
-        //     rb.linearVelocityX = Random.Range(0, 2) == 0 ? enemySpeed*2f : -enemySpeed*2f;
-        //     enemyJumpForce = (target.y - transform.position.y) * 5f;
-        //     rb.AddForceY(enemyJumpForce, ForceMode2D.Impulse);
-        // }
-        
-        rb.linearVelocityX = enemySpeed * (target - (Vector2)transform.position).normalized.x;
-
-        if(gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.1f)
+        // ANIMATION - Walking left / right - use "forwardDir"
+        if (enemyState == EnemyStates.Patrol)
         {
+            // constant speed left / right
+            rb.linearVelocityX = enemySpeed * Mathf.Sign(target.x - transform.position.x);
+        }
+        else if (enemyState == EnemyStates.Pursue)
+        {
+            // slower speed when approaching player - makes it a little easier? can change
+            rb.linearVelocityX = enemySpeed * (target - (Vector2)transform.position).normalized.x;
+        }
+
+        if (isAtApexOfJump())
+        {
+            // ANIMATION - Top of jump reached... falling animation?
             gameObject.layer = LayerMask.NameToLayer("Enemy");
         }
+    }
+
+    private bool isAtApexOfJump()
+    {
+        return gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.1f;
+    }
+
+    private void Jump()
+    {
+        dynamicJumpForce = (target.y - transform.position.y) * 5f + 15f;
+
+        rb.AddForceY(dynamicJumpForce, ForceMode2D.Impulse);
+
+        // when jump go to "Phase Layer"
+        gameObject.layer = LayerMask.NameToLayer("Ignore Collision");
+    }
+
+    private bool ShouldJump()
+    {
+        return rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && Mathf.Abs(target.x - transform.position.x) < 2.2f;
     }
 
     private void SetForwardDirection()
@@ -217,7 +280,6 @@ public class EnemyBehavior : MonoBehaviour
 
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
-                // Debug.Log("Player Detected!");
                 player = hit.collider.gameObject;
                 return true;
             }
