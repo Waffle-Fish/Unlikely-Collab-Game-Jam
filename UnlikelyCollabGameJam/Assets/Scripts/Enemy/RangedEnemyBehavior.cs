@@ -16,8 +16,8 @@ public class RangedEnemyBehavior : EnemyBehavior
     {
         base.Awake();
         // things to adjust?
-        rayLength = 20;
-        enemyAttackCoolDown = .5f;
+        rayLength = 14;
+        enemyAttackCoolDown = 2f;
     }
 
     protected override void Pursue()
