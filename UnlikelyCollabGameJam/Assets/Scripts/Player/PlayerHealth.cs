@@ -12,7 +12,7 @@ public class PlayerHealth : MonoBehaviour
     public bool ClickToHeal = false;
     public bool ClickToDamage = false;
     public event Action<float> OnHealthChanged;
-    public event EventHandler OnPlayerDeath;
+    public event Action OnPlayerDeath;
 
     private void Start()
     {
@@ -50,5 +50,7 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
         gameObject.SetActive(false);
+        OnPlayerDeath?.Invoke();
+        Time.timeScale = 0;
     }   
 }

@@ -9,8 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Final Game Scenes/MainMenu.unity
     guid: b499350f1931f834c865dae57d75f674
   - enabled: 1
-    path: Assets/Scenes/Waffle Scenes/TestPlayer.unity
-    guid: d8c25c247f4b59f4294e655214ccf980
+    path: Assets/Scenes/Waffle Scenes/TestGame.unity
+    guid: f8c6feedf17e0ee44b342fde1e007f3f
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 99f9c9493070a9d4c979a8fec7c5a8d3, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
