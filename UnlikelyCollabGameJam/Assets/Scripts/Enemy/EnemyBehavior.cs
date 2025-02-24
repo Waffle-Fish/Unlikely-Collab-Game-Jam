@@ -115,6 +115,12 @@ public class EnemyBehavior : MonoBehaviour
 
         // DRAW DEBUG PATH
         pm.DrawDebugPath((Vector2)transform.position);
+
+        // if enemy falls through ground -> it dies
+        if (transform.position.y < -100f)
+        {
+            enemyState = EnemyStates.Dead;
+        }
     }
 
     private void GetUnStuck()

@@ -65,6 +65,7 @@ public class RangedEnemyBehavior : EnemyBehavior
             GameObject projInstance = Instantiate(projectile, transform.position, Quaternion.identity);
 
             Vector2 direction = (player.transform.position - transform.position).normalized;
+            Debug.Log("Firing in Direction: "+direction);
 
             projInstance.GetComponent<Projectile>().SetVelocity(
                 direction.x*projectileSpeed,
@@ -72,6 +73,15 @@ public class RangedEnemyBehavior : EnemyBehavior
             projInstance.GetComponent<Projectile>().SetProjectileDamage(projectileDamage);
             enemyAttackTimer = enemyAttackCoolDown;
         }
+
+        //TODO: add lifetime to projectiles, add a timer to projectiles where in the first ~.5 seconds
+        // it will not collide and be destroyed. 
+        // 
+        // remove gravity and have projectiles shoot directly at player OR
+        // make adjustments to current direction of projectiles to account for scenarios like on the same level
+        //
+        // small randomizations in projectile speed / direction 
+
 
         // return to pursue if far enough from player
         if(Vector2.Distance(player.transform.position, transform.position) > 10f)
