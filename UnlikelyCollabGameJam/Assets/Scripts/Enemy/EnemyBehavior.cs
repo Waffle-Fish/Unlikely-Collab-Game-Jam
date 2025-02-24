@@ -6,61 +6,77 @@ using Random = UnityEngine.Random;
 
 public class EnemyBehavior : MonoBehaviour
 {
-    Rigidbody2D rb;
-    PatrolManager pm;
+    protected Rigidbody2D rb;
+    protected PatrolManager pm;
 
     [Header("Vision Settings")]
-    public float rayLength = 10f;
-    public float spreadAngle = 45f;
-    public int numberOfRays = 10;
+    [SerializeField]
+    protected float rayLength = 10f;
+    [SerializeField]
+    protected float spreadAngle = 45f;
+    [SerializeField]
+    protected int numberOfRays = 10;
 
     [Header("Detection Settings")]
-    public LayerMask detectionLayer;
+    protected LayerMask detectionLayer;
 
     [Header("Patrol & Movement Settings")]
-    private Vector2 target;
-    private enum EnemyStates { Patrol, Pursue, Attack, Retreat, Dead }
-    private EnemyStates enemyState;
+    protected Vector2 target;
+    protected enum EnemyStates { Patrol, Pursue, Attack, Retreat, Dead, ImStuck }
+    protected EnemyStates enemyState;
 
     [SerializeField]
-    private float enemySpeed = 5f;
+    protected float enemySpeed = 4.5f;
     
     [Header("Jump Settings")]
-    public float enemyJumpForce = 50f;
-    private float enemyJumpThreshold = 1f;
+    protected float enemyJumpForce = 55f;
+    protected float dynamicJumpForce;
+    protected float enemyJumpThreshold = 1f;
 
-    private Vector2 forwardDir;
-
-    [SerializeField]
-    private float maxEnemyHealth = 100f;
-    private float enemyHealth = 100f;
-
-    private GameObject player;
+    protected Vector2 forwardDir;
 
     [SerializeField]
-    private float enemyAttackDamage = 5f;
+    protected float maxEnemyHealth = 100f;
+    protected float enemyHealth = 100f;
 
+    protected GameObject player;
+
+    [Header("Attack Settings")]
     [SerializeField]
-    private int enemyAttackCoolDown = 10;
-    private int enemyAttackTimer = 0;
+    protected float enemyAttackDamage = 5f;
 
-    void Awake()
+    [Tooltip("Number of Seconds Between Attacks")]
+    [SerializeField]
+    protected float enemyAttackCoolDown = 10f;
+    protected float enemyAttackTimer = 0f;
+
+    protected int randomStuckDirection;
+    protected float initialStuckY;
+
+    protected virtual void Awake()
     {
-        pm = GameObject.Find("PatrolManager").GetComponent<PatrolManager>();
-        target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
+        pm = GetComponentInChildren<PatrolManager>();
         forwardDir = transform.right;
         rb = GetComponent<Rigidbody2D>();
         enemyState = EnemyStates.Patrol;
+        detectionLayer = LayerMask.GetMask("Player");
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), 0, true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), LayerMask.NameToLayer("Player"), true);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), LayerMask.NameToLayer("Ignore Collision"), true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), true);
+    }
 
+    void Start()
+    {
+        target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
+        enemyHealth = maxEnemyHealth;
     }
 
     void Update()
     {
         SetForwardDirection();
+        enemyAttackTimer -= Time.deltaTime;
 
         if (enemyState == EnemyStates.Patrol)
         {
@@ -68,10 +84,22 @@ public class EnemyBehavior : MonoBehaviour
         }
         else if (enemyState == EnemyStates.Pursue)
         {
+            // If player is dead go back to patrolling
+            // if(player.GetComponent<PlayerHealth>().CurrentHealth <= 0)
+            // {
+            //     enemyState = EnemyStates.Patrol;
+            // }
             Pursue();
+        }
+        else if (enemyState == EnemyStates.ImStuck)
+        {
+            GetUnStuck();
         }
         else if (enemyState == EnemyStates.Attack)
         {
+            // in the situation enemyState goes into attack before a jump reaches apex
+            if(gameObject.layer != LayerMask.NameToLayer("Enemy")) gameObject.layer = LayerMask.NameToLayer("Enemy");
+
             Attack();
         }
         else if (enemyState == EnemyStates.Retreat)
@@ -85,21 +113,47 @@ public class EnemyBehavior : MonoBehaviour
             Die();
         }
 
+        // DRAW DEBUG PATH
         pm.DrawDebugPath((Vector2)transform.position);
+
+        // if enemy falls through ground -> it dies
+        if (transform.position.y < -100f)
+        {
+            enemyState = EnemyStates.Dead;
+        }
+    }
+
+    private void GetUnStuck()
+    {
+        rb.linearVelocityX = enemySpeed * randomStuckDirection;
+
+        if (initialStuckY > transform.position.y)
+        {
+            enemyState = EnemyStates.Pursue;
+        }
     }
 
     private void Die()
     {
-        // play death animation?
+        // ANIMATION - Death Animation
         gameObject.SetActive(false);
     }
 
-    private void Patrol()
+    protected virtual void Patrol()
     {
         //Patrol
         NavigateToTarget();
 
         if (isAtTarget())
+        {
+            target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
+        }
+        // if target is directly below me -> get next point in path
+        if (target.y < transform.position.y && transform.position.x < target.x + 2f && transform.position.x > target.x - 2f)
+        {
+            target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
+        }
+        else if (target.y > transform.position.y + 5.5f && transform.position.x < target.x + 2f && transform.position.x > target.x - 2f)
         {
             target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
         }
@@ -113,38 +167,30 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
 
-    private void Attack()
+    protected virtual void Attack()
     {
         // Attack
         if (enemyAttackTimer <= 0)
         {
+            // ANIMATION - Attack goes here
             player.GetComponent<PlayerHealth>().TakeDamage(enemyAttackDamage);
             enemyAttackTimer = enemyAttackCoolDown;
         }
-        // SCUFFED timer -> need better implementation
-        enemyAttackTimer--;
         enemyState = EnemyStates.Pursue;
     }
 
-    private void Pursue()
+    protected virtual void Pursue()
     {
         // Pursue
         NavigateToTarget();
 
-        // FIXME: in situation where enemy is above player on a platform they will not navigate downward
-        // if(target.y < transform.position.y && rb.linearVelocityX == 0)
-        // {
-        //     target = new Vector2(target.x + 5, target.y);
-        // }
-        // else{
-            target = (Vector2)player.transform.position;
-        // }
+        target = (Vector2)player.transform.position;
 
-        if ((player.transform.position - transform.position).magnitude < 1f)
+        if (isNearPlayer())
         {
             enemyState = EnemyStates.Attack;
         }
-        else if ((player.transform.position - transform.position).magnitude > 20f)
+        else if (isFarFromPlayer())
         {
             enemyState = EnemyStates.Patrol;
         }
@@ -152,47 +198,97 @@ public class EnemyBehavior : MonoBehaviour
         {
             enemyState = EnemyStates.Retreat;
         }
+
+        if (isStuck())
+        {
+            randomStuckDirection = Random.Range(0, 2) > 0 ? 1 : -1;
+            initialStuckY = transform.position.y;
+            enemyState = EnemyStates.ImStuck;
+        }
     }
 
-    private bool isAtTarget()
+    protected bool isFarFromPlayer()
+    {
+        return (player.transform.position - transform.position).magnitude > 20f;
+    }
+
+    protected bool isNearPlayer()
+    {
+        return (player.transform.position - transform.position).magnitude < 1f;
+    }
+
+    protected bool isStuck()
+    {
+        return target.y < transform.position.y && (int)Math.Abs(rb.linearVelocity.magnitude) == 0;
+    }
+
+    protected bool isAtTarget()
     {
         return transform.position.x < target.x + 1f && transform.position.x > target.x - 1f &&
-                       transform.position.y < target.y + 1f && transform.position.y > target.y - 1f;
+                transform.position.y < target.y + 1f && transform.position.y > target.y - 1f;
     }
 
-    private void NavigateToTarget()
+    protected virtual void NavigateToTarget()
     {
-        // if should jump -> jump
-        if (rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && Mathf.Abs(target.x - transform.position.x) < 3f) 
+        if (ShouldJump())
         {
-            // Debug.Log("Trying to Jump with force: "+enemyJumpForce); 
-
-            enemyJumpForce = (target.y - transform.position.y) * 5 + 12;
-            
-            rb.AddForceY(enemyJumpForce, ForceMode2D.Impulse);
-
-            // when jump go to "Phase Layer"
-            gameObject.layer = LayerMask.NameToLayer("Ignore Collision");
-            
+            // ANIMATION - JUMP
+            Jump();
         }
 
-        // This is hacky fix to enemy getting stuck
-        // if(rb.linearVelocityX == 0 && rb.linearVelocityY == 0 && target.y < transform.position.y) // if stuck
-        // {
-        //     rb.linearVelocityX = Random.Range(0, 2) == 0 ? enemySpeed*2f : -enemySpeed*2f;
-        //     enemyJumpForce = (target.y - transform.position.y) * 5f;
-        //     rb.AddForceY(enemyJumpForce, ForceMode2D.Impulse);
-        // }
-        
-        rb.linearVelocityX = enemySpeed * (target - (Vector2)transform.position).normalized.x;
-
-        if(gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.1f)
+        // ANIMATION - Walking left / right - use "forwardDir"
+        if (enemyState == EnemyStates.Patrol)
         {
+            // constant speed left / right
+            rb.linearVelocityX = enemySpeed * Mathf.Sign(target.x - transform.position.x);
+        }
+        else if (enemyState == EnemyStates.Pursue)
+        {
+            // slower speed when approaching player - makes it a little easier? can change
+            rb.linearVelocityX = enemySpeed * (target - (Vector2)transform.position).normalized.x;
+        }
+
+        if (isAtApexOfJump())
+        {
+            // ANIMATION - Top of jump reached... falling animation?
             gameObject.layer = LayerMask.NameToLayer("Enemy");
         }
+        
+        // FIXME? hacky fix for enemy falling through floor occasionally
+        // if (transform.position.y < -100f)
+        // {
+        //     Debug.Log("I've fallen, AND I CANT GET UP");
+        //     gameObject.layer = LayerMask.NameToLayer("Enemy");
+        //     transform.position = new Vector2(transform.position.x, 100f);
+        //     enemyState = EnemyStates.Patrol;
+        //     rb.linearVelocityY = 0f;
+        // }
     }
 
-    private void SetForwardDirection()
+    private bool isAtApexOfJump()
+    {
+        return gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.15f;
+    }
+
+    private void Jump()
+    {
+        dynamicJumpForce = (target.y - transform.position.y) * 5f + 15f;
+        dynamicJumpForce = Math.Clamp(dynamicJumpForce, 25f, 55f);
+        // Debug.Log("Jump Force: "+dynamicJumpForce);
+        // previousY = transform.position.y;
+
+        rb.AddForceY(dynamicJumpForce, ForceMode2D.Impulse);
+
+        // when jump go to "Phase Layer"
+        gameObject.layer = LayerMask.NameToLayer("Ignore Collision");
+    }
+
+    private bool ShouldJump()
+    {
+        return rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && Mathf.Abs(target.x - transform.position.x) < 2.2f;
+    }
+
+    protected void SetForwardDirection()
     {
         if (Math.Abs(rb.linearVelocity.x) > 0.1)
         {
@@ -200,7 +296,7 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
 
-    bool CastRays()
+    protected bool CastRays()
     {
         Vector2 origin = transform.position + new Vector3(0f, .5f, 0f);
         float halfAngle = spreadAngle / 2f;
@@ -217,7 +313,6 @@ public class EnemyBehavior : MonoBehaviour
 
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
-                // Debug.Log("Player Detected!");
                 player = hit.collider.gameObject;
                 return true;
             }
