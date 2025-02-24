@@ -97,6 +97,9 @@ public class EnemyBehavior : MonoBehaviour
         }
         else if (enemyState == EnemyStates.Attack)
         {
+            // in the situation enemyState goes into attack before a jump reaches apex
+            if(gameObject.layer != LayerMask.NameToLayer("Enemy")) gameObject.layer = LayerMask.NameToLayer("Enemy");
+
             Attack();
         }
         else if (enemyState == EnemyStates.Retreat)
@@ -246,20 +249,18 @@ public class EnemyBehavior : MonoBehaviour
         }
         
         // FIXME? hacky fix for enemy falling through floor occasionally
-        if (transform.position.y < -100f)
-        {
-            Debug.Log("I've fallen, AND I CANT GET UP");
-            gameObject.layer = LayerMask.NameToLayer("Enemy");
-            transform.position = new Vector2(transform.position.x, 100f);
-            enemyState = EnemyStates.Patrol;
-            rb.linearVelocityY = 0f;
-        }
+        // if (transform.position.y < -100f)
+        // {
+        //     Debug.Log("I've fallen, AND I CANT GET UP");
+        //     gameObject.layer = LayerMask.NameToLayer("Enemy");
+        //     transform.position = new Vector2(transform.position.x, 100f);
+        //     enemyState = EnemyStates.Patrol;
+        //     rb.linearVelocityY = 0f;
+        // }
     }
 
     private bool isAtApexOfJump()
     {
-        // possible fix for enemy falling through floor would be keeping track of last y value and current,
-        // checking to see when the last y value is higher than current (this first instance would be apex)
         return gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.15f;
     }
 
@@ -268,6 +269,7 @@ public class EnemyBehavior : MonoBehaviour
         dynamicJumpForce = (target.y - transform.position.y) * 5f + 15f;
         dynamicJumpForce = Math.Clamp(dynamicJumpForce, 25f, 55f);
         // Debug.Log("Jump Force: "+dynamicJumpForce);
+        // previousY = transform.position.y;
 
         rb.AddForceY(dynamicJumpForce, ForceMode2D.Impulse);
 
