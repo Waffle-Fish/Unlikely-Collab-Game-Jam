@@ -6,9 +6,12 @@ using Random = UnityEngine.Random;
 public class RangedEnemyBehavior : EnemyBehavior
 {
 
+    [Header("Projectile Settings")]
     public GameObject projectile;
     [SerializeField]
-    private float projectileSpeed = 10f;
+    private float projectileSpeed = 15f;
+    [SerializeField]
+    private float projectileDamage = 5f;
     protected override void Awake()
     {
         base.Awake();
@@ -22,7 +25,6 @@ public class RangedEnemyBehavior : EnemyBehavior
         // instead of go directly at player, find spot with line of site
         // attack when in line of site / then go back to pursue
         // difficult to keep ranged enemy at range?
-
 
         // Pursue
         NavigateToTarget();
@@ -50,6 +52,7 @@ public class RangedEnemyBehavior : EnemyBehavior
         }
     }
 
+    // FIXME: Might revert back to this
     // protected override void Attack()
     // {
     //     // add a wait timer for windup
@@ -120,7 +123,7 @@ public class RangedEnemyBehavior : EnemyBehavior
                     Vector2 directDir = (targetPos - startPos).normalized;
                     velocity = directDir * v0;
                     velocity.y += directDir.y;
-                    Debug.Log("Shooting directly at player");
+                    // Debug.Log("Shooting directly at player");
                 }
                 else
                 {
@@ -141,13 +144,14 @@ public class RangedEnemyBehavior : EnemyBehavior
                     }
 
                     velocity = new Vector2(vx, vy);
-                    Debug.Log("Fancy math shot");
+                    // Debug.Log("Fancy math shot");
 
                 }
             }
 
             // Pass the computed velocity to the projectile.
             projInstance.GetComponent<Projectile>().SetVelocity(velocity.x, velocity.y);
+            projInstance.GetComponent<Projectile>().SetProjectileDamage(projectileDamage);
 
             enemyAttackTimer = enemyAttackCoolDown;
         }
@@ -160,7 +164,7 @@ public class RangedEnemyBehavior : EnemyBehavior
     }
 
 
-
+//    // TODO: if this implementation works better -> will have to switch detection layer before and after to "default" and back to "player"
 //     private bool isPlayerInDirectLineOfSight()
 // {
 //     // Adjust the origin if needed (e.g., to represent the enemy's "eyes")

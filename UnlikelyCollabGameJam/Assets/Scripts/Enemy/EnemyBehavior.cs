@@ -41,10 +41,11 @@ public class EnemyBehavior : MonoBehaviour
 
     protected GameObject player;
 
+    [Header("Attack Settings")]
     [SerializeField]
     protected float enemyAttackDamage = 5f;
 
-    [Tooltip("Number of seconds between attacks")]
+    [Tooltip("Number of Seconds Between Attacks")]
     [SerializeField]
     protected float enemyAttackCoolDown = 10f;
     protected float enemyAttackTimer = 0f;
@@ -62,6 +63,7 @@ public class EnemyBehavior : MonoBehaviour
         detectionLayer = LayerMask.GetMask("Player");
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), 0, true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), LayerMask.NameToLayer("Player"), true);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), LayerMask.NameToLayer("Ignore Collision"), true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), true);
     }
@@ -82,6 +84,11 @@ public class EnemyBehavior : MonoBehaviour
         }
         else if (enemyState == EnemyStates.Pursue)
         {
+            // If player is dead go back to patrolling
+            // if(player.GetComponent<PlayerHealth>().CurrentHealth <= 0)
+            // {
+            //     enemyState = EnemyStates.Patrol;
+            // }
             Pursue();
         }
         else if (enemyState == EnemyStates.ImStuck)

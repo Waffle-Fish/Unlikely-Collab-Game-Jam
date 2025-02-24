@@ -21,6 +21,11 @@ public class Projectile : MonoBehaviour
         rb.linearVelocityY = vy;
     }
 
+    public void SetProjectileDamage(float damage)
+    {
+        projectileDamgage = damage;
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player")) {
