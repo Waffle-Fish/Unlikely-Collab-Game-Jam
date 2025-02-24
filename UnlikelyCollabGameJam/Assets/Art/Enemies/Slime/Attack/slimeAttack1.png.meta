@@ -46,9 +46,9 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
-  spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMode: 1
+  spriteExtrude: 0
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 64
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: slimeAttack1_0
+      name: ShadowManAttack1_0
       rect:
         serializedVersion: 2
-        x: 22
+        x: 19
         y: 15
-        width: 27
-        height: 16
-      alignment: 9
-      pivot: {x: 0.5, y: 0.4375}
+        width: 22
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: eb8510f51ffe7dba0800000000000000
-      internalID: -6064114553271002946
+      spriteID: f72c4f5506c646c40800000000000000
+      internalID: 5504643805568352895
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: a519540b37dbd094b8bde2ddb02173f0
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      slimeAttack1_0: -6064114553271002946
+      ShadowManAttack1_0: 5504643805568352895
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

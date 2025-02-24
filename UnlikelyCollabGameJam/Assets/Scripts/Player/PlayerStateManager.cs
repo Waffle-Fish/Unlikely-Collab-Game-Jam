@@ -8,6 +8,8 @@ public class PlayerStateManager : MonoBehaviour
     public AttackState CurrentAttackState = AttackState.Idle;
     public InputSystem_Actions InputActions {get; private set;}
 
+    public bool IsFacingLeft { get; private set;}
+
     private void Awake() {
         InputActions = new();
     }
@@ -17,5 +19,9 @@ public class PlayerStateManager : MonoBehaviour
 
     private void OnDisable() {
         InputActions.Disable();
+    }
+
+    public void UpdateFaceDirection(bool dir) {
+        IsFacingLeft = dir;
     }
 }

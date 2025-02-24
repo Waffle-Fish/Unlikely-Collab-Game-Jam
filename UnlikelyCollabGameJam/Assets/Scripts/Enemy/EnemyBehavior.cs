@@ -58,6 +58,10 @@ public class EnemyBehavior : MonoBehaviour
 
     }
 
+    private void Start() {
+        enemyHealth = maxEnemyHealth;
+    }
+
     void Update()
     {
         SetForwardDirection();
@@ -229,6 +233,7 @@ public class EnemyBehavior : MonoBehaviour
     public void TakeDamage(float amount)
     {
         enemyHealth -= amount;
+        Debug.Log($"{gameObject.name} has taken {amount} damage\n Current Health: {enemyHealth}");
         if(enemyHealth <= 0)
         {
             enemyState = EnemyStates.Dead;

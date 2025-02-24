@@ -78,6 +78,7 @@ public class PlayerMovement : MonoBehaviour
         // Velocity Movement
         rb2D.linearVelocityX = dir.x * moveForce;
         spriteRenderer.flipX = dir.x < 0f;
+        psm.UpdateFaceDirection(dir.x < 0f);
     }
 
     private void DetectState() {

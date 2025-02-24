@@ -17,9 +17,12 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField][Min(0.0000001f)] float comboTime;
     [Tooltip("Short cooldown between attacks. Prevents spam")]
     [SerializeField][Range(0.0000001f, 1f)] float attackCooldown;
-    [SerializeField] Collider2D weaponCollider;
+    [SerializeField] Collider2D leftWeaponCollider;
+    [SerializeField] Collider2D rightWeaponCollider;
+    [SerializeField] float combo1damageVal;
+    [SerializeField] float combo2damageVal;
+    [SerializeField] float combo3damageVal;
     int comboCount = 0;
-    float weaponTimer = 0f;
 
 
     [Header("Special Attack")]
@@ -28,18 +31,23 @@ public class PlayerAttack : MonoBehaviour
     [Tooltip("Damage dealt per second")]
     [SerializeField] float screamDamage;
 
+    ContactFilter2D enemyFilter;
+
     private void Awake() {
         psm = GetComponent<PlayerStateManager>();
         animator = GetComponent<Animator>();
     }
 
     private void Start() {
-        weaponCollider.gameObject.SetActive(false);
+        leftWeaponCollider.gameObject.SetActive(false);
+        rightWeaponCollider.gameObject.SetActive(false);
         screamCollider.gameObject.SetActive(false);
 
         inputActions = psm.InputActions;
         inputActions.Player.Attack.performed += ProcessAttack;
         inputActions.Player.Special.performed += ProcessSpecialAttack;
+
+        enemyFilter.SetLayerMask(LayerMask.GetMask("Enemy"));
     }
 
     private void Update()
@@ -54,6 +62,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void ProcessAttack(InputAction.CallbackContext context)
     {
+        if (psm.CurrentAttackState == PlayerStateManager.AttackState.Screaming) return;
         switch (comboCount) {
             case 0:
                 animator.SetTrigger("Attack1");
@@ -69,20 +78,25 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    public void AttackEnemy() {
+    public void AttackEnemy(float damageVal) {
         psm.CurrentAttackState = PlayerStateManager.AttackState.Attacking;
         List<Collider2D> OverlapResults = new();
         EnableWeapon();
-        weaponCollider.Overlap(OverlapResults);
-        foreach (var enemy in OverlapResults)
-        {
-            if (enemy.CompareTag("Enemy")) OverlapResults.Remove(enemy);
-        }
-
+        if (psm.IsFacingLeft) leftWeaponCollider.Overlap(enemyFilter, OverlapResults);
+        else rightWeaponCollider.Overlap(enemyFilter, OverlapResults);
+        
         foreach (var enemy in OverlapResults)
         {
             Debug.Log(enemy.name);
+            EnemyBehavior eb = enemy.GetComponent<EnemyBehavior>();
+            if (comboCount == 1) eb.TakeDamage(combo1damageVal);
+            if (comboCount == 2) eb.TakeDamage(combo2damageVal);
+            if (comboCount == 3) {
+                eb.TakeDamage(combo3damageVal);
+            }
         }
+        Debug.Log("ComboCount: " + comboCount);
+        DisableWeapon();
     }
 
     public void IncrementComboCount() {
@@ -101,11 +115,13 @@ public class PlayerAttack : MonoBehaviour
     }
 
     public void EnableWeapon() {
-        weaponCollider.gameObject.SetActive(true);
+        if (psm.IsFacingLeft) leftWeaponCollider.gameObject.SetActive(true);
+        else rightWeaponCollider.gameObject.SetActive(true);
     }
 
     public void DisableWeapon() {
-        weaponCollider.gameObject.SetActive(false);
+        if (psm.IsFacingLeft) leftWeaponCollider.gameObject.SetActive(false);
+        else rightWeaponCollider.gameObject.SetActive(false);
     }
 
     private void ProcessSpecialAttack(InputAction.CallbackContext context)
@@ -114,9 +130,8 @@ public class PlayerAttack : MonoBehaviour
             List<Collider2D> EnemiesInRange = new();
             float finalTime = Time.time + screamDuration;
             while (Time.time < finalTime) {
-                ContactFilter2D screamFilter = new();
-                screamFilter.SetLayerMask(LayerMask.GetMask("Enemy"));
-                screamCollider.Overlap(screamFilter, EnemiesInRange);
+                
+                screamCollider.Overlap(enemyFilter, EnemiesInRange);
                 foreach (var enemy in EnemiesInRange)
                 {
                     Debug.Log("Screamed at: " + enemy.name);
