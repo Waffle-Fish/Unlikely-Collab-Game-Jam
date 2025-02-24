@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8210bbcdceb7c344699042c1bc5142ae
+guid: 7bd08ab77d6afcb48af5cf8c2efa1ea6
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: 4
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -119,9 +119,9 @@ TextureImporter:
         x: 22
         y: 15
         width: 40
-        height: 34
+        height: 37
       alignment: 9
-      pivot: {x: 0.2, y: 0.5147059}
+      pivot: {x: 0.25, y: 0.47297296}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 2cff20c446231fa458883a607166037d
+    spriteID: 80a4367dc8b8d3f499b017afcacb68b6
     internalID: 0
     vertices: []
     indices: 
