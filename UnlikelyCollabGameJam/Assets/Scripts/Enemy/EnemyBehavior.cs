@@ -6,55 +6,59 @@ using Random = UnityEngine.Random;
 
 public class EnemyBehavior : MonoBehaviour
 {
-    Rigidbody2D rb;
-    PatrolManager pm;
+    protected Rigidbody2D rb;
+    protected PatrolManager pm;
 
     [Header("Vision Settings")]
-    public float rayLength = 10f;
-    public float spreadAngle = 45f;
-    public int numberOfRays = 10;
+    [SerializeField]
+    protected float rayLength = 10f;
+    [SerializeField]
+    protected float spreadAngle = 45f;
+    [SerializeField]
+    protected int numberOfRays = 10;
 
     [Header("Detection Settings")]
-    public LayerMask detectionLayer;
+    protected LayerMask detectionLayer;
 
     [Header("Patrol & Movement Settings")]
-    private Vector2 target;
-    private enum EnemyStates { Patrol, Pursue, Attack, Retreat, Dead, ImStuck }
-    private EnemyStates enemyState;
+    protected Vector2 target;
+    protected enum EnemyStates { Patrol, Pursue, Attack, Retreat, Dead, ImStuck }
+    protected EnemyStates enemyState;
 
     [SerializeField]
-    private float enemySpeed = 4.5f;
+    protected float enemySpeed = 4.5f;
     
     [Header("Jump Settings")]
-    public float enemyJumpForce = 55f;
-    private float dynamicJumpForce;
-    private float enemyJumpThreshold = 1f;
+    protected float enemyJumpForce = 55f;
+    protected float dynamicJumpForce;
+    protected float enemyJumpThreshold = 1f;
 
-    private Vector2 forwardDir;
-
-    [SerializeField]
-    private float maxEnemyHealth = 100f;
-    private float enemyHealth = 100f;
-
-    private GameObject player;
+    protected Vector2 forwardDir;
 
     [SerializeField]
-    private float enemyAttackDamage = 5f;
+    protected float maxEnemyHealth = 100f;
+    protected float enemyHealth = 100f;
+
+    protected GameObject player;
 
     [SerializeField]
-    private int enemyAttackCoolDown = 10;
-    private int enemyAttackTimer = 0;
+    protected float enemyAttackDamage = 5f;
 
-    private int randomStuckDirection;
-    private float initialStuckY;
+    [SerializeField]
+    protected int enemyAttackCoolDown = 10;
+    protected int enemyAttackTimer = 0;
 
-    void Awake()
+    protected int randomStuckDirection;
+    protected float initialStuckY;
+
+    protected virtual void Awake()
     {
-        pm = GameObject.Find("PatrolManager").GetComponent<PatrolManager>();
+        pm = GetComponentInChildren<PatrolManager>();
         target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
         forwardDir = transform.right;
         rb = GetComponent<Rigidbody2D>();
         enemyState = EnemyStates.Patrol;
+        detectionLayer = LayerMask.GetMask("Player");
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), 0, true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), LayerMask.NameToLayer("Player"), true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), true);
@@ -98,7 +102,7 @@ public class EnemyBehavior : MonoBehaviour
         }
 
         // DRAW DEBUG PATH
-        // pm.DrawDebugPath((Vector2)transform.position);
+        pm.DrawDebugPath((Vector2)transform.position);
     }
 
     private void GetUnStuck()
@@ -145,7 +149,7 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
 
-    private void Attack()
+    protected virtual void Attack()
     {
         // Attack
         if (enemyAttackTimer <= 0)
@@ -159,7 +163,7 @@ public class EnemyBehavior : MonoBehaviour
         enemyState = EnemyStates.Pursue;
     }
 
-    private void Pursue()
+    protected virtual void Pursue()
     {
         // Pursue
         NavigateToTarget();
@@ -187,28 +191,28 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
 
-    private bool isFarFromPlayer()
+    protected bool isFarFromPlayer()
     {
         return (player.transform.position - transform.position).magnitude > 20f;
     }
 
-    private bool isNearPlayer()
+    protected bool isNearPlayer()
     {
         return (player.transform.position - transform.position).magnitude < 1f;
     }
 
-    private bool isStuck()
+    protected bool isStuck()
     {
         return target.y < transform.position.y && (int)Math.Abs(rb.linearVelocity.magnitude) == 0;
     }
 
-    private bool isAtTarget()
+    protected bool isAtTarget()
     {
         return transform.position.x < target.x + 1f && transform.position.x > target.x - 1f &&
                        transform.position.y < target.y + 1f && transform.position.y > target.y - 1f;
     }
 
-    private void NavigateToTarget()
+    protected void NavigateToTarget()
     {
         if (ShouldJump())
         {
@@ -255,7 +259,7 @@ public class EnemyBehavior : MonoBehaviour
         return rb.linearVelocityY == 0 && target.y > transform.position.y + enemyJumpThreshold && Mathf.Abs(target.x - transform.position.x) < 2.2f;
     }
 
-    private void SetForwardDirection()
+    protected void SetForwardDirection()
     {
         if (Math.Abs(rb.linearVelocity.x) > 0.1)
         {
@@ -280,6 +284,7 @@ public class EnemyBehavior : MonoBehaviour
 
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
+                Debug.Log("Player detected");
                 player = hit.collider.gameObject;
                 return true;
             }

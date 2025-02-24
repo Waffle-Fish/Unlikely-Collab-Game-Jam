@@ -44,7 +44,7 @@ public class PatrolManager : MonoBehaviour
                     {
                         patrolPoints.Add(point);
                         // Just for visualization purposes
-                        // Instantiate(ppObject, point, Quaternion.identity);
+                        Instantiate(ppObject, point, Quaternion.identity);
                     }
                 }
             }

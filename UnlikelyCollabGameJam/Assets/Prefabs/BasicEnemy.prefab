@@ -50,6 +50,10 @@ MonoBehaviour:
     m_Bits: 1
   neighborThreshold: 20
   ppObject: {fileID: 6223566268012064778, guid: 2725ada61ae41f840b4cc61a2d1ece89, type: 3}
+  xStart: -10
+  yStart: 10
+  width: 60
+  height: 12
 --- !u!120 &3231216874687307845
 LineRenderer:
   serializedVersion: 2
@@ -171,7 +175,7 @@ GameObject:
   - component: {fileID: 3558233929816710650}
   - component: {fileID: 7741331507674829678}
   m_Layer: 6
-  m_Name: Enemy
+  m_Name: BasicEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -336,11 +340,7 @@ MonoBehaviour:
   rayLength: 10
   spreadAngle: 45
   numberOfRays: 10
-  detectionLayer:
-    serializedVersion: 2
-    m_Bits: 128
   enemySpeed: 5
-  enemyJumpForce: 35
   maxEnemyHealth: 100
   enemyAttackDamage: 5
   enemyAttackCoolDown: 100
