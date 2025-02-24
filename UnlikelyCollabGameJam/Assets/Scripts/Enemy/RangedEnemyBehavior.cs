@@ -15,23 +15,18 @@ public class RangedEnemyBehavior : EnemyBehavior
     protected override void Awake()
     {
         base.Awake();
-        // things to adjust?
         rayLength = 14;
         enemyAttackCoolDown = 2f;
     }
 
     protected override void Pursue()
     {
-        // instead of go directly at player, find spot with line of site
-        // attack when in line of site / then go back to pursue
-        // difficult to keep ranged enemy at range?
-
         // Pursue
         NavigateToTarget();
 
         target = (Vector2)player.transform.position;
 
-        if (isPlayerInFOV() && rb.linearVelocityY == 0)
+        if (isPlayerInFOV())
         {
             enemyState = EnemyStates.Attack;
         }
@@ -55,11 +50,12 @@ public class RangedEnemyBehavior : EnemyBehavior
     // FIXME: Might revert back to this
     protected override void Attack()
     {
-        // add a wait timer for windup
+        // cooldown timer
         if (enemyAttackTimer <= 0)
         {
             // stop moving
             rb.linearVelocityX = 0f;
+            // can add another timer here for a "windup"
             // ANIMATION - Ranged Attack goes here
             // shoot projectile at player
             GameObject projInstance = Instantiate(projectile, transform.position, Quaternion.identity);
@@ -74,42 +70,12 @@ public class RangedEnemyBehavior : EnemyBehavior
             enemyAttackTimer = enemyAttackCoolDown;
         }
 
-        //TODO: add lifetime to projectiles, add a timer to projectiles where in the first ~.5 seconds
-        // it will not collide and be destroyed. 
-        // 
-        // remove gravity and have projectiles shoot directly at player OR
-        // make adjustments to current direction of projectiles to account for scenarios like on the same level
-        //
-        // small randomizations in projectile speed / direction 
-
-
         // return to pursue if far enough from player
         if(Vector2.Distance(player.transform.position, transform.position) > 10f)
         {
             enemyState = EnemyStates.Pursue;
         }
     }
-
-//    // TODO: if this implementation works better -> will have to switch detection layer before and after to "default" and back to "player"
-//     private bool isPlayerInDirectLineOfSight()
-// {
-//     // Adjust the origin if needed (e.g., to represent the enemy's "eyes")
-//     Vector2 origin = transform.position + new Vector3(0f, 0.5f, 0f);
-    
-//     // Determine the direction and distance from the enemy to the player
-//     Vector2 direction = (player.transform.position - (Vector3)origin).normalized;
-//     float distanceToPlayer = Vector2.Distance(origin, player.transform.position);
-
-//     // Cast a ray toward the player using a layer mask (detectionLayer) that should include obstacles and the player
-//     RaycastHit2D hit = Physics2D.Raycast(origin, direction, distanceToPlayer, detectionLayer);
-
-//     // Return true only if the first collider hit is the player
-//     if (hit.collider == null)
-//     {
-//         return true;
-//     }
-//     return false;
-// }
 
     private bool isPlayerInFOV() // could refactor CastRays instead to limit amount of code
     {
