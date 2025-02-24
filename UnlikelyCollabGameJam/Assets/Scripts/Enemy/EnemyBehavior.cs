@@ -216,7 +216,7 @@ public class EnemyBehavior : MonoBehaviour
     protected bool isAtTarget()
     {
         return transform.position.x < target.x + 1f && transform.position.x > target.x - 1f &&
-                       transform.position.y < target.y + 1f && transform.position.y > target.y - 1f;
+                transform.position.y < target.y + 1f && transform.position.y > target.y - 1f;
     }
 
     protected virtual void NavigateToTarget()
@@ -244,16 +244,30 @@ public class EnemyBehavior : MonoBehaviour
             // ANIMATION - Top of jump reached... falling animation?
             gameObject.layer = LayerMask.NameToLayer("Enemy");
         }
+        
+        // FIXME? hacky fix for enemy falling through floor occasionally
+        if (transform.position.y < -100f)
+        {
+            Debug.Log("I've fallen, AND I CANT GET UP");
+            gameObject.layer = LayerMask.NameToLayer("Enemy");
+            transform.position = new Vector2(transform.position.x, 100f);
+            enemyState = EnemyStates.Patrol;
+            rb.linearVelocityY = 0f;
+        }
     }
 
     private bool isAtApexOfJump()
     {
+        // possible fix for enemy falling through floor would be keeping track of last y value and current,
+        // checking to see when the last y value is higher than current (this first instance would be apex)
         return gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.15f;
     }
 
     private void Jump()
     {
         dynamicJumpForce = (target.y - transform.position.y) * 5f + 15f;
+        dynamicJumpForce = Math.Clamp(dynamicJumpForce, 25f, 55f);
+        // Debug.Log("Jump Force: "+dynamicJumpForce);
 
         rb.AddForceY(dynamicJumpForce, ForceMode2D.Impulse);
 
@@ -287,7 +301,7 @@ public class EnemyBehavior : MonoBehaviour
             Vector2 rayDirection = Quaternion.Euler(0, 0, angle) * forwardDir;
 
             RaycastHit2D hit = Physics2D.Raycast(origin, rayDirection, rayLength, detectionLayer);
-            // Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
+            Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
 
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
