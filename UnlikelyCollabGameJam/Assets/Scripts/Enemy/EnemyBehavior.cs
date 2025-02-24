@@ -39,9 +39,10 @@ public class EnemyBehavior : MonoBehaviour
 
     [SerializeField]
     private float enemyAttackDamage = 5f;
-
+    
     [SerializeField]
     private int enemyAttackCoolDown = 10;
+    
     private int enemyAttackTimer = 0;
 
     void Awake()
