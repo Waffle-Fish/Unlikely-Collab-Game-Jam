@@ -3,6 +3,9 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     Rigidbody2D rb;
+
+    [SerializeField]
+    private float projectileDamgage = 5f;
     void Awake()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -16,5 +19,13 @@ public class Projectile : MonoBehaviour
     {
         rb.linearVelocityX = vx;
         rb.linearVelocityY = vy;
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player")) {
+            collision.GetComponent<PlayerHealth>().TakeDamage(projectileDamgage);
+        } 
+        gameObject.SetActive(false);
     }
 }

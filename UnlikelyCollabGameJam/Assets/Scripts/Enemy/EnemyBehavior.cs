@@ -44,9 +44,10 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField]
     protected float enemyAttackDamage = 5f;
 
+    [Tooltip("Number of seconds between attacks")]
     [SerializeField]
-    protected int enemyAttackCoolDown = 10;
-    protected int enemyAttackTimer = 0;
+    protected float enemyAttackCoolDown = 10f;
+    protected float enemyAttackTimer = 0f;
 
     protected int randomStuckDirection;
     protected float initialStuckY;
@@ -73,6 +74,7 @@ public class EnemyBehavior : MonoBehaviour
     void Update()
     {
         SetForwardDirection();
+        enemyAttackTimer -= Time.deltaTime;
 
         if (enemyState == EnemyStates.Patrol)
         {
@@ -102,7 +104,7 @@ public class EnemyBehavior : MonoBehaviour
         }
 
         // DRAW DEBUG PATH
-        pm.DrawDebugPath((Vector2)transform.position);
+        // pm.DrawDebugPath((Vector2)transform.position);
     }
 
     private void GetUnStuck()
@@ -158,8 +160,6 @@ public class EnemyBehavior : MonoBehaviour
             player.GetComponent<PlayerHealth>().TakeDamage(enemyAttackDamage);
             enemyAttackTimer = enemyAttackCoolDown;
         }
-        // SCUFFED timer -> need better implementation
-        enemyAttackTimer--;
         enemyState = EnemyStates.Pursue;
     }
 
@@ -241,7 +241,7 @@ public class EnemyBehavior : MonoBehaviour
 
     private bool isAtApexOfJump()
     {
-        return gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.1f;
+        return gameObject.layer == LayerMask.NameToLayer("Ignore Collision") && rb.linearVelocityY < 0.15f;
     }
 
     private void Jump()
@@ -280,11 +280,10 @@ public class EnemyBehavior : MonoBehaviour
             Vector2 rayDirection = Quaternion.Euler(0, 0, angle) * forwardDir;
 
             RaycastHit2D hit = Physics2D.Raycast(origin, rayDirection, rayLength, detectionLayer);
-            Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
+            // Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
 
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
-                Debug.Log("Player detected");
                 player = hit.collider.gameObject;
                 return true;
             }
