@@ -56,7 +56,6 @@ public class EnemyBehavior : MonoBehaviour
     protected virtual void Awake()
     {
         pm = GetComponentInChildren<PatrolManager>();
-        target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
         forwardDir = transform.right;
         rb = GetComponent<Rigidbody2D>();
         enemyState = EnemyStates.Patrol;
@@ -70,6 +69,7 @@ public class EnemyBehavior : MonoBehaviour
 
     void Start()
     {
+        target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
         enemyHealth = maxEnemyHealth;
     }
 
@@ -111,7 +111,7 @@ public class EnemyBehavior : MonoBehaviour
         }
 
         // DRAW DEBUG PATH
-        // pm.DrawDebugPath((Vector2)transform.position);
+        pm.DrawDebugPath((Vector2)transform.position);
     }
 
     private void GetUnStuck()
@@ -130,7 +130,7 @@ public class EnemyBehavior : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void Patrol()
+    protected virtual void Patrol()
     {
         //Patrol
         NavigateToTarget();
@@ -219,7 +219,7 @@ public class EnemyBehavior : MonoBehaviour
                        transform.position.y < target.y + 1f && transform.position.y > target.y - 1f;
     }
 
-    protected void NavigateToTarget()
+    protected virtual void NavigateToTarget()
     {
         if (ShouldJump())
         {
@@ -274,7 +274,7 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
 
-    bool CastRays()
+    protected bool CastRays()
     {
         Vector2 origin = transform.position + new Vector3(0f, .5f, 0f);
         float halfAngle = spreadAngle / 2f;

@@ -5,14 +5,14 @@ using System.Linq;
 
 public class PatrolManager : MonoBehaviour
 {
-    private List<Vector2> patrolPoints = new List<Vector2>();
-    private List<Vector2> path = new List<Vector2>();
+    protected List<Vector2> patrolPoints = new List<Vector2>();
+    protected List<Vector2> path = new List<Vector2>();
 
     public LayerMask detectionLayer;
     public float neighborThreshold = 3.5f;
 
     [SerializeField]
-    private GameObject ppObject;
+    protected GameObject ppObject;
 
     [Header("Initialize Patrol Points")]
     [SerializeField] int xStart = -10;
@@ -22,14 +22,14 @@ public class PatrolManager : MonoBehaviour
 
     private LineRenderer lr;
 
-    public void Awake()
+    protected virtual void Awake()
     {
+        InitializePatrolPoints(xStart, yStart, width, height);
         detectionLayer = LayerMask.GetMask("Default");
         lr = GetComponent<LineRenderer>();
-        InitializePatrolPoints(xStart, yStart, width, height);
     }
 
-    private void InitializePatrolPoints(int xStart, int yStart, int width, int height)
+    protected virtual void InitializePatrolPoints(int xStart, int yStart, int width, int height)
     {
         for (int i = xStart; i < width + xStart; i += 1)
         {
@@ -51,7 +51,7 @@ public class PatrolManager : MonoBehaviour
         }
     }
 
-    private Vector2 FindRandomClosePatrolPoint(Vector2 enemyLocation, float threshold = 5f)
+    protected Vector2 FindRandomClosePatrolPoint(Vector2 enemyLocation, float threshold = 5f)
     {
         List<Vector2> closePoints = patrolPoints.Where(p => Vector2.Distance(enemyLocation, p) <= threshold).ToList();
         if (closePoints.Count > 0)
@@ -80,7 +80,7 @@ public class PatrolManager : MonoBehaviour
         return closest;
     }
 
-    public void SetNextPatrolPath(Vector2 enemyLocation)
+    protected virtual void SetNextPatrolPath(Vector2 enemyLocation)
     {
         path = new List<Vector2>();
 
@@ -156,7 +156,7 @@ public class PatrolManager : MonoBehaviour
     }
 
     // Returns neighbors within a set threshold.
-    private List<Vector2> GetNeighbors(Vector2 point)
+    protected List<Vector2> GetNeighbors(Vector2 point)
     {
         List<Vector2> neighbors = new List<Vector2>();
         foreach (var other in patrolPoints)
