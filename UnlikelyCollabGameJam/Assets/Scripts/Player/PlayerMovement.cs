@@ -72,6 +72,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
         animator.SetBool("Run", dir.x != 0f);
         if (dir.x == 0f) return;
+        animator.ResetTrigger("Attack");
         // Force Movement
         // rb2D.AddForce(new Vector2(dir.x * moveForce, 0f));
 

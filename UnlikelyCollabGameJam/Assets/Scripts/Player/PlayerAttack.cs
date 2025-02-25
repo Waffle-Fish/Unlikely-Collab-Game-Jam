@@ -22,7 +22,9 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] float combo1damageVal;
     [SerializeField] float combo2damageVal;
     [SerializeField] float combo3damageVal;
-    int comboCount = 0;
+    [Tooltip("Number of frames between attacks that will count as a combo")]
+    [SerializeField] int comboWindow = 0;
+    float comboTimeLimit;
 
 
     [Header("Special Attack")]
@@ -52,68 +54,37 @@ public class PlayerAttack : MonoBehaviour
 
     private void Update()
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) {psm.CurrentAttackState = PlayerStateManager.AttackState.Idle;}
-        // if (psm.CurrentAttackState == PlayerStateManager.AttackState.Idle) {
-        //     animator.ResetTrigger("Attack2");
-        //     animator.ResetTrigger("Attack3");
-        //     ResetComboCount(0);
-        // }
+
     }
 
     private void ProcessAttack(InputAction.CallbackContext context)
     {
         if (psm.CurrentAttackState == PlayerStateManager.AttackState.Screaming) return;
-        switch (comboCount) {
-            case 0:
-                animator.SetTrigger("Attack1");
-            break;
-            case 1:
-                animator.SetTrigger("Attack2");
-            break;
-            case 2:
-                animator.SetTrigger("Attack3");
-            break;
-            default:
-            break;
+        if (psm.CurrentMoveState != PlayerStateManager.MoveState.Grounded) {
+            animator.ResetTrigger("Attack");
+            return;
         }
+        animator.SetTrigger("Attack");
     }
 
-    public void AttackEnemy(float damageVal) {
+    public void AttackEnemy(int comboNum) {
         psm.CurrentAttackState = PlayerStateManager.AttackState.Attacking;
         List<Collider2D> OverlapResults = new();
         EnableWeapon();
         if (psm.IsFacingLeft) leftWeaponCollider.Overlap(enemyFilter, OverlapResults);
         else rightWeaponCollider.Overlap(enemyFilter, OverlapResults);
-        
         foreach (var enemy in OverlapResults)
         {
             Debug.Log(enemy.name);
             EnemyBehavior eb = enemy.GetComponent<EnemyBehavior>();
-            if (comboCount == 1) eb.TakeDamage(combo1damageVal);
-            if (comboCount == 2) eb.TakeDamage(combo2damageVal);
-            if (comboCount == 3) {
-                eb.TakeDamage(combo3damageVal);
-            }
+            if (comboNum == 1) eb.TakeDamage(combo1damageVal);
+            if (comboNum == 2) eb.TakeDamage(combo2damageVal);
+            if (comboNum == 3) eb.TakeDamage(combo3damageVal);
         }
-        Debug.Log("ComboCount: " + comboCount);
         DisableWeapon();
-    }
 
-    public void IncrementComboCount() {
-        StopCoroutine(nameof(DelayComboCount));
-        comboCount++;
+        // comboTimeLimit = Time.time + comboWindow * Time.deltaTime;
     }
-
-    public void ResetComboCount(float frameDelay){
-        StartCoroutine(DelayComboCount(frameDelay));
-    }
-
-    private IEnumerator DelayComboCount(float numFrames)
-    {
-        yield return new WaitForSeconds(numFrames * Time.deltaTime);
-        comboCount = 0;
-    }
-
     public void EnableWeapon() {
         if (psm.IsFacingLeft) leftWeaponCollider.gameObject.SetActive(true);
         else rightWeaponCollider.gameObject.SetActive(true);
@@ -122,6 +93,10 @@ public class PlayerAttack : MonoBehaviour
     public void DisableWeapon() {
         if (psm.IsFacingLeft) leftWeaponCollider.gameObject.SetActive(false);
         else rightWeaponCollider.gameObject.SetActive(false);
+    }
+
+    public void SetAttackStateToIdle() {
+        psm.CurrentAttackState = PlayerStateManager.AttackState.Idle;
     }
 
     private void ProcessSpecialAttack(InputAction.CallbackContext context)
