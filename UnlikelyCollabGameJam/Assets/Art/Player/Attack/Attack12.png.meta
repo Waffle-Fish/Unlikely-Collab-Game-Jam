@@ -1,16 +1,7 @@
 fileFormatVersion: 2
-guid: bee6f38b49f22a849b2103cfb2bab355
+guid: a6facc11d0f964b4fbf30bda382308da
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 7288640264799240224
-    second: Attack12_0
-  - first:
-      213: -1583020105904773582
-    second: Attack12_1
-  - first:
-      213: 541296402962030461
-    second: Attack12_2
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -52,9 +43,9 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
-  spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMode: 1
+  spriteExtrude: 0
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 64
@@ -119,67 +110,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Attack12_0
+      name: ShadowManAttack1_0
       rect:
         serializedVersion: 2
-        x: 22
-        y: 13
-        width: 42
-        height: 40
-      alignment: 9
-      pivot: {x: 0.21428572, y: 0.4875}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 020c7f634b3762560800000000000000
-      internalID: 7288640264799240224
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Attack12_1
-      rect:
-        serializedVersion: 2
-        x: 37
-        y: 48
-        width: 9
-        height: 7
+        x: 19
+        y: 15
+        width: 22
+        height: 31
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 236ae33d99bf70ae0800000000000000
-      internalID: -1583020105904773582
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Attack12_2
-      rect:
-        serializedVersion: 2
-        x: 57
-        y: 29
-        width: 6
-        height: 9
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: d7f9fb8e532138700800000000000000
-      internalID: 541296402962030461
+      spriteID: f72c4f5506c646c40800000000000000
+      internalID: 5504643805568352895
       vertices: []
       indices: 
       edges: []
@@ -188,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 4bc653c9e7d104f448ba97edb5f15b8d
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -198,9 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Attack12_0: 7288640264799240224
-      Attack12_1: -1583020105904773582
-      Attack12_2: 541296402962030461
+      ShadowManAttack1_0: 5504643805568352895
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

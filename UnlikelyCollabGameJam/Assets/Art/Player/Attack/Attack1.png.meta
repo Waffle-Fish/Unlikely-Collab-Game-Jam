@@ -1,10 +1,7 @@
 fileFormatVersion: 2
-guid: 26645a60682711941875f5feb6fba53f
+guid: 36eeb0933f5e0b542b527345ef000490
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 6934013284892070054
-    second: Attack1_0
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,9 +43,9 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
-  spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMode: 1
+  spriteExtrude: 0
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 64
@@ -75,7 +72,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: 4
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,23 +110,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Attack1_0
+      name: ShadowManAttack1_0
       rect:
         serializedVersion: 2
-        x: 21
+        x: 19
         y: 15
-        width: 20
-        height: 38
-      alignment: 9
-      pivot: {x: 0.5, y: 0.46052632}
+        width: 22
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6a0d4d938509a3060800000000000000
-      internalID: 6934013284892070054
+      spriteID: f72c4f5506c646c40800000000000000
+      internalID: 5504643805568352895
       vertices: []
       indices: 
       edges: []
@@ -138,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: be1ed0b6127b19f4fa4ffc61428f0716
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Attack1_0: 6934013284892070054
+      ShadowManAttack1_0: 5504643805568352895
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

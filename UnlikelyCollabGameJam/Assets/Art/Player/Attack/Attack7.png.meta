@@ -1,10 +1,7 @@
 fileFormatVersion: 2
-guid: 11faf34ca6e877f4ebe694304d6327ec
+guid: 912d1001a05e0ec48890b6cd9f8e5aca
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -3966222051133264906
-    second: Attack7_0
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,9 +43,9 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
-  spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMode: 1
+  spriteExtrude: 0
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 64
@@ -113,23 +110,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Attack7_0
+      name: ShadowManAttack1_0
       rect:
         serializedVersion: 2
-        x: 16
+        x: 19
         y: 15
-        width: 24
-        height: 37
-      alignment: 9
-      pivot: {x: 0.6666667, y: 0.47297296}
+        width: 22
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6fb61e5fe0625f8c0800000000000000
-      internalID: -3966222051133264906
+      spriteID: f72c4f5506c646c40800000000000000
+      internalID: 5504643805568352895
       vertices: []
       indices: 
       edges: []
@@ -138,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 3e4d53f5351578a4a8920bc1fa99e0d3
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Attack7_0: -3966222051133264906
+      ShadowManAttack1_0: 5504643805568352895
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

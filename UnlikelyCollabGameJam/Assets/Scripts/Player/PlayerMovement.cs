@@ -10,8 +10,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Horizontal Movement")]
     [SerializeField] float moveForce = 0f;
-    [Tooltip("How much to reduce the final velocity of the player after releasing move buttons")]
-    [SerializeField][Range(0f,1f)] float finalXVelocityReduction = 0f;
+    // [Tooltip("How much to reduce the final velocity of the player after releasing move buttons")]
+    // [SerializeField][Range(0f,1f)] float finalXVelocityReduction = 0f;
 
     [Header("Dash")]
     [Tooltip("How far player goes in a single dash")]
@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
         DetectState();
         ProcessFastFalling();
         UpdateAnimation();
-        if(!inputActions.Player.Move.WasPerformedThisFrame() && psm.CurrentMoveState == PlayerStateManager.MoveState.Grounded) rb2D.linearVelocityX *= finalXVelocityReduction;
+        // if(!inputActions.Player.Move.WasPerformedThisFrame() && psm.CurrentMoveState == PlayerStateManager.MoveState.Grounded) rb2D.linearVelocityX = 0;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -71,7 +71,10 @@ public class PlayerMovement : MonoBehaviour
         if (psm.CurrentMoveState == PlayerStateManager.MoveState.Dashing || psm.CurrentAttackState == PlayerStateManager.AttackState.Attacking) return;
         Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
         animator.SetBool("Run", dir.x != 0f);
-        if (dir.x == 0f) return;
+        if (dir.x == 0f) {
+            rb2D.linearVelocityX = 0;
+            return;
+        }
         animator.ResetTrigger("Attack");
         // Force Movement
         // rb2D.AddForce(new Vector2(dir.x * moveForce, 0f));
@@ -88,7 +91,6 @@ public class PlayerMovement : MonoBehaviour
             psm.CurrentMoveState = PlayerStateManager.MoveState.Grounded;
         }
         if (rb2D.linearVelocityY < -0.1f) {
-            Debug.Log(rb2D.linearVelocityY);
             psm.CurrentMoveState = PlayerStateManager.MoveState.Falling;
         }
     }
