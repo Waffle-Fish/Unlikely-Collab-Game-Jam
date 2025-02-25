@@ -88,6 +88,7 @@ public class PlayerMovement : MonoBehaviour
             psm.CurrentMoveState = PlayerStateManager.MoveState.Grounded;
         }
         if (rb2D.linearVelocityY < -0.1f) {
+            Debug.Log(rb2D.linearVelocityY);
             psm.CurrentMoveState = PlayerStateManager.MoveState.Falling;
         }
     }
