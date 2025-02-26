@@ -182,9 +182,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Special"",
+                    ""name"": ""Scream"",
                     ""type"": ""Button"",
                     ""id"": ""0afac718-9ee5-4017-aee8-da8789634b2b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fireball"",
+                    ""type"": ""Button"",
+                    ""id"": ""f6863fbf-5c30-405e-bd98-050e1d731a1f"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -595,7 +604,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Special"",
+                    ""action"": ""Scream"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ad3c450e-645b-4fab-b4cf-e09bdbf27a68"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fireball"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1193,7 +1213,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_FastFall = m_Player.FindAction("FastFall", throwIfNotFound: true);
-        m_Player_Special = m_Player.FindAction("Special", throwIfNotFound: true);
+        m_Player_Scream = m_Player.FindAction("Scream", throwIfNotFound: true);
+        m_Player_Fireball = m_Player.FindAction("Fireball", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1297,7 +1318,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Next;
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_FastFall;
-    private readonly InputAction m_Player_Special;
+    private readonly InputAction m_Player_Scream;
+    private readonly InputAction m_Player_Fireball;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -1350,9 +1372,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @FastFall => m_Wrapper.m_Player_FastFall;
         /// <summary>
-        /// Provides access to the underlying input action "Player/Special".
+        /// Provides access to the underlying input action "Player/Scream".
         /// </summary>
-        public InputAction @Special => m_Wrapper.m_Player_Special;
+        public InputAction @Scream => m_Wrapper.m_Player_Scream;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Fireball".
+        /// </summary>
+        public InputAction @Fireball => m_Wrapper.m_Player_Fireball;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1409,9 +1435,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @FastFall.started += instance.OnFastFall;
             @FastFall.performed += instance.OnFastFall;
             @FastFall.canceled += instance.OnFastFall;
-            @Special.started += instance.OnSpecial;
-            @Special.performed += instance.OnSpecial;
-            @Special.canceled += instance.OnSpecial;
+            @Scream.started += instance.OnScream;
+            @Scream.performed += instance.OnScream;
+            @Scream.canceled += instance.OnScream;
+            @Fireball.started += instance.OnFireball;
+            @Fireball.performed += instance.OnFireball;
+            @Fireball.canceled += instance.OnFireball;
         }
 
         /// <summary>
@@ -1453,9 +1482,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @FastFall.started -= instance.OnFastFall;
             @FastFall.performed -= instance.OnFastFall;
             @FastFall.canceled -= instance.OnFastFall;
-            @Special.started -= instance.OnSpecial;
-            @Special.performed -= instance.OnSpecial;
-            @Special.canceled -= instance.OnSpecial;
+            @Scream.started -= instance.OnScream;
+            @Scream.performed -= instance.OnScream;
+            @Scream.canceled -= instance.OnScream;
+            @Fireball.started -= instance.OnFireball;
+            @Fireball.performed -= instance.OnFireball;
+            @Fireball.canceled -= instance.OnFireball;
         }
 
         /// <summary>
@@ -1827,12 +1859,19 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFastFall(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Special" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Scream" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSpecial(InputAction.CallbackContext context);
+        void OnScream(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Fireball" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFireball(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.

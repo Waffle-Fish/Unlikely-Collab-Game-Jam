@@ -47,7 +47,8 @@ public class PlayerAttack : MonoBehaviour
 
         inputActions = psm.InputActions;
         inputActions.Player.Attack.performed += ProcessAttack;
-        inputActions.Player.Special.performed += ProcessSpecialAttack;
+        inputActions.Player.Scream.performed += ProcessScreamAttack;
+        // inputActions.Player.Fireball.performed += ProcessFireballAttack;
 
         enemyFilter.SetLayerMask(LayerMask.GetMask("Enemy"));
     }
@@ -99,7 +100,7 @@ public class PlayerAttack : MonoBehaviour
         psm.CurrentAttackState = PlayerStateManager.AttackState.Idle;
     }
 
-    private void ProcessSpecialAttack(InputAction.CallbackContext context)
+    private void ProcessScreamAttack(InputAction.CallbackContext context)
     {
         IEnumerator Scream() {
             List<Collider2D> EnemiesInRange = new();

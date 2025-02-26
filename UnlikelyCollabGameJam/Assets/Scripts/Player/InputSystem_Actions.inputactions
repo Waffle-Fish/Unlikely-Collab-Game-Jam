@@ -96,9 +96,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Special",
+                    "name": "Scream",
                     "type": "Button",
                     "id": "0afac718-9ee5-4017-aee8-da8789634b2b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Fireball",
+                    "type": "Button",
+                    "id": "f6863fbf-5c30-405e-bd98-050e1d731a1f",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -509,7 +518,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Special",
+                    "action": "Scream",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ad3c450e-645b-4fab-b4cf-e09bdbf27a68",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fireball",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
