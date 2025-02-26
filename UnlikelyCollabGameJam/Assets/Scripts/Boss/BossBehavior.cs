@@ -54,6 +54,7 @@ public class BossBehavior : MonoBehaviour
     private float swordWindUpSpeed = 10f;
     [SerializeField]
     private int swordStabCount = 4;
+    private int swordStabCounter;
     [SerializeField]
     private float swordStabReach = 15f;
     [SerializeField]
@@ -65,7 +66,22 @@ public class BossBehavior : MonoBehaviour
     [Header("Fireball Attack Settings")]
     [SerializeField]
     private GameObject fireball;
-
+    [SerializeField]
+    private int numFireballs = 50;
+    [SerializeField]
+    private float fireballDamage = 10f;
+    [SerializeField]
+    private float fireballLifeTime = 8f;
+    [SerializeField]
+    private float fireballSpreadX = 25f;
+    [SerializeField]
+    private float fireballSpawnY = 30f;
+    [SerializeField]
+    private float fireballSpreadY = 5f;
+    [SerializeField]
+    private float fireballSpeedY = 10f;
+    private float fireballX;
+    private float fireballY;
 
     void Awake()
     {
@@ -187,6 +203,7 @@ public class BossBehavior : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
         Debug.Log("Starting sword stab");
+        swordStabCounter = swordStabCount;
 
         
         // Record the sword's starting horizontal position
@@ -194,7 +211,7 @@ public class BossBehavior : MonoBehaviour
         // Determine stab direction based on player's relative position
         swordStabDirection = (player.transform.position - sword.transform.position).normalized.x;
 
-        while (swordStabCount > 0)
+        while (swordStabCounter > 0)
         {
             // Forward stab: move until the sword has traveled the specified reach
             while (Mathf.Abs(sword.transform.position.x - swordInitialX) < swordStabReach)
@@ -224,7 +241,7 @@ public class BossBehavior : MonoBehaviour
             swordRB.linearVelocity = Vector2.zero;
             // yield return new WaitForSeconds(1f);
 
-            swordStabCount--;
+            swordStabCounter--;
         }
         Debug.Log("Finishing Sword Attack");
 
@@ -276,13 +293,7 @@ public class BossBehavior : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         // fireball rain, randomly spawn them above player and have them rain down
-        int numFireballs = 50;
-        float fireballLifeTime = 8f;
-        float fireballSpawnY = 30f;
-        float fireballSpreadX = 25f;
-        float fireballSpreadY = 5f;
-        float fireballDamage = 10f;
-        float fireballSpeedY = 10f;
+        
 
         Debug.Log("Spawning Fireballs Above at Random X");
 
