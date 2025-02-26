@@ -58,7 +58,7 @@ public class WinManager : MonoBehaviour
     {
         // Play Animation
         int curScene = SceneManager.GetActiveScene().buildIndex;
-        if (SceneManager.sceneCountInBuildSettings >= curScene+1) curScene -= 1;
+        if (curScene+1 >= SceneManager.sceneCountInBuildSettings) curScene -= 1;
         sceneControllerInstance.LoadScene(curScene + 1);
     }
 }
