@@ -1568,7 +1568,7 @@ Transform:
   m_GameObject: {fileID: 1361259565}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 19.31, y: 17.38, z: -10}
+  m_LocalPosition: {x: 1.1099998, y: 6.3200006, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2286,11 +2286,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6774109526885548021, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 19.31
+      value: 1.11
       objectReference: {fileID: 0}
     - target: {fileID: 6774109526885548021, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 17.38
+      value: 6.32
       objectReference: {fileID: 0}
     - target: {fileID: 6774109526885548021, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2343,7 +2343,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5835477416272109900, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8378680186482128607, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2520,6 +2520,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 329037493981588486, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 329037493981588486, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5104677307250047159, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: sword
+      value: 
+      objectReference: {fileID: 5694810240356598302}
+    - target: {fileID: 5104677307250047159, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: bossAttackCoolDown
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5104677307250047159, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: bossEnragedAttackCoolDown
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6271956259438682282, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: m_LocalPosition.x
       value: 20.05
@@ -2566,13 +2586,48 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8603642795501074344, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7777123907574968439, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5694810240356598306}
   m_SourcePrefab: {fileID: 100100000, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+--- !u!1 &5694810240356598302 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7777123907574968439, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+  m_PrefabInstance: {fileID: 5694810240356598301}
+  m_PrefabAsset: {fileID: 0}
+--- !u!50 &5694810240356598306
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5694810240356598302}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

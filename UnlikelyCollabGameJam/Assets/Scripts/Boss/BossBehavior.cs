@@ -1,5 +1,10 @@
 // using System.Numerics;
+using System;
+using System.Collections;
+using UnityEditor.Callbacks;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
 
 public class BossBehavior : MonoBehaviour
 {
@@ -7,32 +12,60 @@ public class BossBehavior : MonoBehaviour
     private enum BossStates {Attack, SwordAttack, FireballAttack, ScreamAttack, Enrage, Weak, Dead, Healed};
 
     private BossStates bossState;
+    [Header("Attack CoolDown Settings")]
 
     [SerializeField]
-    private float bossAttackCoolDown = 5f;
+    private float bossAttackCoolDown = 3f;
 
     [SerializeField]
-    private float bossEnragedAttackCoolDown = 3f;
+    private float bossEnragedAttackCoolDown = 2f;
     private float bossAttackTimer = 0f;
 
     private bool enraged = false;
+    [Header("Boss Health Settings")]
 
     [SerializeField]
     private float bossEnrageHealth = 75f;
     [SerializeField]
     private float bossWeakenedHealth = 15f;
 
-    [SerializeField]
-    private float deltaScan = 2f;
-
 
     [SerializeField]
     private float bossMaxHealth = 250f;
     private float bossHealth;
 
+    private bool isAttacking = false;
+
+    [SerializeField]
+    private GameObject projectile;
+    
+    private Rigidbody2D swordRB;
+
+    private GameObject player;
+
+    [Header("Sword Attack Settings")]
+    [SerializeField]
+    private GameObject sword;
+    [SerializeField]
+    private float swordWindUpTime = 3f;
+    [SerializeField]
+    private float swordWindUpSpeed = 10f;
+    [SerializeField]
+    private int swordStabCount = 4;
+    [SerializeField]
+    private float swordStabReach = 15f;
+    [SerializeField]
+    private float swordStabSpeed = 30f;
+    private float swordInitialX;
+    private float swordStabDirection;
+    private float swordWindUpTimer;
+
+
     void Awake()
     {
         bossHealth = bossMaxHealth;
+        swordRB = sword.GetComponent<Rigidbody2D>();
+        player = GameObject.FindWithTag("Player");
         bossState = BossStates.Attack;
     }
     void Start()
@@ -48,15 +81,27 @@ public class BossBehavior : MonoBehaviour
         }
         else if (bossState == BossStates.SwordAttack)
         {
-            SwordAttack();
+            if(!isAttacking)
+            {
+                isAttacking = true;
+                StartCoroutine(SwordAttack());
+            }
         }
         else if (bossState == BossStates.FireballAttack)
         {
-            FireballAttack();
+            if(!isAttacking)
+            {
+                isAttacking = true;    
+                StartCoroutine(FireballAttack());
+            }
         }
         else if (bossState == BossStates.ScreamAttack)
         {
-            ScreamAttack();
+            if(!isAttacking)
+            {
+                isAttacking = true;    
+                StartCoroutine(ScreamAttack());
+            }
         }
         else if (bossState == BossStates.Enrage)
         {
@@ -107,27 +152,95 @@ public class BossBehavior : MonoBehaviour
         // maybe attack a few times before returning to scan
     }
 
-    private void SwordAttack()
+    private IEnumerator SwordAttack()
     {
         Debug.Log("Sword Attack!");
+        sword.SetActive(true);
         // left or right sword stab (repetive thrust)
         // pick side player is on
         // pick correct y level
         // stab stab stab
+        yield return new WaitForSeconds(1f);
+        Debug.Log("Starting Sword Windup");
+
+        swordWindUpTimer = swordWindUpTime;
+
+        while(swordWindUpTimer > 0)
+        {
+            swordWindUpTimer -= Time.deltaTime;
+            Vector2 targetPosition = new Vector2(sword.transform.position.x, player.transform.position.y);
+            // Move the sword towards the target position at a constant speed.
+            sword.transform.position = Vector2.MoveTowards(sword.transform.position, targetPosition, swordWindUpSpeed * Time.deltaTime);
+            yield return null;
+        }
+        swordRB.linearVelocityY = 0f;
+
+        yield return new WaitForSeconds(1f);
+        Debug.Log("Starting sword stab");
+
+        
+        // Record the sword's starting horizontal position
+        swordInitialX = sword.transform.position.x;
+        // Determine stab direction based on player's relative position
+        swordStabDirection = (player.transform.position - sword.transform.position).normalized.x;
+
+        while (swordStabCount > 0)
+        {
+            // Forward stab: move until the sword has traveled the specified reach
+            while (Mathf.Abs(sword.transform.position.x - swordInitialX) < swordStabReach)
+            {
+                swordRB.linearVelocity = new Vector2(swordStabDirection * swordStabSpeed, 0f);
+                yield return null;
+            }
+            swordRB.linearVelocity = Vector2.zero;
+            // yield return new WaitForSeconds(1f);
+
+            // Return stab: move back to near the original position
+            while (Mathf.Abs(sword.transform.position.x - swordInitialX) > 0.1f)
+            {
+                swordRB.linearVelocity = new Vector2(-swordStabDirection * swordStabSpeed, 0f);
+                yield return null;
+            }
+            swordRB.linearVelocity = Vector2.zero;
+            // yield return new WaitForSeconds(1f);
+
+            swordStabCount--;
+        }
+        Debug.Log("Finishing Sword Attack");
+
+        sword.SetActive(false);
+        bossState = BossStates.Attack;
+        isAttacking = false;
+        yield return new WaitForEndOfFrame();
     }
 
-    private void ScreamAttack()
+    private IEnumerator ScreamAttack()
     {
         // difficult - have scream attack to damage to everything in direct line of sight
         Debug.Log("Scream Attack!");
+
+
+        
+        yield return new WaitForSeconds(0.1f);
+        
+
+
+        bossState = BossStates.Attack;
+        isAttacking = false;
     }
 
-    private void FireballAttack()
+    private IEnumerator FireballAttack()
     {
         Debug.Log("Fireball Attack!");
 
         // shoot stream of fireballs directly upward
         // fireballs spawn randomly above and rain down
+        
+        yield return new WaitForSeconds(0.1f);
+
+
+        bossState = BossStates.Attack;
+        isAttacking = false;
     }
 
     private void SummonMobs()
