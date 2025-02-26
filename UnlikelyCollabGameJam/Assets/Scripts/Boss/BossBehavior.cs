@@ -47,6 +47,11 @@ public class BossBehavior : MonoBehaviour
     [SerializeField]
     private GameObject sword;
     [SerializeField]
+    private float swordDamage = 20f;
+    [SerializeField]
+    private float swordDamageCoolDown = 1f;
+    private float swordDamageTimer;
+    [SerializeField]
     private float swordWindUpTime = 3f;
     [SerializeField]
     private float swordWindUpSpeed = 10f;
@@ -164,13 +169,19 @@ public class BossBehavior : MonoBehaviour
         Debug.Log("Starting Sword Windup");
 
         swordWindUpTimer = swordWindUpTime;
+        swordDamageTimer = 0f;
 
         while(swordWindUpTimer > 0)
         {
             swordWindUpTimer -= Time.deltaTime;
+            swordDamageTimer -= Time.deltaTime;
             Vector2 targetPosition = new Vector2(sword.transform.position.x, player.transform.position.y);
             // Move the sword towards the target position at a constant speed.
             sword.transform.position = Vector2.MoveTowards(sword.transform.position, targetPosition, swordWindUpSpeed * Time.deltaTime);
+            if (swordDamageTimer <= 0)
+            {
+                CheckSwordCollision();
+            }
             yield return null;
         }
         swordRB.linearVelocityY = 0f;
@@ -189,7 +200,12 @@ public class BossBehavior : MonoBehaviour
             // Forward stab: move until the sword has traveled the specified reach
             while (Mathf.Abs(sword.transform.position.x - swordInitialX) < swordStabReach)
             {
+                swordDamageTimer -= Time.deltaTime;
                 swordRB.linearVelocity = new Vector2(swordStabDirection * swordStabSpeed, 0f);
+                if (swordDamageTimer <= 0)
+                {
+                    CheckSwordCollision();
+                }
                 yield return null;
             }
             swordRB.linearVelocity = Vector2.zero;
@@ -198,7 +214,12 @@ public class BossBehavior : MonoBehaviour
             // Return stab: move back to near the original position
             while (Mathf.Abs(sword.transform.position.x - swordInitialX) > 0.1f)
             {
+                swordDamageTimer -= Time.deltaTime;
                 swordRB.linearVelocity = new Vector2(-swordStabDirection * swordStabSpeed, 0f);
+                if (swordDamageTimer <= 0)
+                {
+                    CheckSwordCollision();
+                }
                 yield return null;
             }
             swordRB.linearVelocity = Vector2.zero;
@@ -212,6 +233,23 @@ public class BossBehavior : MonoBehaviour
         bossState = BossStates.Attack;
         isAttacking = false;
         yield return new WaitForEndOfFrame();
+    }
+
+    private void CheckSwordCollision()
+    {
+        // Get the sword's collider component (assumes a BoxCollider2D)
+        BoxCollider2D swordCollider = sword.GetComponent<BoxCollider2D>();
+        
+        // Use OverlapBox to see if the sword's collider overlaps any collider on the "Player" layer.
+        // Make sure the player is assigned to a layer named "Player" (or adjust the layer mask accordingly).
+        Collider2D hit = Physics2D.OverlapBox(swordCollider.bounds.center, swordCollider.bounds.size, 0f, LayerMask.GetMask("Player"));
+        
+        if(hit != null)
+        {
+            Debug.Log("Sword hit the player!");
+            player.GetComponent<PlayerHealth>().TakeDamage(swordDamage);
+            swordDamageTimer = swordDamageCoolDown;
+        }
     }
 
     private IEnumerator ScreamAttack()
