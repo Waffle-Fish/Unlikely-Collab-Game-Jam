@@ -2343,7 +2343,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5835477416272109900, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8378680186482128607, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2520,17 +2520,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5104677307250047159, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
-      propertyPath: bossScanCoolDown
-      value: 0.05
-      objectReference: {fileID: 0}
     - target: {fileID: 6271956259438682282, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 20.02
+      value: 20.05
       objectReference: {fileID: 0}
     - target: {fileID: 6271956259438682282, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.09
+      value: -0.81
       objectReference: {fileID: 0}
     - target: {fileID: 6271956259438682282, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2567,6 +2563,10 @@ PrefabInstance:
     - target: {fileID: 8603642795501074344, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: m_Name
       value: Boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 8603642795501074344, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

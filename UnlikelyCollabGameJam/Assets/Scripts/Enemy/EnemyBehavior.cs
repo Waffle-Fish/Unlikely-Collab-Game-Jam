@@ -22,7 +22,7 @@ public class EnemyBehavior : MonoBehaviour
 
     [Header("Patrol & Movement Settings")]
     protected Vector2 target;
-    protected enum EnemyStates { Patrol, Pursue, Attack, Retreat, Dead, ImStuck }
+    protected enum EnemyStates { Patrol, Pursue, Flee, Attack, Retreat, Dead, ImStuck }
     protected EnemyStates enemyState;
 
     [SerializeField]
@@ -52,6 +52,10 @@ public class EnemyBehavior : MonoBehaviour
 
     protected int randomStuckDirection;
     protected float initialStuckY;
+
+    private float fleeTimer = 0;
+    [SerializeField]
+    private float fleeTime = 2f;
 
     protected virtual void Awake()
     {
@@ -90,6 +94,10 @@ public class EnemyBehavior : MonoBehaviour
             //     enemyState = EnemyStates.Patrol;
             // }
             Pursue();
+        }
+        else if (enemyState == EnemyStates.Flee)
+        {
+            Flee();
         }
         else if (enemyState == EnemyStates.ImStuck)
         {
@@ -204,6 +212,18 @@ public class EnemyBehavior : MonoBehaviour
             randomStuckDirection = Random.Range(0, 2) > 0 ? 1 : -1;
             initialStuckY = transform.position.y;
             enemyState = EnemyStates.ImStuck;
+        }
+    }
+
+    protected void Flee()
+    {
+        fleeTimer -= Time.deltaTime;
+
+        rb.linearVelocityX = -(player.transform.position - transform.position).normalized.x * enemySpeed;
+
+        if(fleeTimer <= 0)
+        {
+            enemyState = EnemyStates.Pursue;
         }
     }
 
@@ -324,10 +344,23 @@ public class EnemyBehavior : MonoBehaviour
     public void TakeDamage(float amount)
     {
         enemyHealth -= amount;
+        enemyState = EnemyStates.Attack;
         if(enemyHealth <= 0)
         {
             enemyState = EnemyStates.Dead;
         }
+    }
+
+    public void TakeScreamDamage(float amount)
+    {
+        enemyHealth -= amount;
+        fleeTimer = fleeTime;
+        enemyState = EnemyStates.Flee;
+        if(enemyHealth <= 0)
+        {
+            enemyState = EnemyStates.Dead;
+        }
+
     }
     
 }
