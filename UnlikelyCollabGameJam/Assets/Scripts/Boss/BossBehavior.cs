@@ -35,9 +35,6 @@ public class BossBehavior : MonoBehaviour
     private float bossHealth;
 
     private bool isAttacking = false;
-
-    [SerializeField]
-    private GameObject projectile;
     
     private Rigidbody2D swordRB;
 
@@ -64,6 +61,10 @@ public class BossBehavior : MonoBehaviour
     private float swordInitialX;
     private float swordStabDirection;
     private float swordWindUpTimer;
+
+    [Header("Fireball Attack Settings")]
+    [SerializeField]
+    private GameObject fireball;
 
 
     void Awake()
@@ -137,7 +138,7 @@ public class BossBehavior : MonoBehaviour
         bossAttackTimer -= Time.deltaTime;
         if(bossAttackTimer <= 0f)
         {
-            switch(Random.Range(0,2))
+            switch(Random.Range(0,3))
             {
                 case 0:
                     bossState = BossStates.SwordAttack;
@@ -153,8 +154,6 @@ public class BossBehavior : MonoBehaviour
             }
             bossAttackTimer = enraged ? bossEnragedAttackCoolDown : bossAttackCoolDown;
         }
-
-        // maybe attack a few times before returning to scan
     }
 
     private IEnumerator SwordAttack()
@@ -271,11 +270,35 @@ public class BossBehavior : MonoBehaviour
     {
         Debug.Log("Fireball Attack!");
 
-        // shoot stream of fireballs directly upward
-        // fireballs spawn randomly above and rain down
+        // implement stream of "fireballs" upward as indicator
+
+        Debug.Log("Fireball indicator");
+        yield return new WaitForSeconds(2f);
+
+        // fireball rain, randomly spawn them above player and have them rain down
+        int numFireballs = 50;
+        float fireballLifeTime = 8f;
+        float fireballSpawnY = 30f;
+        float fireballSpreadX = 25f;
+        float fireballSpreadY = 5f;
+        float fireballDamage = 10f;
+        float fireballSpeedY = 10f;
+
+        Debug.Log("Spawning Fireballs Above at Random X");
+
+        for(int i = 0; i < numFireballs; i++)
+        {
+            float fireballX = Random.Range(transform.position.x - fireballSpreadX, transform.position.x + fireballSpreadX);
+            float fireballY = Random.Range(fireballSpawnY - fireballSpreadY, fireballSpawnY + fireballSpreadY);
+            GameObject fireballInstance = Instantiate(fireball, new Vector2(fireballX, fireballY), Quaternion.identity);
+            fireballInstance.GetComponent<Fireball>().SetLifeTime(fireballLifeTime);
+            fireballInstance.GetComponent<Fireball>().SetProjectileDamage(fireballDamage);
+            fireballInstance.GetComponent<Fireball>().SetVelocity(0f, fireballSpeedY);
+        }
         
         yield return new WaitForSeconds(0.1f);
 
+        Debug.Log("Finished Fireball Attack");
 
         bossState = BossStates.Attack;
         isAttacking = false;

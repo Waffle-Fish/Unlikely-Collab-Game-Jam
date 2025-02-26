@@ -7,7 +7,7 @@ public class Projectile : MonoBehaviour
     private float lifetime = 3f;
 
     [SerializeField]
-    private float projectileDamgage = 5f;
+    protected float projectileDamage = 5f;
     [SerializeField]
     private float shotRandomness = 0.25f;
     void Awake()
@@ -33,13 +33,18 @@ public class Projectile : MonoBehaviour
 
     public void SetProjectileDamage(float damage)
     {
-        projectileDamgage = damage;
+        projectileDamage = damage;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    public void SetLifeTime(float time)
+    {
+        lifetime = time;
+    }
+
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player")) {
-            collision.GetComponent<PlayerHealth>().TakeDamage(projectileDamgage);
+            collision.GetComponent<PlayerHealth>().TakeDamage(projectileDamage);
             gameObject.SetActive(false);
         } 
     }
