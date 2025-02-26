@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Final Game Scenes/Level 3.unity
     guid: df96d694be2ceeb4990ff8cf5c0b678f
+  - enabled: 1
+    path: Assets/Scenes/Final Game Scenes/Level 4.1.unity
+    guid: a078e30e0eb617d438581f161063f069
+  - enabled: 1
+    path: Assets/Scenes/Final Game Scenes/Level 4.2.unity
+    guid: 5b1716e495d85844da01eda8dc9a6489
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 99f9c9493070a9d4c979a8fec7c5a8d3, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
