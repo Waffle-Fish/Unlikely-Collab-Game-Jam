@@ -2520,6 +2520,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5104677307250047159, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: bossScanCoolDown
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 6271956259438682282, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: m_LocalPosition.x
       value: 20.02
