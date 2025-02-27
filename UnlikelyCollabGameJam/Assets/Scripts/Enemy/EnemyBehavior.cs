@@ -57,6 +57,9 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField]
     private float fleeTime = 2f;
 
+    [Header("Animation")]
+    private Animator animator;
+
     protected virtual void Awake()
     {
         pm = GetComponentInChildren<PatrolManager>();
@@ -69,6 +72,8 @@ public class EnemyBehavior : MonoBehaviour
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Ignore Collision"), LayerMask.NameToLayer("Ignore Collision"), true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Player"), true);
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), true);
+
+        animator = GetComponent<Animator>();
     }
 
     void Start()
@@ -129,6 +134,11 @@ public class EnemyBehavior : MonoBehaviour
         {
             enemyState = EnemyStates.Dead;
         }
+
+        if (animator.GetBool("Jump") && Mathf.Approximately(rb.linearVelocityY,0f)) {
+            animator.SetTrigger("Land");
+            animator.SetBool("Jump", false);
+        }
     }
 
     private void GetUnStuck()
@@ -143,7 +153,12 @@ public class EnemyBehavior : MonoBehaviour
 
     private void Die()
     {
-        // ANIMATION - Death Animation
+        animator.SetTrigger("Death");
+    }
+
+    // Event for death animation to call
+    public void DisableEnemy() 
+    {
         gameObject.SetActive(false);
     }
 
@@ -180,7 +195,7 @@ public class EnemyBehavior : MonoBehaviour
         // Attack
         if (enemyAttackTimer <= 0)
         {
-            // ANIMATION - Attack goes here
+            animator.SetTrigger("Attack");
             player.GetComponent<PlayerHealth>().TakeDamage(enemyAttackDamage);
             enemyAttackTimer = enemyAttackCoolDown;
         }
@@ -252,11 +267,12 @@ public class EnemyBehavior : MonoBehaviour
     {
         if (ShouldJump())
         {
-            // ANIMATION - JUMP
+            animator.SetBool("Jump", true);
             Jump();
         }
 
-        // ANIMATION - Walking left / right - use "forwardDir"
+        animator.SetBool("Walk", true);
+        GetComponent<SpriteRenderer>().flipX = forwardDir == Vector2.left;
         if (enemyState == EnemyStates.Patrol)
         {
             // constant speed left / right
@@ -270,7 +286,7 @@ public class EnemyBehavior : MonoBehaviour
 
         if (isAtApexOfJump())
         {
-            // ANIMATION - Top of jump reached... falling animation?
+            animator.SetTrigger("Peak");
             gameObject.layer = LayerMask.NameToLayer("Enemy");
         }
         

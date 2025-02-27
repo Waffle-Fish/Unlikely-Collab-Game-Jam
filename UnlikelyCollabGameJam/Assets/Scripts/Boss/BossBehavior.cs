@@ -177,10 +177,10 @@ public class BossBehavior : MonoBehaviour
             switch(Random.Range(0,3))
             {
                 case 0:
-                    bossState = BossStates.Attack;
+                    bossState = BossStates.SwordAttack;
                     break;
                 case 1:
-                    bossState = BossStates.FireballAttack;
+                    bossState = BossStates.SwordAttack;
                     break;
                 case 2:
                     bossState = BossStates.ScreamAttack;
