@@ -14,6 +14,14 @@ public class PlayerHealth : MonoBehaviour
     public event Action<float> OnHealthChanged;
     public event Action OnPlayerDeath;
 
+    Animator animator;
+    PlayerStateManager psm;
+
+    private void Awake() {
+        animator = GetComponent<Animator>();
+        psm = GetComponent<PlayerStateManager>();
+    }
+
     private void Start()
     {
         CurrentHealth = maxHealth;
@@ -38,7 +46,8 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Ouch! I only have " + CurrentHealth + " health left!");
         if (CurrentHealth <= 0)
         {
-            Die();
+            psm.InputActions.Player.Disable();
+            animator.SetTrigger("PlayerDeath");
         }
     }
     public void Heal(float healAmount)
@@ -47,10 +56,9 @@ public class PlayerHealth : MonoBehaviour
         OnHealthChanged?.Invoke(CurrentHealth);
     }
 
-    private void Die()
+    public void Die()
     {
         gameObject.SetActive(false);
         OnPlayerDeath?.Invoke();
-        Time.timeScale = 0;
     }   
 }
