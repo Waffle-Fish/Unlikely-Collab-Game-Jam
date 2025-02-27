@@ -83,6 +83,26 @@ public class BossBehavior : MonoBehaviour
     private float fireballX;
     private float fireballY;
 
+    [Header("Scream Attack Settings")]
+    [SerializeField]
+    private GameObject scream;
+    [SerializeField]
+    private float screamDamage = 5f;
+    [SerializeField]
+    private float screamGrowthRate = .5f;
+    [SerializeField]
+    private float screamDuration = 10f;
+    private float screamDurationTimer;
+    [SerializeField]
+    private float screamDamageCooldown = 1f;
+    private float screamDamageTimer;
+
+    [Header("Summon Mobs Settings")]
+    [SerializeField]
+    private GameObject basicEnemy;
+    [SerializeField]
+    private GameObject rangedEnemy;
+
     void Awake()
     {
         bossHealth = bossMaxHealth;
@@ -157,13 +177,13 @@ public class BossBehavior : MonoBehaviour
             switch(Random.Range(0,3))
             {
                 case 0:
-                    bossState = BossStates.SwordAttack;
+                    bossState = BossStates.ScreamAttack;
                     break;
                 case 1:
                     bossState = BossStates.ScreamAttack;
                     break;
                 case 2:
-                    bossState = BossStates.FireballAttack;
+                    bossState = BossStates.ScreamAttack;
                     break;
                 default:
                     break;
@@ -270,55 +290,86 @@ public class BossBehavior : MonoBehaviour
 
     private IEnumerator ScreamAttack()
     {
-        // difficult - have scream attack to damage to everything in direct line of sight
-        Debug.Log("Scream Attack!");
+        // Debug.Log("Scream Attack!");
+        // play scream sound effect
+        screamDamageTimer = 0f;
+        screamDurationTimer = screamDuration;
 
+        GameObject screamInstance = Instantiate(scream, transform.position, Quaternion.identity);
 
+        while(screamDurationTimer > 0)
+        {
+            screamDamageTimer -= Time.deltaTime;
+            screamDurationTimer -= Time.deltaTime;
+
+            screamInstance.transform.localScale += new Vector3(screamGrowthRate, screamGrowthRate, 0f);
+
+            if(screamDamageTimer <= 0)
+            {
+                CheckScreamCollision(screamInstance);
+            }
+            yield return null;
+        }
         
-        yield return new WaitForSeconds(0.1f);
-        
-
-
+        screamInstance.SetActive(false);
         bossState = BossStates.Attack;
         isAttacking = false;
+        yield return new WaitForEndOfFrame();
+    }
+
+    private void CheckScreamCollision(GameObject screamInstance)
+    {
+        // Get the scream's collider component (assumes a CircleCollider2D)
+        CircleCollider2D screamCollider = scream.GetComponent<CircleCollider2D>();
+        
+        Collider2D hit = Physics2D.OverlapCircle(screamInstance.transform.position, screamInstance.transform.localScale.x*screamCollider.radius, LayerMask.GetMask("Player"));
+        
+        if(hit != null)
+        {
+            // Debug.Log("Scream hit the player!");
+            player.GetComponent<PlayerHealth>().TakeDamage(swordDamage);
+            screamDamageTimer = screamDamageCooldown;
+        }
     }
 
     private IEnumerator FireballAttack()
     {
-        Debug.Log("Fireball Attack!");
+        // Debug.Log("Fireball Attack!");
 
         // implement stream of "fireballs" upward as indicator
 
-        Debug.Log("Fireball indicator");
+        // Debug.Log("Fireball indicator");
         yield return new WaitForSeconds(2f);
 
         // fireball rain, randomly spawn them above player and have them rain down
         
 
-        Debug.Log("Spawning Fireballs Above at Random X");
+        // Debug.Log("Spawning Fireballs Above at Random X");
 
         for(int i = 0; i < numFireballs; i++)
         {
-            float fireballX = Random.Range(transform.position.x - fireballSpreadX, transform.position.x + fireballSpreadX);
-            float fireballY = Random.Range(fireballSpawnY - fireballSpreadY, fireballSpawnY + fireballSpreadY);
+            fireballX = Random.Range(transform.position.x - fireballSpreadX, transform.position.x + fireballSpreadX);
+            fireballY = Random.Range(fireballSpawnY - fireballSpreadY, fireballSpawnY + fireballSpreadY);
             GameObject fireballInstance = Instantiate(fireball, new Vector2(fireballX, fireballY), Quaternion.identity);
             fireballInstance.GetComponent<Fireball>().SetLifeTime(fireballLifeTime);
             fireballInstance.GetComponent<Fireball>().SetProjectileDamage(fireballDamage);
             fireballInstance.GetComponent<Fireball>().SetVelocity(0f, fireballSpeedY);
         }
         
-        yield return new WaitForSeconds(0.1f);
 
-        Debug.Log("Finished Fireball Attack");
+        // Debug.Log("Finished Fireball Attack");
 
         bossState = BossStates.Attack;
         isAttacking = false;
+        yield return new WaitForEndOfFrame();
     }
 
     private void SummonMobs()
     {
         // spawn a few enemies
-        // will have to assign a few gameobjects and choose from them which to spawn
+        Instantiate(basicEnemy, transform.position, Quaternion.identity);
+        Instantiate(rangedEnemy, transform.position, Quaternion.identity);
+
     }
 
     private void Enrage()

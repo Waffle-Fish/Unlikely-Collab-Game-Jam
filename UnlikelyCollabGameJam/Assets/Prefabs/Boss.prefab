@@ -268,12 +268,22 @@ MonoBehaviour:
   bossEnrageHealth: 75
   bossWeakenedHealth: 15
   bossMaxHealth: 250
-  projectile: {fileID: 0}
   sword: {fileID: 7777123907574968439}
-  swordDamage: 0
+  swordDamage: 20
   swordDamageCoolDown: 1
   swordWindUpTime: 3
   swordWindUpSpeed: 10
   swordStabCount: 4
   swordStabReach: 15
   swordStabSpeed: 30
+  fireball: {fileID: 4409439074398842536, guid: dca348e4b3b10ed4ba1924aa41bb3dc8, type: 3}
+  numFireballs: 25
+  fireballDamage: 10
+  fireballLifeTime: 8
+  fireballSpreadX: 25
+  fireballSpawnY: 30
+  fireballSpreadY: 5
+  fireballSpeedY: 10
+  screamCollider: {fileID: 996846389870823586, guid: 29d0f252da7d5164fa5abb480818afd2, type: 3}
+  basicEnemy: {fileID: 5835477416272109900, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
+  rangedEnemy: {fileID: 5344389753387737128, guid: aff2fb99633b29f42a1b8d335aa00a2b, type: 3}

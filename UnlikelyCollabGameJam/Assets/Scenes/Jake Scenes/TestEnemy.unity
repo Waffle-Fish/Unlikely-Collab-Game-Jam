@@ -1568,7 +1568,7 @@ Transform:
   m_GameObject: {fileID: 1361259565}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1099998, y: 6.3200006, z: -10}
+  m_LocalPosition: {x: 19.12, y: 17.67, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2286,11 +2286,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6774109526885548021, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.11
+      value: 19.12
       objectReference: {fileID: 0}
     - target: {fileID: 6774109526885548021, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.32
+      value: 17.67
       objectReference: {fileID: 0}
     - target: {fileID: 6774109526885548021, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2521,16 +2521,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5104677307250047159, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
-      propertyPath: fireball
+      propertyPath: scream
       value: 
-      objectReference: {fileID: 4409439074398842536, guid: dca348e4b3b10ed4ba1924aa41bb3dc8, type: 3}
+      objectReference: {fileID: 996846389870823586, guid: 29d0f252da7d5164fa5abb480818afd2, type: 3}
     - target: {fileID: 5104677307250047159, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
-      propertyPath: swordDamage
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 5104677307250047159, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
-      propertyPath: numFireballs
-      value: 25
+      propertyPath: screamGrowthRate
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 6271956259438682282, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: m_LocalPosition.x
