@@ -24,20 +24,20 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] float combo3damageVal;
     [Tooltip("Number of frames between attacks that will count as a combo")]
     [SerializeField] int comboWindow = 0;
-    float comboTimeLimit;
 
-
-    [Header("Special Attack")]
+    [Header("Scream Attack")]
     [SerializeField] Collider2D screamCollider;
-    [SerializeField] float screamDuration;
-    [Tooltip("Damage dealt per second")]
-    [SerializeField] float screamDamage;
+    [SerializeField][Min(0f)] float screamDamage;
+    [SerializeField][Min(0f)] float screamCooldown;
+    float screamTimer;
 
     ContactFilter2D enemyFilter;
+    Rigidbody2D rb2d;
 
     private void Awake() {
         psm = GetComponent<PlayerStateManager>();
         animator = GetComponent<Animator>();
+        rb2d = GetComponent<Rigidbody2D>();
     }
 
     private void Start() {
@@ -60,7 +60,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void ProcessAttack(InputAction.CallbackContext context)
     {
-        if (psm.CurrentAttackState == PlayerStateManager.AttackState.Screaming) return;
+        if (psm.CurrentAttackState != PlayerStateManager.AttackState.Idle && psm.CurrentAttackState != PlayerStateManager.AttackState.Attacking) return;
         if (psm.CurrentMoveState != PlayerStateManager.MoveState.Grounded) {
             animator.ResetTrigger("Attack");
             return;
@@ -102,26 +102,19 @@ public class PlayerAttack : MonoBehaviour
 
     private void ProcessScreamAttack(InputAction.CallbackContext context)
     {
-        IEnumerator Scream() {
-            List<Collider2D> EnemiesInRange = new();
-            float finalTime = Time.time + screamDuration;
-            while (Time.time < finalTime) {
-                
-                screamCollider.Overlap(enemyFilter, EnemiesInRange);
-                foreach (var enemy in EnemiesInRange)
-                {
-                    Debug.Log("Screamed at: " + enemy.name);
-                    enemy.GetComponent<EnemyBehavior>().TakeDamage(screamDamage * Time.deltaTime);
-                }
-                yield return null;
-            }
-            screamCollider.gameObject.SetActive(false);
-            psm.CurrentAttackState = PlayerStateManager.AttackState.Idle;
+        if (Time.time < screamTimer) return;
+        psm.CurrentAttackState = PlayerStateManager.AttackState.Screaming;
+
+        animator.SetTrigger("Scream");
+        screamCollider.gameObject.SetActive(true);
+        List<Collider2D> EnemiesInRange = new();
+        screamCollider.Overlap(enemyFilter, EnemiesInRange);
+        foreach (var enemy in EnemiesInRange) {
+            enemy.GetComponent<EnemyBehavior>().TakeDamage(screamDamage);
         }
 
-        psm.CurrentAttackState = PlayerStateManager.AttackState.Screaming;
-        screamCollider.gameObject.SetActive(true);
-        Debug.Log("Screaming");
-        StartCoroutine(Scream());
+        screamCollider.gameObject.SetActive(false);
+        psm.CurrentAttackState = PlayerStateManager.AttackState.Idle;
+        screamTimer = Time.time + screamCooldown;
     }
 }

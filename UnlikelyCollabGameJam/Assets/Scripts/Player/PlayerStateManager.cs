@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerStateManager : MonoBehaviour
 {
     public enum MoveState { Jumping, Falling, Grounded, Dashing}
-    public enum AttackState {Idle, Attacking, Screaming }
+    public enum AttackState {Idle, Attacking, Screaming, Fireball }
     public MoveState CurrentMoveState = MoveState.Grounded;
     public AttackState CurrentAttackState = AttackState.Idle;
     public InputSystem_Actions InputActions {get; private set;}

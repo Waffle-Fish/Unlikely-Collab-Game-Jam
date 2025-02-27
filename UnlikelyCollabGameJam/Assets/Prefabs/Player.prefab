@@ -269,14 +269,13 @@ GameObject:
   - component: {fileID: 6774109526885548021}
   - component: {fileID: 2871104974049380652}
   - component: {fileID: 3834293882225499734}
-  - component: {fileID: 3111527635850736269}
   - component: {fileID: 5107011049939977524}
   - component: {fileID: 4494198987102032308}
+  - component: {fileID: 6610297556898321340}
   - component: {fileID: 4011661523735385067}
   - component: {fileID: 6878941695560686198}
+  - component: {fileID: 3111527635850736269}
   - component: {fileID: 739538300645771396}
-  - component: {fileID: 6610297556898321340}
-  - component: {fileID: 7823187080151830079}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -367,24 +366,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &3111527635850736269
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362588724417458548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd5c7e588d1398b4da9109698b15b131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveForce: 7
-  DashDistance: 7
-  DashCooldown: 0.5
-  DashDuration: 0.1
-  jumpForce: 12
-  fallForce: 5
 --- !u!212 &5107011049939977524
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -462,58 +443,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4011661523735385067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362588724417458548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a2b231c87ecdbb42bd83470d49dbe9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  ClickToHeal: 0
-  ClickToDamage: 0
---- !u!114 &6878941695560686198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362588724417458548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56bdbb6c9e9793246b9ef459d2558f86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CurrentMoveState: 2
-  CurrentAttackState: 0
---- !u!114 &739538300645771396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4362588724417458548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acf03cbc39e40434693223b8b0caed12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  comboTime: 0.1
-  attackCooldown: 0.0000001
-  leftWeaponCollider: {fileID: 4551930453098540369}
-  rightWeaponCollider: {fileID: 295678981421450560}
-  combo1damageVal: 10
-  combo2damageVal: 20
-  combo3damageVal: 30
-  comboWindow: 60
-  screamCollider: {fileID: 7141551370590227706}
-  screamDuration: 5
-  screamDamage: 20
 --- !u!82 &6610297556898321340
 AudioSource:
   m_ObjectHideFlags: 0
@@ -611,52 +540,76 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!61 &7823187080151830079
-BoxCollider2D:
+--- !u!114 &4011661523735385067
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4362588724417458548}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 0.375, y: 0.546875}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.25, y: 0.5}
-  m_EdgeRadius: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a2b231c87ecdbb42bd83470d49dbe9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  ClickToHeal: 0
+  ClickToDamage: 0
+--- !u!114 &6878941695560686198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4362588724417458548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56bdbb6c9e9793246b9ef459d2558f86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CurrentMoveState: 2
+  CurrentAttackState: 0
+--- !u!114 &3111527635850736269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4362588724417458548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd5c7e588d1398b4da9109698b15b131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveForce: 7
+  DashDistance: 5
+  DashCooldown: 1
+  DashDuration: 0.05
+  jumpForce: 12
+  fallForce: 5
+--- !u!114 &739538300645771396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4362588724417458548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf03cbc39e40434693223b8b0caed12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  comboTime: 0.1
+  attackCooldown: 0.0000001
+  leftWeaponCollider: {fileID: 4551930453098540369}
+  rightWeaponCollider: {fileID: 295678981421450560}
+  combo1damageVal: 10
+  combo2damageVal: 20
+  combo3damageVal: 30
+  comboWindow: 60
+  screamCollider: {fileID: 7141551370590227706}
+  screamDamage: 20
+  screamCooldown: 0
 --- !u!1 &6319515921578743222
 GameObject:
   m_ObjectHideFlags: 0
@@ -819,7 +772,7 @@ Transform:
   m_GameObject: {fileID: 6920381048164952927}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.46230268, z: -2.8571427}
+  m_LocalPosition: {x: 0, y: -0.37527028, z: -2.8571427}
   m_LocalScale: {x: 0.28571427, y: 0.28571427, z: 0.28571427}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -883,13 +836,13 @@ MonoBehaviour:
   CameraDistance: 10
   DeadZoneDepth: 0
   Composition:
-    ScreenPosition: {x: 0, y: -0.1}
+    ScreenPosition: {x: 0, y: 0.055038735}
     DeadZone:
       Enabled: 1
-      Size: {x: 0.3, y: 0.42829466}
+      Size: {x: 0.3, y: 0.38953504}
     HardLimits:
       Enabled: 1
-      Size: {x: 0.8, y: 2.4550385}
+      Size: {x: 0.8, y: 0.48992133}
       Offset: {x: 0, y: -0.9}
   CenterOnActivate: 0
   TargetOffset: {x: 0, y: 0.3, z: 0}

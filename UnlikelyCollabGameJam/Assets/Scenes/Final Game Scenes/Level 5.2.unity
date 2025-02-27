@@ -18499,7 +18499,7 @@ CompositeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
@@ -19988,7 +19988,7 @@ Transform:
   m_GameObject: {fileID: 1361259565}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -52.5, y: 86.186554, z: -10}
+  m_LocalPosition: {x: -52.5, y: -0.91344595, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -20185,7 +20185,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1496273485
 Transform:
   m_ObjectHideFlags: 0
@@ -21311,6 +21311,18 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.37527028
       objectReference: {fileID: 0}
+    - target: {fileID: 3111527635850736269, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: DashCooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3111527635850736269, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: DashDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3111527635850736269, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: DashDuration
+      value: 0.05
+      objectReference: {fileID: 0}
     - target: {fileID: 3834293882225499734, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_GravityScale
       value: 1.5
@@ -21325,7 +21337,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6774109526885548021, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 87.5
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 6774109526885548021, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_LocalPosition.z
