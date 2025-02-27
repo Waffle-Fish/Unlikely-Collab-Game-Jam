@@ -11,10 +11,12 @@ public class SceneController : MonoBehaviour
     }
 
     public void LoadScene(int buildIndex) {
+        Time.timeScale = 1;
         SceneManager.LoadScene(buildIndex);
     }
 
     public void LoadScene(int buildIndex, float delay) {
+        Time.timeScale = 1;
         StartCoroutine(DelayLoadScene(buildIndex, delay));
     }
 

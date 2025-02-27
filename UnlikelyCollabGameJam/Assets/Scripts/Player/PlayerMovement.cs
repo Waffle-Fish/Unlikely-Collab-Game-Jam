@@ -10,8 +10,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Horizontal Movement")]
     [SerializeField] float moveForce = 0f;
-    [Tooltip("How much to reduce the final velocity of the player after releasing move buttons")]
-    [SerializeField][Range(0f,1f)] float finalXVelocityReduction = 0f;
+    // [Tooltip("How much to reduce the final velocity of the player after releasing move buttons")]
+    // [SerializeField][Range(0f,1f)] float finalXVelocityReduction = 0f;
 
     [Header("Dash")]
     [Tooltip("How far player goes in a single dash")]
@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
         DetectState();
         ProcessFastFalling();
         UpdateAnimation();
-        if(!inputActions.Player.Move.WasPerformedThisFrame() && psm.CurrentState == PlayerStateManager.State.Grounded) rb2D.linearVelocityX *= finalXVelocityReduction;
+        // if(!inputActions.Player.Move.WasPerformedThisFrame() && psm.CurrentMoveState == PlayerStateManager.MoveState.Grounded) rb2D.linearVelocityX = 0;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -68,32 +68,34 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move()
     {
-        if (psm.CurrentState == PlayerStateManager.State.Dashing) return;
+        if (psm.CurrentMoveState == PlayerStateManager.MoveState.Dashing) return;
         Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
         animator.SetBool("Run", dir.x != 0f);
-        if (dir.x == 0f) return;
-        // Force Movement
-        // rb2D.AddForce(new Vector2(dir.x * moveForce, 0f));
-
-        // Velocity Movement
-        rb2D.linearVelocityX = dir.x * moveForce;
+        if (dir.x == 0f) {
+            rb2D.linearVelocityX = 0;
+            return;
+        }
+        float finalMoveForce = moveForce;
+        if (psm.CurrentAttackState != PlayerStateManager.AttackState.Idle) finalMoveForce = moveForce * 0.1f;
+        rb2D.linearVelocityX = dir.x * finalMoveForce;
         spriteRenderer.flipX = dir.x < 0f;
+        psm.UpdateFaceDirection(dir.x < 0f);
     }
 
     private void DetectState() {
         if (Mathf.Approximately(rb2D.linearVelocityY, 0f)) {
             rb2D.gravityScale = originalGravScale;
-            psm.CurrentState = PlayerStateManager.State.Grounded;
+            psm.CurrentMoveState = PlayerStateManager.MoveState.Grounded;
         }
-        if (rb2D.linearVelocityY < -0.01f) {
-            psm.CurrentState = PlayerStateManager.State.Falling;
+        if (rb2D.linearVelocityY < -0.1f) {
+            psm.CurrentMoveState = PlayerStateManager.MoveState.Falling;
         }
     }
 
     private void ProcessFastFalling() {
         
         if(inputActions.Player.FastFall.WasPerformedThisFrame()) {
-            if (psm.CurrentState == PlayerStateManager.State.Falling || psm.CurrentState == PlayerStateManager.State.Jumping) {
+            if (psm.CurrentMoveState == PlayerStateManager.MoveState.Falling || psm.CurrentMoveState == PlayerStateManager.MoveState.Jumping) {
                 // rb2D.linearVelocity = new(rb2D.linearVelocityX, 0f);
                 rb2D.gravityScale = fallForce;
             }
@@ -106,36 +108,35 @@ public class PlayerMovement : MonoBehaviour
 
     private void ProcessJump(InputAction.CallbackContext context)
     {
-        if (psm.CurrentState != PlayerStateManager.State.Grounded) return;
+        if (psm.CurrentMoveState != PlayerStateManager.MoveState.Grounded) return;
         rb2D.AddForceY(jumpForce, ForceMode2D.Impulse);
-        psm.CurrentState = PlayerStateManager.State.Jumping;
+        psm.CurrentMoveState = PlayerStateManager.MoveState.Jumping;
     }
 
     private void ProcessDash(InputAction.CallbackContext context)
     {
-        // Horizontal Dash
-        // IEnumerator Dash(float xDir) {
-        //     // Vector3 goalPos = new(transform.position.x + (xDir * DashDistance), transform.position.y);
-        //     Vector2 curVelocity = rb2D.linearVelocity;
-        //     float timer = 0f;
-        //     while (timer < DashDuration) {
-        //         transform.position = Vector2.SmoothDamp(transform.position, goalPos, ref curVelocity, DashDuration);
-        //         timer += Time.deltaTime;
-        //         yield return null;
-        //     }
-        //     psm.CurrentState = PlayerStateManager.State.Grounded;
-        // }
-        // if (Time.time < timeDashUsed + DashCooldown) return;
-        // float xDir = inputActions.Player.Move.ReadValue<Vector2>().x;
-        // if (Mathf.Approximately(xDir, 0)) return;
+        // Base Conditions
+        if (psm.CurrentAttackState != PlayerStateManager.AttackState.Idle) return;
+        if (Time.time < timeDashUsed + DashCooldown) return;
+        Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
+        if (dir == Vector2.zero) return;
+        
+        StartCoroutine(Dash(dir));
 
-        // psm.CurrentState = PlayerStateManager.State.Dashing;
-        // timeDashUsed = Time.time;
-        // StartCoroutine(Dash(xDir));
-
-        // Directional Dash
         IEnumerator Dash(Vector2 dir) {
+            Collider2D collider2D = GetComponent<Collider2D>();
+            psm.CurrentMoveState = PlayerStateManager.MoveState.Dashing;
+            timeDashUsed = Time.time;
+
             Vector2 goalPos = (Vector2)transform.position + dir * DashDistance;
+            Debug.DrawLine(transform.position, goalPos, Color.red, 10f);
+            Collider2D hitCollider = Physics2D.OverlapPoint(goalPos);
+            if (hitCollider) {
+                float newDist = Vector2.Distance(hitCollider.ClosestPoint(goalPos), transform.position);
+                goalPos = (Vector2)transform.position + dir * newDist;
+                Debug.DrawLine(transform.position, goalPos, Color.blue, 10f);
+            }
+
             Vector2 curVelocity = rb2D.linearVelocity;
             float timer = 0f;
             while (timer < DashDuration) {
@@ -143,21 +144,14 @@ public class PlayerMovement : MonoBehaviour
                 timer += Time.deltaTime;
                 yield return null;
             }
-            psm.CurrentState = PlayerStateManager.State.Grounded;
+
+            psm.CurrentMoveState = PlayerStateManager.MoveState.Grounded;
         }
-
-        if (Time.time < timeDashUsed + DashCooldown) return;
-        Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
-        if (dir == Vector2.zero) return;
-
-        psm.CurrentState = PlayerStateManager.State.Dashing;
-        timeDashUsed = Time.time;
-        StartCoroutine(Dash(dir));
     } 
 
     private void UpdateAnimation() {
-        animator.SetBool("Fall", psm.CurrentState == PlayerStateManager.State.Falling);
-        animator.SetBool("Jump", psm.CurrentState == PlayerStateManager.State.Jumping);
-        animator.SetBool("Peak", psm.CurrentState == PlayerStateManager.State.Jumping && rb2D.linearVelocityY < 5 && rb2D.linearVelocityY > 0);
+        animator.SetBool("Fall", psm.CurrentMoveState == PlayerStateManager.MoveState.Falling);
+        animator.SetBool("Jump", psm.CurrentMoveState == PlayerStateManager.MoveState.Jumping);
+        animator.SetBool("Peak", psm.CurrentMoveState == PlayerStateManager.MoveState.Jumping && rb2D.linearVelocityY < 5 && rb2D.linearVelocityY > 0);
     }
 }
