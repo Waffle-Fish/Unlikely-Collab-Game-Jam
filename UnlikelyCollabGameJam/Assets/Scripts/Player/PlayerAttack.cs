@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,6 +32,11 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField][Min(0f)] float screamCooldown;
     float screamTimer;
 
+    [Header("Fireball")]
+    [SerializeField] GameObject fireBallPrefab;
+    [SerializeField] float fireBallForce;
+    GameObject fireBallObj;
+
     ContactFilter2D enemyFilter;
     Rigidbody2D rb2d;
 
@@ -38,6 +44,9 @@ public class PlayerAttack : MonoBehaviour
         psm = GetComponent<PlayerStateManager>();
         animator = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
+
+        fireBallObj = Instantiate(fireBallPrefab, transform.position, quaternion.identity);
+        fireBallObj.SetActive(false);
     }
 
     private void Start() {
@@ -48,14 +57,9 @@ public class PlayerAttack : MonoBehaviour
         inputActions = psm.InputActions;
         inputActions.Player.Attack.performed += ProcessAttack;
         inputActions.Player.Scream.performed += ProcessScreamAttack;
-        // inputActions.Player.Fireball.performed += ProcessFireballAttack;
+        inputActions.Player.Fireball.performed += ProcessFireballAttack;
 
         enemyFilter.SetLayerMask(LayerMask.GetMask("Enemy"));
-    }
-
-    private void Update()
-    {
-
     }
 
     private void ProcessAttack(InputAction.CallbackContext context)
@@ -86,6 +90,7 @@ public class PlayerAttack : MonoBehaviour
 
         // comboTimeLimit = Time.time + comboWindow * Time.deltaTime;
     }
+
     public void EnableWeapon() {
         if (psm.IsFacingLeft) leftWeaponCollider.gameObject.SetActive(true);
         else rightWeaponCollider.gameObject.SetActive(true);
@@ -116,5 +121,23 @@ public class PlayerAttack : MonoBehaviour
         screamCollider.gameObject.SetActive(false);
         psm.CurrentAttackState = PlayerStateManager.AttackState.Idle;
         screamTimer = Time.time + screamCooldown;
+    }
+
+    private void ProcessFireballAttack(InputAction.CallbackContext context)
+    {
+        fireBallObj.transform.position = transform.position;
+        fireBallObj.SetActive(true);
+        Rigidbody2D fireballRb2D = fireBallObj.GetComponent<Rigidbody2D>();
+        fireballRb2D.linearVelocity = Vector2.zero;
+
+        Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
+        mouseScreenPos.z = Mathf.Abs(Camera.main.transform.position.z);
+        Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mouseScreenPos);
+        Vector2 dir = (mouseWorldPosition - transform.position);
+        float zRot = -Vector2.SignedAngle(dir, Vector2.right);
+        Debug.Log("Angle: " + zRot);
+        dir = dir.normalized;
+        fireBallObj.transform.rotation = Quaternion.Euler(0,0,zRot);
+        fireballRb2D.AddForce(fireBallForce * dir);
     }
 }

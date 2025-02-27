@@ -1,16 +1,33 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerProjectile : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] float damageVal;
+    [SerializeField] float lifeSpan;
+
+    void OnEnable()
     {
-        
+        StartCoroutine(ProcessLifeSpan());
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator ProcessLifeSpan()
     {
-        
+        float finalTime = Time.time + lifeSpan;
+        while (Time.time < finalTime)
+        {
+            yield return null;
+        }
+        gameObject.SetActive(false);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.collider.CompareTag("Enemy")) {
+            collision.gameObject.GetComponent<EnemyBehavior>().TakeDamage(damageVal);
+        }
+        gameObject.SetActive(false);
     }
 }
