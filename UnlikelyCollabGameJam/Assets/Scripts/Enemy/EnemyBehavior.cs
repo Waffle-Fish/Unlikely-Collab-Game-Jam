@@ -27,6 +27,8 @@ public class EnemyBehavior : MonoBehaviour
 
     [SerializeField]
     protected float enemySpeed = 4.5f;
+
+    protected float pursueThreshold = 1f;
     
     [Header("Jump Settings")]
     protected float enemyJumpForce = 55f;
@@ -184,7 +186,12 @@ public class EnemyBehavior : MonoBehaviour
             player.GetComponent<PlayerHealth>().TakeDamage(enemyAttackDamage);
             enemyAttackTimer = enemyAttackCoolDown;
         }
-        enemyState = EnemyStates.Pursue;
+
+        // return to pursue if far enough from player
+        if(Vector2.Distance(player.transform.position, transform.position) > pursueThreshold)
+        {
+            enemyState = EnemyStates.Pursue;
+        }
     }
 
     protected virtual void Pursue()

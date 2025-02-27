@@ -17,6 +17,7 @@ public class RangedEnemyBehavior : EnemyBehavior
         base.Awake();
         rayLength = 14;
         enemyAttackCoolDown = 2f;
+        pursueThreshold = 10f;
     }
 
     protected override void Pursue()
@@ -71,7 +72,7 @@ public class RangedEnemyBehavior : EnemyBehavior
         }
 
         // return to pursue if far enough from player
-        if(Vector2.Distance(player.transform.position, transform.position) > 10f)
+        if(Vector2.Distance(player.transform.position, transform.position) > pursueThreshold)
         {
             enemyState = EnemyStates.Pursue;
         }
