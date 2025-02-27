@@ -59,6 +59,7 @@ public class EnemyBehavior : MonoBehaviour
 
     [Header("Animation")]
     private Animator animator;
+    bool isDeadProcessing = false;
 
     protected virtual void Awake()
     {
@@ -153,6 +154,8 @@ public class EnemyBehavior : MonoBehaviour
 
     private void Die()
     {
+        if (isDeadProcessing) return;
+        isDeadProcessing = true;
         animator.SetTrigger("Death");
     }
 
