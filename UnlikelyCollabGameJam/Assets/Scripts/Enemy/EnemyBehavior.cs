@@ -28,6 +28,7 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField]
     protected float enemySpeed = 4.5f;
 
+    [SerializeField]
     protected float pursueThreshold = 1f;
     
     [Header("Jump Settings")]
@@ -259,7 +260,7 @@ public class EnemyBehavior : MonoBehaviour
 
     protected bool isNearPlayer()
     {
-        return (player.transform.position - transform.position).magnitude < 1f;
+        return (player.transform.position - transform.position).magnitude < pursueThreshold;
     }
 
     protected bool isStuck()
