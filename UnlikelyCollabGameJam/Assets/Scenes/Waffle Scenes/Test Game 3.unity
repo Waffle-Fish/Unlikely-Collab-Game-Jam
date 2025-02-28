@@ -14289,6 +14289,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: RangedEnemy (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5344389753387737128, guid: aff2fb99633b29f42a1b8d335aa00a2b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5391188581933280352, guid: aff2fb99633b29f42a1b8d335aa00a2b, type: 3}
+      propertyPath: pursueThreshold
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7738525829389327841, guid: aff2fb99633b29f42a1b8d335aa00a2b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 42.8
@@ -14931,6 +14939,10 @@ PrefabInstance:
     - target: {fileID: 5835477416272109900, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7741331507674829678, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
+      propertyPath: pursueThreshold
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8378680186482128607, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
       propertyPath: m_LocalPosition.x
