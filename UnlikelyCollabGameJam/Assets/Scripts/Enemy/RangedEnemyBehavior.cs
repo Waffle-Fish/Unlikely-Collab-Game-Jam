@@ -12,6 +12,8 @@ public class RangedEnemyBehavior : EnemyBehavior
     private float projectileSpeed = 15f;
     [SerializeField]
     private float projectileDamage = 5f;
+    [SerializeField]
+    private Transform projectileSpawnPos;
     protected override void Awake()
     {
         base.Awake();
@@ -58,8 +60,9 @@ public class RangedEnemyBehavior : EnemyBehavior
             rb.linearVelocityX = 0f;
             // can add another timer here for a "windup"
             // ANIMATION - Ranged Attack goes here
+            base.animator.SetTrigger("Attack");
             // shoot projectile at player
-            GameObject projInstance = Instantiate(projectile, transform.position, Quaternion.identity);
+            GameObject projInstance = Instantiate(projectile, projectileSpawnPos.position, Quaternion.identity);
 
             Vector2 direction = (player.transform.position - transform.position).normalized;
             Debug.Log("Firing in Direction: "+direction);
@@ -77,6 +80,8 @@ public class RangedEnemyBehavior : EnemyBehavior
             enemyState = EnemyStates.Pursue;
         }
     }
+
+    
 
     private bool isPlayerInFOV() // could refactor CastRays instead to limit amount of code
     {

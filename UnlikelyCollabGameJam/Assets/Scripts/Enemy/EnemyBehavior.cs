@@ -61,7 +61,7 @@ public class EnemyBehavior : MonoBehaviour
     private float fleeTime = 2f;
 
     [Header("Animation")]
-    private Animator animator;
+    protected Animator animator;
     bool isDeadProcessing = false;
 
     protected virtual void Awake()

@@ -14281,29 +14281,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 327069682888813137, guid: aff2fb99633b29f42a1b8d335aa00a2b, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: c8812e340f1ebad4da4d6c4e06a96cf3, type: 2}
     - target: {fileID: 5344389753387737128, guid: aff2fb99633b29f42a1b8d335aa00a2b, type: 3}
       propertyPath: m_Name
       value: RangedEnemy (1)
       objectReference: {fileID: 0}
-    - target: {fileID: 5344389753387737128, guid: aff2fb99633b29f42a1b8d335aa00a2b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5391188581933280352, guid: aff2fb99633b29f42a1b8d335aa00a2b, type: 3}
-      propertyPath: pursueThreshold
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 7738525829389327841, guid: aff2fb99633b29f42a1b8d335aa00a2b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 42.8
+      value: 15.01
       objectReference: {fileID: 0}
     - target: {fileID: 7738525829389327841, guid: aff2fb99633b29f42a1b8d335aa00a2b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.41
+      value: 0.09
       objectReference: {fileID: 0}
     - target: {fileID: 7738525829389327841, guid: aff2fb99633b29f42a1b8d335aa00a2b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -14938,7 +14926,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5835477416272109900, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7741331507674829678, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
       propertyPath: pursueThreshold
