@@ -10,6 +10,7 @@ public class BossBehavior : MonoBehaviour
 {
 
     private enum BossStates {Attack, SwordAttack, FireballAttack, ScreamAttack, Enrage, Weak, Dead, Healed};
+    private enum AttackStates {Sword, Fireball, Scream}
 
     private BossStates bossState;
     [Header("Attack CoolDown Settings")]
@@ -171,6 +172,8 @@ public class BossBehavior : MonoBehaviour
             // death animation
             Die();
         }
+
+
     }
 
 
