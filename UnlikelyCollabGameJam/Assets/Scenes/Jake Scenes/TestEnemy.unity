@@ -1355,6 +1355,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ShadowMan
       objectReference: {fileID: 0}
+    - target: {fileID: 299716081339667370, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2916569665348222676, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 7.0548162
@@ -2394,17 +2398,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5158237551181940934, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
-      propertyPath: m_FlipX
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5835477416272109900, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 5835477416272109900, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8378680186482128607, guid: c61eb9c2dae5f6647b5d0a41a90a2010, type: 3}
       propertyPath: m_LocalPosition.x

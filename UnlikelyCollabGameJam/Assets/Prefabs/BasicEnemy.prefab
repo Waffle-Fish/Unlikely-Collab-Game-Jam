@@ -364,6 +364,7 @@ MonoBehaviour:
   spreadAngle: 45
   numberOfRays: 10
   enemySpeed: 5
+  pursueThreshold: 1
   maxEnemyHealth: 100
   enemyAttackDamage: 5
   enemyAttackCoolDown: 5

@@ -14,12 +14,16 @@ public class RangedEnemyBehavior : EnemyBehavior
     private float projectileDamage = 5f;
     [SerializeField]
     private Transform projectileSpawnPos;
+    [SerializeField]
+    private float attackWindUpTime = 1f;
+    private float attackWindUpTimer;
     protected override void Awake()
     {
         base.Awake();
         rayLength = 14;
         enemyAttackCoolDown = 2f;
         pursueThreshold = 10f;
+        attackWindUpTimer = attackWindUpTime;
     }
 
     protected override void Pursue()
@@ -31,6 +35,7 @@ public class RangedEnemyBehavior : EnemyBehavior
 
         if (isPlayerInFOV())
         {
+            attackWindUpTimer = attackWindUpTime;
             enemyState = EnemyStates.Attack;
         }
         else if (isFarFromPlayer())
@@ -59,19 +64,29 @@ public class RangedEnemyBehavior : EnemyBehavior
             // stop moving
             rb.linearVelocityX = 0f;
             // can add another timer here for a "windup"
-            // ANIMATION - Ranged Attack goes here
-            base.animator.SetTrigger("Attack");
-            // shoot projectile at player
-            GameObject projInstance = Instantiate(projectile, projectileSpawnPos.position, Quaternion.identity);
+            attackWindUpTimer -= Time.deltaTime;
+            if(attackWindUpTimer <= 0)
+            {
+                // ANIMATION - Ranged Attack goes here
+                base.animator.SetTrigger("Attack");
+                // shoot projectile at player
+                Vector2 direction = (player.transform.position - transform.position).normalized;
 
-            Vector2 direction = (player.transform.position - transform.position).normalized;
-            Debug.Log("Firing in Direction: "+direction);
+                // Get the angle in degrees using Atan2
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-            projInstance.GetComponent<Projectile>().SetVelocity(
-                direction.x*projectileSpeed,
-                direction.y*projectileSpeed);
-            projInstance.GetComponent<Projectile>().SetProjectileDamage(projectileDamage);
-            enemyAttackTimer = enemyAttackCoolDown;
+                GameObject projInstance = Instantiate(projectile, projectileSpawnPos.position, Quaternion.Euler(0f, 0f, angle));
+
+                Debug.Log("Firing in Direction: "+direction);
+
+                projInstance.GetComponent<Projectile>().SetVelocity(
+                    direction.x*projectileSpeed,
+                    direction.y*projectileSpeed);
+                projInstance.GetComponent<Projectile>().SetProjectileDamage(projectileDamage);
+
+                enemyAttackTimer = enemyAttackCoolDown;
+                attackWindUpTimer = attackWindUpTime;
+            }
         }
 
         // return to pursue if far enough from player

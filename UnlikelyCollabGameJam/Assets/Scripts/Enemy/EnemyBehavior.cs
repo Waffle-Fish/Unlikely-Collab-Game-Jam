@@ -64,8 +64,11 @@ public class EnemyBehavior : MonoBehaviour
     protected Animator animator;
     bool isDeadProcessing = false;
 
+    private SpriteRenderer sr;
+
     protected virtual void Awake()
     {
+        sr = GetComponent<SpriteRenderer>();
         player = GameObject.FindWithTag("Player");
         pm = GetComponentInChildren<PatrolManager>();
         forwardDir = transform.right;
@@ -91,10 +94,7 @@ public class EnemyBehavior : MonoBehaviour
     {
         SetForwardDirection();
 
-        
-        GetComponent<SpriteRenderer>().flipX = forwardDir.x < 0f;
-        
-        
+        sr.flipX = forwardDir.x < 0f;
 
         enemyAttackTimer -= Time.deltaTime;
 
@@ -290,7 +290,7 @@ public class EnemyBehavior : MonoBehaviour
         }
 
         animator.SetBool("Walk", true);
-        GetComponent<SpriteRenderer>().flipX = forwardDir == Vector2.left;
+
         if (enemyState == EnemyStates.Patrol)
         {
             // constant speed left / right
