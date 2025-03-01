@@ -66,6 +66,7 @@ public class EnemyBehavior : MonoBehaviour
 
     protected virtual void Awake()
     {
+        player = GameObject.FindWithTag("Player");
         pm = GetComponentInChildren<PatrolManager>();
         forwardDir = transform.right;
         rb = GetComponent<Rigidbody2D>();
@@ -89,6 +90,12 @@ public class EnemyBehavior : MonoBehaviour
     void Update()
     {
         SetForwardDirection();
+
+        
+        GetComponent<SpriteRenderer>().flipX = forwardDir.x < 0f;
+        
+        
+
         enemyAttackTimer -= Time.deltaTime;
 
         if (enemyState == EnemyStates.Patrol)
@@ -337,7 +344,11 @@ public class EnemyBehavior : MonoBehaviour
 
     protected void SetForwardDirection()
     {
-        if (Math.Abs(rb.linearVelocity.x) > 0.1)
+        if(enemyState == EnemyStates.Pursue || enemyState == EnemyStates.Attack)
+        {
+            forwardDir.x = (player.transform.position - transform.position).normalized.x;
+        }
+        else if (Math.Abs(rb.linearVelocity.x) > 0.1)
         {
             forwardDir = rb.linearVelocity.x > 0 ? transform.right : -transform.right;
         }

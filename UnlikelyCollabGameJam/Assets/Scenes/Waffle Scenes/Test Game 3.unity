@@ -15703,50 +15703,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ShadowMan
       objectReference: {fileID: 0}
-    - target: {fileID: 299716081339667370, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 804222615616133497, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 3ec30c7b749d3584eba5273e44237f55, type: 2}
-    - target: {fileID: 2677049077689925393, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_Size.x
-      value: 0.35
-      objectReference: {fileID: 0}
-    - target: {fileID: 2677049077689925393, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_Size.y
-      value: 0.5628209
-      objectReference: {fileID: 0}
-    - target: {fileID: 2677049077689925393, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_Offset.x
-      value: -0.049999997
-      objectReference: {fileID: 0}
-    - target: {fileID: 2677049077689925393, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_Offset.y
-      value: 0.03108953
-      objectReference: {fileID: 0}
-    - target: {fileID: 2677049077689925393, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_SpriteTilingProperty.oldSize.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2677049077689925393, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_SpriteTilingProperty.oldSize.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2916569665348222676, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2916569665348222676, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2916569665348222676, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 3.5
-      objectReference: {fileID: 0}
     - target: {fileID: 2916569665348222676, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.4
@@ -15787,22 +15743,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3411659644743094930, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: rayLength
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 3411659644743094930, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: enemySpeed
-      value: 7.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3411659644743094930, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: enemyAttackCoolDown
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3700172815888340496, guid: 26dc002e894cb5341aa4d69b808e4ea7, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 574fdfd0dc118a0458e36c6663c7fb8b, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
