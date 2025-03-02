@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEditor.EditorTools;
+using System.Collections.Generic;
 
 public class BossAttack : MonoBehaviour
 {
@@ -74,6 +75,7 @@ public class BossAttack : MonoBehaviour
     private float fireballSpeedY = 10f;
     private float fireballX;
     private float fireballY;
+
     [Header("Scream Attack Settings")]
     [SerializeField]
     private GameObject scream;
@@ -81,8 +83,6 @@ public class BossAttack : MonoBehaviour
     private float screamDamage = 5f;
     [SerializeField]
     private float screamGrowthRate = 1.25f;
-    private Vector3 intialScreamScale;
-    private Vector3 inverseParentScale;
 
     [SerializeField]
     private float screamDuration = 10f;
@@ -90,6 +90,7 @@ public class BossAttack : MonoBehaviour
     [SerializeField]
     private float screamDamageCooldown = 1f;
     private float screamDamageTimer;
+    [SerializeField] CircleCollider2D screamCollider;
 
     [Header("Summon Mobs Settings")]
     [SerializeField]
@@ -98,6 +99,7 @@ public class BossAttack : MonoBehaviour
     private GameObject rangedEnemy;
 
     Animator animator;
+    ContactFilter2D playerFilter;
 
     void Awake()
     {
@@ -109,13 +111,11 @@ public class BossAttack : MonoBehaviour
     void Start()
     {
         bossHealth = bossMaxHealth;
-        intialScreamScale = scream.transform.localScale;
-        inverseParentScale = new Vector3(
-            1f / transform.lossyScale.x,
-            1f / transform.lossyScale.y,
-            1f
-        );
         bossState = BossStates.Attack;
+        screamCollider.gameObject.SetActive(false);
+
+        playerFilter = new();
+        playerFilter.SetLayerMask(LayerMask.GetMask("Player"));
     }
 
     void Update()
@@ -145,6 +145,7 @@ public class BossAttack : MonoBehaviour
         }
     }
 
+    #region Sword
     public void ActivateSword() {
         sword.SetActive(true); 
     }
@@ -279,6 +280,7 @@ public class BossAttack : MonoBehaviour
             swordDamageTimer = swordDamageCoolDown;
         }
     }
+    #endregion
 
     public void ActivateScreamAttack() {
         StartCoroutine(ScreamAttack());
@@ -305,11 +307,9 @@ public class BossAttack : MonoBehaviour
 
             // Compute effective radius from the world (lossy) scale.
             // After counteracting the parent, the x and y should be roughly the same.
-            float effectiveRadius = scream.transform.lossyScale.x/2f;
-
             if (screamDamageTimer <= 0)
             {
-                CheckScreamCollision(effectiveRadius);
+                CheckScreamCollision();
             }
             yield return null;
         }
@@ -317,8 +317,6 @@ public class BossAttack : MonoBehaviour
         animator.SetBool("Scream", false);
         yield return null;
         scream.SetActive(false);
-        // Reset the scream's scale back to its initial value (counteracting parent's scale)
-        scream.transform.localScale = Vector3.Scale(intialScreamScale, inverseParentScale);
 
         bossState = BossStates.Attack;
         isAttacking = false;
@@ -326,14 +324,12 @@ public class BossAttack : MonoBehaviour
         yield return new WaitForEndOfFrame();
     }
 
-    private void CheckScreamCollision(float effectiveRadius)
+    private void CheckScreamCollision()
     {
-        // Use the effective radius (from world space) to perform a circular overlap test.
-        Collider2D hit = Physics2D.OverlapCircle(scream.transform.position, effectiveRadius, LayerMask.GetMask("Player"));
-        
-        if (hit != null)
-        {
-            // Debug.Log("Scream hit the player!");
+        float damageRange = screamCollider.radius * scream.transform.lossyScale.x;
+        float distance = Vector2.Distance(player.transform.position, screamCollider.transform.position);
+        Debug.Log("Player distance: " + distance + "\nDamageRange: " + damageRange);
+        if (distance < damageRange) {
             player.GetComponent<PlayerHealth>().TakeDamage(screamDamage);
             screamDamageTimer = screamDamageCooldown;
         }

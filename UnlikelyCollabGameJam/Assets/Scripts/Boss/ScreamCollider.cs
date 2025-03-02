@@ -1,16 +1,20 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 public class ScreamCollider : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    PlayerHealth playerHealth;
+    public float damage;
 
-    // Update is called once per frame
-    void Update()
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        
+        Debug.Log(collision.name + " has entered");
+    }
+    
+    private void OnTriggerStay2D(Collider2D other) {
+        Debug.Log("Fish");
+        // if (!collision.CompareTag("Player")) return;
+        other.GetComponent<PlayerHealth>();
+        playerHealth.TakeDamage(damage * Time.deltaTime);
     }
 }
