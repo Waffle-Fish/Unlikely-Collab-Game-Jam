@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 12.4, y: -0.6, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 268482582877320091}
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5362276639069365872, guid: 5d92e11a7006a1b48839e3f4f1de791c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 574fdfd0dc118a0458e36c6663c7fb8b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -153,17 +153,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.049999997, y: 0.03108953}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.59375, y: 0.21875}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 0.4375, y: 0.28125}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.6, y: 0.1875}
+  m_Size: {x: 0.35, y: 0.5628209}
   m_EdgeRadius: 0
 --- !u!95 &804222615616133497
 Animator:
@@ -175,7 +175,7 @@ Animator:
   m_GameObject: {fileID: 299716081339667370}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 66f2d6ad45f01ff4ea59c8438f6e6a93, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3ec30c7b749d3584eba5273e44237f55, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -199,14 +199,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da645085c2bb55c40afdca0fb77d7c93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayLength: 10
+  rayLength: 20
   spreadAngle: 45
   numberOfRays: 10
-  enemySpeed: 5
+  enemySpeed: 7.5
   pursueThreshold: 2
   maxEnemyHealth: 100
   enemyAttackDamage: 5
-  enemyAttackCoolDown: 5
+  enemyAttackCoolDown: 2
   fleeTime: 2
 --- !u!1 &4753653095407943258
 GameObject:

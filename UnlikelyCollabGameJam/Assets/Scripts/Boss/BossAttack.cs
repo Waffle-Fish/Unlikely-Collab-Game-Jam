@@ -1,15 +1,10 @@
-// using System.Numerics;
-using System;
-using System.Collections;
-using UnityEditor.Callbacks;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using System.Collections;
+using UnityEditor.EditorTools;
 
-
-public class BossBehavior : MonoBehaviour
+public class BossAttack : MonoBehaviour
 {
-
-    private enum BossStates {Attack, SwordAttack, FireballAttack, ScreamAttack, Enrage, Weak, Dead, Healed};
+     private enum BossStates {Attack, SwordAttack, FireballAttack, ScreamAttack, Enrage, Weak, Dead, Healed};
     private enum AttackStates {Sword, Fireball, Scream}
 
     private BossStates bossState;
@@ -42,27 +37,23 @@ public class BossBehavior : MonoBehaviour
     private GameObject player;
 
     [Header("Sword Attack Settings")]
-    [SerializeField]
-    private GameObject sword;
-    [SerializeField]
-    private float swordDamage = 20f;
-    [SerializeField]
-    private float swordDamageCoolDown = 1f;
-    private float swordDamageTimer;
-    [SerializeField]
-    private float swordWindUpTime = 3f;
-    [SerializeField]
-    private float swordWindUpSpeed = 10f;
-    [SerializeField]
-    private int swordStabCount = 4;
+    [SerializeField] private GameObject sword;
+    [SerializeField] private float swordDamage = 20f;
+    [SerializeField] private float swordDamageCoolDown = 1f;
+    [SerializeField] private float swordWindUpTime = 3f;
+    [SerializeField] private float swordWindUpSpeed = 10f;
+    [SerializeField] private int swordStabIterations = 4;
+    [SerializeField] private int swordStabCount = 4;
+    [Tooltip("Time between wind up and actually stabbing")]
+    [SerializeField] private float swordTransitionStabTime = 4;
     private int swordStabCounter;
-    [SerializeField]
-    private float swordStabReach = 15f;
-    [SerializeField]
-    private float swordStabSpeed = 30f;
-    private float swordInitialX;
-    private float swordStabDirection;
+    [SerializeField] private float swordStabReach = 15f;
+    [SerializeField] private float swordStabSpeed = 30f;
+    private float swordDamageTimer;
+    private Vector2 swordInitialPos;
+    private Vector2 swordStabDirection;
     private float swordWindUpTimer;
+
 
     [Header("Fireball Attack Settings")]
     [SerializeField]
@@ -83,7 +74,6 @@ public class BossBehavior : MonoBehaviour
     private float fireballSpeedY = 10f;
     private float fireballX;
     private float fireballY;
-
     [Header("Scream Attack Settings")]
     [SerializeField]
     private GameObject scream;
@@ -108,125 +98,77 @@ public class BossBehavior : MonoBehaviour
     private GameObject rangedEnemy;
 
     Animator animator;
+
     void Awake()
     {
-        bossHealth = bossMaxHealth;
         swordRB = sword.GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        player = GameObject.FindWithTag("Player");
+    }
+
+    void Start()
+    {
+        bossHealth = bossMaxHealth;
         intialScreamScale = scream.transform.localScale;
         inverseParentScale = new Vector3(
             1f / transform.lossyScale.x,
             1f / transform.lossyScale.y,
             1f
         );
-        player = GameObject.FindWithTag("Player");
         bossState = BossStates.Attack;
-
-        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        if (bossState == BossStates.Attack)
-        {
-            Attack();
-        }
-        else if (bossState == BossStates.SwordAttack)
-        {
-            if(!isAttacking)
-            {
-                isAttacking = true;
-                StartCoroutine(SwordAttack());
-            }
-        }
-        else if (bossState == BossStates.FireballAttack)
-        {
-            if(!isAttacking)
-            {
-                isAttacking = true;    
-                StartCoroutine(FireballAttack());
-            }
-        }
-        else if (bossState == BossStates.ScreamAttack)
-        {
-            if(!isAttacking)
-            {
-                isAttacking = true;    
-                StartCoroutine(ScreamAttack());
-            }
-        }
+        if (isAttacking) return;
+        if (Time.time < bossAttackTimer) return;
+        Attack();
     }
-
 
     private void Attack()
     {
-        bossAttackTimer -= Time.deltaTime;
-        if(bossAttackTimer <= 0f)
+        isAttacking = true;
+        switch(Random.Range(2,2))
         {
-            switch(Random.Range(0,3))
-            {
-                case 0:
-                    bossState = BossStates.SwordAttack;
-                    break;
-                case 1:
-                    bossState = BossStates.SwordAttack;
-                    break;
-                case 2:
-                    bossState = BossStates.FireballAttack;
-                    break;
-                default:
-                    break;
-            }
-            bossAttackTimer = enraged ? bossEnragedAttackCoolDown : bossAttackCoolDown;
+            case 0:
+                StartCoroutine(SwordAttack());
+                break;
+            case 1:
+                StartCoroutine(FireballAttack());
+                break;
+            case 2:
+                animator.SetBool("Scream", true);
+                Debug.Log("Scream Attack!");
+                break;
+            default:
+                break;
         }
     }
 
+    public void ActivateSword() {
+        sword.SetActive(true); 
+    }
     private IEnumerator SwordAttack()
     {
         Debug.Log("Sword Attack!");
-        sword.SetActive(true);
-        
-        yield return new WaitForSeconds(1f);
-        // Debug.Log("Starting Sword Windup");
+        animator.SetBool("Sword", true);
+        yield return null;
+        float clipDuration = animator.GetCurrentAnimatorStateInfo(0).length;
+        Debug.Log("Length: " + clipDuration);
+        yield return new WaitForSeconds(clipDuration);
 
-        swordWindUpTimer = swordWindUpTime;
-        swordDamageTimer = 0f;
-
-        while(swordWindUpTimer > 0)
+        for (int i = swordStabIterations; i > 0; i--)
         {
-            // Update timers
-            swordWindUpTimer -= Time.deltaTime;
-            swordDamageTimer -= Time.deltaTime;
+            swordWindUpTimer = swordWindUpTime;
+            swordDamageTimer = 0f;
 
-            SwordWindUp();
-
-            if (swordDamageTimer <= 0)
+            while(swordWindUpTimer > 0)
             {
-                CheckSwordCollision();
-            }
-            yield return null;
-        }
-        // Ensure sword is not moving after finishing windup
-        swordRB.linearVelocityY = 0f;
-
-        yield return new WaitForSeconds(1f);
-
-        // Debug.Log("Starting sword stab");
-        swordStabCounter = swordStabCount;
-        // Record the sword's starting horizontal position
-        swordInitialX = sword.transform.position.x;
-        // Determine stab direction based on player's relative position
-        swordStabDirection = (player.transform.position - sword.transform.position).normalized.x;
-
-
-        while (swordStabCounter > 0)
-        {
-            // Forward stab: move until the sword has traveled the specified reach
-            while (isSwordMovingToStabPosition())
-            {
-                // Update timer
+                // Update timers
+                swordWindUpTimer -= Time.deltaTime;
                 swordDamageTimer -= Time.deltaTime;
 
-                SwordStab();
+                SwordWindUp();
 
                 if (swordDamageTimer <= 0)
                 {
@@ -234,59 +176,91 @@ public class BossBehavior : MonoBehaviour
                 }
                 yield return null;
             }
-            swordRB.linearVelocity = Vector2.zero;
+            // Ensure sword is not moving after finishing windup
+            swordRB.linearVelocityY = 0f;
 
-            // Return stab: move back to near the original position
-            while (isSwordMovingToInitialPosition())
+            yield return new WaitForSeconds(swordTransitionStabTime);
+
+            // Debug.Log("Starting sword stab");
+            swordStabCounter = swordStabCount;
+            // Record the sword's starting horizontal position
+            swordInitialPos = sword.transform.position;
+            // Determine stab direction based on player's relative position
+            swordStabDirection = -sword.transform.right;
+            float reach = Vector2.Distance(player.transform.position, sword.transform.position);
+            while (swordStabCounter > 0)
             {
-                // Update timer
-                swordDamageTimer -= Time.deltaTime;
-
-                SwordRetract();
-
-                if (swordDamageTimer <= 0)
+                // Forward stab: move until the sword has traveled the specified reach
+                while (IsSwordMovingToStabPosition(reach))
                 {
-                    CheckSwordCollision();
-                }
-                yield return null;
-            }
-            swordRB.linearVelocity = Vector2.zero;
+                    // Update timer
+                    swordDamageTimer -= Time.deltaTime;
 
-            swordStabCounter--;
+                    SwordStab();
+
+                    if (swordDamageTimer <= 0)
+                    {
+                        CheckSwordCollision();
+                    }
+                    yield return null;
+                }
+                swordRB.linearVelocity = Vector2.zero;
+
+                // Return stab: move back to near the original position
+                while (IsSwordMovingToInitialPosition())
+                {
+                    // Update timer
+                    swordDamageTimer -= Time.deltaTime;
+
+                    SwordRetract();
+
+                    if (swordDamageTimer <= 0)
+                    {
+                        CheckSwordCollision();
+                    }
+                    yield return null;
+                }
+                swordRB.linearVelocity = Vector2.zero;
+
+                swordStabCounter--;
+            }
+            // Debug.Log("Finishing Sword Attack");
+           
         }
-        // Debug.Log("Finishing Sword Attack");
 
         sword.SetActive(false);
         bossState = BossStates.Attack;
         isAttacking = false;
+        animator.SetBool("Sword", false);
+        ResetBossCooldownTimer();
         yield return new WaitForEndOfFrame();
     }
 
     private void SwordRetract()
     {
-        swordRB.linearVelocity = new Vector2(-swordStabDirection * swordStabSpeed, 0f);
+        swordRB.linearVelocity = -swordStabDirection * swordStabSpeed;
     }
 
     private void SwordStab()
     {
-        swordRB.linearVelocity = new Vector2(swordStabDirection * swordStabSpeed, 0f);
+        swordRB.linearVelocity = swordStabDirection * swordStabSpeed;
     }
 
     private void SwordWindUp()
     {
-        Vector2 targetPosition = new Vector2(sword.transform.position.x, player.transform.position.y);
-        // Move the sword towards the target position at a constant speed.
-        sword.transform.position = Vector2.MoveTowards(sword.transform.position, targetPosition, swordWindUpSpeed * Time.deltaTime);
+        Vector2 dirToPlayer = (player.transform.position - sword.transform.position).normalized;
+        float angle = Vector2.SignedAngle(Vector2.left, dirToPlayer);
+        sword.transform.rotation = Quaternion.Euler(new(0, 0, angle));
     }
 
-    private bool isSwordMovingToInitialPosition()
+    private bool IsSwordMovingToInitialPosition()
     {
-        return Mathf.Abs(sword.transform.position.x - swordInitialX) > 0.1f;
+        return Vector2.Distance(sword.transform.position, swordInitialPos) > 0.1f;
     }
 
-    private bool isSwordMovingToStabPosition()
+    private bool IsSwordMovingToStabPosition(float reach)
     {
-        return Mathf.Abs(sword.transform.position.x - swordInitialX) < swordStabReach;
+        return Vector2.Distance(sword.transform.position,swordInitialPos) < reach;
     }
 
     private void CheckSwordCollision()
@@ -306,13 +280,16 @@ public class BossBehavior : MonoBehaviour
         }
     }
 
+    public void ActivateScreamAttack() {
+        StartCoroutine(ScreamAttack());
+    }
+
     private IEnumerator ScreamAttack()
     {
         scream.SetActive(true);
-        Debug.Log("Scream Attack!");
         
         // Reset the scream's scale so that its world scale matches the intended (uniform) initial scale.
-        scream.transform.localScale = Vector3.Scale(intialScreamScale, inverseParentScale);
+        scream.transform.localScale = Vector3.zero;
 
         screamDamageTimer = 0f;
         screamDurationTimer = screamDuration;
@@ -324,7 +301,7 @@ public class BossBehavior : MonoBehaviour
             screamDurationTimer -= Time.deltaTime;
 
             // Additive growth
-            scream.transform.localScale += intialScreamScale * screamGrowthRate;
+            scream.transform.localScale += screamGrowthRate * Time.deltaTime * Vector3.one;
 
             // Compute effective radius from the world (lossy) scale.
             // After counteracting the parent, the x and y should be roughly the same.
@@ -337,13 +314,15 @@ public class BossBehavior : MonoBehaviour
             yield return null;
         }
         
+        animator.SetBool("Scream", false);
+        yield return null;
         scream.SetActive(false);
-
         // Reset the scream's scale back to its initial value (counteracting parent's scale)
         scream.transform.localScale = Vector3.Scale(intialScreamScale, inverseParentScale);
 
         bossState = BossStates.Attack;
         isAttacking = false;
+        ResetBossCooldownTimer();
         yield return new WaitForEndOfFrame();
     }
 
@@ -399,54 +378,7 @@ public class BossBehavior : MonoBehaviour
         fireballInstance.GetComponent<Fireball>().SetVelocity(0f, fireballSpeedY);
     }
 
-    private void SummonMobs()
-    {
-        // spawn a few enemies
-        Instantiate(basicEnemy, transform.position, Quaternion.identity);
-        Instantiate(rangedEnemy, transform.position, Quaternion.identity);
-
-    }
-
-    private void Enrage()
-    {
-        // ANIMATION - Enrage
-        // add small wait timer
-        enraged = true;
-    }
-
-    private void Weak()
-    {
-        // ANIMATION - Weakened
-        // give player to choice to heal or kill
-        // perhaps create a variable that says canTakeDamage and set to false in this mode
-    }
-
-    private void Heal()
-    {
-        // ANIMATION - Healed
-        // have boss patrol or maybe do a silly dance?
-    }
-
-    private void Die()
-    {
-        // ANIMATION - Death
-        gameObject.SetActive(false);
-    }
-
-    public void TakeDamage(float damage)
-    {
-        bossHealth -= damage;
-        if(bossHealth <= bossEnrageHealth)
-        {
-            bossState = BossStates.Enrage;
-        }
-        else if(bossHealth <= bossWeakenedHealth)
-        {
-            bossState = BossStates.Weak;
-        }
-        else if(bossHealth <= 0)
-        {
-            bossState = BossStates.Dead;
-        }
+    private void ResetBossCooldownTimer(){
+        bossAttackTimer = Time.time + (enraged ? bossEnragedAttackCoolDown : bossAttackCoolDown);
     }
 }
