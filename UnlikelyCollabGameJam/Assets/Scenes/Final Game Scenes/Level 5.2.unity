@@ -617,7 +617,7 @@ PrefabInstance:
       objectReference: {fileID: 245178801}
     - target: {fileID: 550571521209350308, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: screamDuration
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 550571521209350308, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: swordStabCount
@@ -629,7 +629,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 550571521209350308, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: screamGrowthRate
-      value: 6
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 550571521209350308, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: swordWindUpSpeed
