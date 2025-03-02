@@ -116,6 +116,8 @@ public class BossAttack : MonoBehaviour
 
         playerFilter = new();
         playerFilter.SetLayerMask(LayerMask.GetMask("Player"));
+
+        bossAttackTimer = bossAttackCoolDown;
     }
 
     void Update()
@@ -128,7 +130,7 @@ public class BossAttack : MonoBehaviour
     private void Attack()
     {
         isAttacking = true;
-        switch(Random.Range(1,1))
+        switch(Random.Range(0,3))
         {
             case 0:
                 StartCoroutine(SwordAttack());
