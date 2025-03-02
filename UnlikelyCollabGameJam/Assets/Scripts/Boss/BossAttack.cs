@@ -72,7 +72,7 @@ public class BossAttack : MonoBehaviour
     [SerializeField]
     private float fireballSpreadY = 5f;
     [SerializeField]
-    private float fireballSpeedY = 10f;
+    private float fireballGravScale = 1f;
     private float fireballX;
     private float fireballY;
 
@@ -128,12 +128,13 @@ public class BossAttack : MonoBehaviour
     private void Attack()
     {
         isAttacking = true;
-        switch(Random.Range(2,2))
+        switch(Random.Range(1,1))
         {
             case 0:
                 StartCoroutine(SwordAttack());
                 break;
             case 1:
+                animator.SetBool("Fireball", true);
                 StartCoroutine(FireballAttack());
                 break;
             case 2:
@@ -151,11 +152,11 @@ public class BossAttack : MonoBehaviour
     }
     private IEnumerator SwordAttack()
     {
-        Debug.Log("Sword Attack!");
+        // Debug.Log("Sword Attack!");
         animator.SetBool("Sword", true);
         yield return null;
         float clipDuration = animator.GetCurrentAnimatorStateInfo(0).length;
-        Debug.Log("Length: " + clipDuration);
+        // Debug.Log("Length: " + clipDuration);
         yield return new WaitForSeconds(clipDuration);
 
         for (int i = swordStabIterations; i > 0; i--)
@@ -338,40 +339,31 @@ public class BossAttack : MonoBehaviour
 
     private IEnumerator FireballAttack()
     {
-        Debug.Log("Fireball Attack!");
-
-        // implement stream of "fireballs" upward as indicator
-        // Debug.Log("Fireball indicator");
-        yield return new WaitForSeconds(2f);
-
-        // fireball rain, randomly spawn them above player and have them rain down
-        // Debug.Log("Spawning Fireballs Above at Random X");
-
-        for(int i = 0; i < numFireballs; i++)
-        {
-            SpawnFireball();
-        }
-
-        // Debug.Log("Finished Fireball Attack");
-
+        yield return null;
         bossState = BossStates.Attack;
         isAttacking = false;
+        animator.SetBool("Fireball", false);
+        ResetBossCooldownTimer();
         yield return new WaitForEndOfFrame();
     }
 
-    private void SpawnFireball()
+    public void SpawnFireballs()
     {
-        // Pick Random X and Y's within specified ranges (Serialized Fields)
-        fireballX = Random.Range(transform.position.x - fireballSpreadX, transform.position.x + fireballSpreadX);
-        fireballY = Random.Range(fireballSpawnY - fireballSpreadY, fireballSpawnY + fireballSpreadY);
+        for (int i = 0; i < numFireballs; i++) {
+            // Pick Random X and Y's within specified ranges (Serialized Fields)
+            fireballX = Random.Range(transform.position.x - fireballSpreadX, transform.position.x + fireballSpreadX);
+            fireballY = Random.Range(fireballSpawnY - fireballSpreadY, fireballSpawnY + fireballSpreadY);
 
-        // Instantitate a new fireball (expensive)
-        GameObject fireballInstance = Instantiate(fireball, new Vector2(fireballX, fireballY), Quaternion.identity);
+            // Instantitate a new fireball (expensive)
+            // spawn fireball facing down
+            GameObject fireballInstance = Instantiate(fireball, new Vector2(fireballX, fireballY), Quaternion.Euler(0,0,-90f));
 
-        // Update fireball instance stuff
-        fireballInstance.GetComponent<Fireball>().SetLifeTime(fireballLifeTime);
-        fireballInstance.GetComponent<Fireball>().SetProjectileDamage(fireballDamage);
-        fireballInstance.GetComponent<Fireball>().SetVelocity(0f, fireballSpeedY);
+            // Update fireball instance stuff
+            fireballInstance.GetComponent<Fireball>().SetLifeTime(fireballLifeTime);
+            fireballInstance.GetComponent<Fireball>().SetProjectileDamage(fireballDamage);
+            fireballInstance.GetComponent<Rigidbody2D>().gravityScale = fireballGravScale;
+        }
+        
     }
 
     private void ResetBossCooldownTimer(){
