@@ -96,7 +96,7 @@ public class PlayerAttack : MonoBehaviour
         foreach (var enemy in OverlapResults)
         {
             Debug.Log(enemy.name);
-            EnemyBehavior eb = enemy.GetComponent<EnemyBehavior>();
+            IDamageable eb = enemy.GetComponent<IDamageable>();
             if (comboNum == 1) eb.TakeDamage(combo1damageVal);
             if (comboNum == 2) eb.TakeDamage(combo2damageVal);
             if (comboNum == 3) eb.TakeDamage(combo3damageVal);
@@ -130,7 +130,7 @@ public class PlayerAttack : MonoBehaviour
         List<Collider2D> EnemiesInRange = new();
         screamCollider.Overlap(enemyFilter, EnemiesInRange);
         foreach (var enemy in EnemiesInRange) {
-            enemy.GetComponent<EnemyBehavior>().TakeDamage(screamDamage);
+            enemy.GetComponent<IDamageable>().TakeDamage(screamDamage);
         }
 
         screamCollider.gameObject.SetActive(false);

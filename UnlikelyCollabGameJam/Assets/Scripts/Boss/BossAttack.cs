@@ -5,10 +5,10 @@ using System.Collections.Generic;
 
 public class BossAttack : MonoBehaviour
 {
-     private enum BossStates {Attack, SwordAttack, FireballAttack, ScreamAttack, Enrage, Weak, Dead, Healed};
-    private enum AttackStates {Sword, Fireball, Scream}
+    //  private enum BossStates {Attack, SwordAttack, FireballAttack, ScreamAttack, Enrage, Weak, Dead, Healed};
+    // private enum AttackStates {Sword, Fireball, Scream}
 
-    private BossStates bossState;
+    // private BossStates bossState;
     [Header("Attack CoolDown Settings")]
 
     [SerializeField]
@@ -19,17 +19,6 @@ public class BossAttack : MonoBehaviour
     private float bossAttackTimer = 0f;
 
     private bool enraged = false;
-    
-    [Header("Boss Health Settings")]
-    [SerializeField]
-    private float bossEnrageHealth = 75f;
-    [SerializeField]
-    private float bossWeakenedHealth = 15f;
-
-
-    [SerializeField]
-    private float bossMaxHealth = 250f;
-    private float bossHealth;
 
     private bool isAttacking = false;
     
@@ -110,8 +99,6 @@ public class BossAttack : MonoBehaviour
 
     void Start()
     {
-        bossHealth = bossMaxHealth;
-        bossState = BossStates.Attack;
         screamCollider.gameObject.SetActive(false);
 
         playerFilter = new();
@@ -130,7 +117,7 @@ public class BossAttack : MonoBehaviour
     private void Attack()
     {
         isAttacking = true;
-        switch(Random.Range(0,3))
+        switch(Random.Range(0,0))
         {
             case 0:
                 StartCoroutine(SwordAttack());
@@ -233,7 +220,6 @@ public class BossAttack : MonoBehaviour
         }
 
         sword.SetActive(false);
-        bossState = BossStates.Attack;
         isAttacking = false;
         animator.SetBool("Sword", false);
         ResetBossCooldownTimer();
@@ -321,7 +307,6 @@ public class BossAttack : MonoBehaviour
         yield return null;
         scream.SetActive(false);
 
-        bossState = BossStates.Attack;
         isAttacking = false;
         ResetBossCooldownTimer();
         yield return new WaitForEndOfFrame();
@@ -342,7 +327,6 @@ public class BossAttack : MonoBehaviour
     private IEnumerator FireballAttack()
     {
         yield return null;
-        bossState = BossStates.Attack;
         isAttacking = false;
         animator.SetBool("Fireball", false);
         ResetBossCooldownTimer();
@@ -370,5 +354,9 @@ public class BossAttack : MonoBehaviour
 
     private void ResetBossCooldownTimer(){
         bossAttackTimer = Time.time + (enraged ? bossEnragedAttackCoolDown : bossAttackCoolDown);
+    }
+
+    public void Enrage() {
+        
     }
 }

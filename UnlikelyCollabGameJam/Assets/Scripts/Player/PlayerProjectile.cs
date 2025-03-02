@@ -26,7 +26,7 @@ public class PlayerProjectile : MonoBehaviour
     void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.collider.CompareTag("Enemy")) {
-            collision.gameObject.GetComponent<EnemyBehavior>().TakeDamage(damageVal);
+            collision.gameObject.GetComponent<IDamageable>().TakeDamage(damageVal);
         }
         gameObject.SetActive(false);
     }

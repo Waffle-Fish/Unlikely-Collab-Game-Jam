@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
-public class EnemyBehavior : MonoBehaviour
+public class EnemyBehavior : MonoBehaviour, IDamageable
 {
     protected Rigidbody2D rb;
     protected PatrolManager pm;

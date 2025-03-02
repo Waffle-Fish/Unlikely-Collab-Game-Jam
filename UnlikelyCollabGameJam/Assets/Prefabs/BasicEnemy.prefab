@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 7741331507674829678}
   m_Layer: 6
   m_Name: BasicEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -364,6 +364,7 @@ MonoBehaviour:
   spreadAngle: 45
   numberOfRays: 10
   enemySpeed: 5
+  pursueThreshold: 1
   maxEnemyHealth: 100
   enemyAttackDamage: 5
   enemyAttackCoolDown: 5
