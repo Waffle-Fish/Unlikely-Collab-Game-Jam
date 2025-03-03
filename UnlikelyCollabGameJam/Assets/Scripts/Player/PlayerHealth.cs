@@ -42,7 +42,7 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(float damage)
     {
         CurrentHealth -= damage;
-        OnHealthChanged?.Invoke(CurrentHealth);
+        OnHealthChanged?.Invoke(CurrentHealth / maxHealth);
         Debug.Log("Ouch! I only have " + CurrentHealth + " health left!");
         if (CurrentHealth <= 0)
         {
@@ -53,7 +53,7 @@ public class PlayerHealth : MonoBehaviour
     public void Heal(float healAmount)
     {
         CurrentHealth = Mathf.Clamp(CurrentHealth + healAmount , 0, maxHealth);
-        OnHealthChanged?.Invoke(CurrentHealth);
+        OnHealthChanged?.Invoke(CurrentHealth / maxHealth);
     }
 
     public void Die()

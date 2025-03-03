@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class PlayerHUDManager : MonoBehaviour
 {
-    TextMeshProUGUI healthTMP;
     PlayerHealth playerHealth;
     [SerializeField] GameObject DeathOverlay;
+    [SerializeField] RectTransform healthSlider;
 
     void Awake()
     {
         playerHealth = GameObject.FindWithTag("Player").GetComponent<PlayerHealth>();
-        healthTMP = GetComponentInChildren<TextMeshProUGUI>();
     }
 
     void Start()
@@ -21,9 +20,10 @@ public class PlayerHUDManager : MonoBehaviour
         playerHealth.OnPlayerDeath += ProcessDeathOverlay;
     }
 
-    private void UpdateHealth(float currentHealth)
+    private void UpdateHealth(float healthPercentage)
     {
-        healthTMP.text = "Health: " + currentHealth.ToString();
+        healthSlider.anchorMax = new(healthPercentage, healthSlider.anchorMax.y);
+        healthSlider.offsetMax = new(0, healthSlider.offsetMax.y);
     }
 
     private void ProcessDeathOverlay()

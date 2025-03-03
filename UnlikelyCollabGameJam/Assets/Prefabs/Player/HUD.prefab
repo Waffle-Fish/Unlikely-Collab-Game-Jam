@@ -117,6 +117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DeathOverlay: {fileID: 4843664724800012398}
+  healthSlider: {fileID: 8141951084596504331}
 --- !u!1 &598521620016177353
 GameObject:
   m_ObjectHideFlags: 0
