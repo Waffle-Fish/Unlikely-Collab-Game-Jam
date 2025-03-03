@@ -15582,6 +15582,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 739538300645771396, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: ScreamAttackEnabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 739538300645771396, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: FireballAttackEnabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2747029443339160499, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.89707375

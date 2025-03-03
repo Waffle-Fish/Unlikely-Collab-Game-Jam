@@ -104,7 +104,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6948259514330137076
 Transform:
   m_ObjectHideFlags: 0
@@ -114,8 +114,8 @@ Transform:
   m_GameObject: {fileID: 2363205689815191569}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.375, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.5, z: 1}
+  m_LocalPosition: {x: -0.5, y: 0, z: 0}
+  m_LocalScale: {x: 1.25, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6774109526885548021}
@@ -764,6 +764,7 @@ MonoBehaviour:
   DashDuration: 0.05
   jumpForce: 12
   fallForce: 5
+  StartWithFall: 0
 --- !u!114 &739538300645771396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -891,8 +892,8 @@ Transform:
   m_GameObject: {fileID: 6319515921578743222}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.375, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0.5, y: 0, z: 0}
+  m_LocalScale: {x: 1.25, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6774109526885548021}
