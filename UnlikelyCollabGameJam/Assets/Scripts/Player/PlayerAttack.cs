@@ -14,6 +14,7 @@ public class PlayerAttack : MonoBehaviour
     Animator animator;
 
     [Header("Normal Attack")]
+    [SerializeField] bool SwordAttackEnabled;
     [Tooltip("Time between attacks for it to count as a combo")]
     [SerializeField][Min(0.0000001f)] float comboTime;
     [Tooltip("Short cooldown between attacks. Prevents spam")]
@@ -27,12 +28,14 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] int comboWindow = 0;
 
     [Header("Scream Attack")]
+    [SerializeField] bool ScreamAttackEnabled;
     [SerializeField] Collider2D screamCollider;
     [SerializeField][Min(0f)] float screamDamage;
     [SerializeField][Min(0f)] float screamCooldown;
     float screamTimer;
 
     [Header("Fireball")]
+    [SerializeField] bool FireballAttackEnabled;
     [SerializeField] GameObject fireBallPrefab;
     [SerializeField] float fireBallForce;
     [SerializeField] Transform rightSpawnLocation;
@@ -70,9 +73,9 @@ public class PlayerAttack : MonoBehaviour
         screamCollider.gameObject.SetActive(false);
 
         inputActions = psm.InputActions;
-        inputActions.Player.Attack.performed += ProcessAttack;
-        inputActions.Player.Scream.performed += ProcessScreamAttack;
-        inputActions.Player.Fireball.performed += StartFireballAttack;
+        if (SwordAttackEnabled) inputActions.Player.Attack.performed += ProcessAttack;
+        if (ScreamAttackEnabled) inputActions.Player.Scream.performed += ProcessScreamAttack;
+        if (FireballAttackEnabled) inputActions.Player.Fireball.performed += StartFireballAttack;
 
         enemyFilter.SetLayerMask(LayerMask.GetMask("Enemy"));
     }
