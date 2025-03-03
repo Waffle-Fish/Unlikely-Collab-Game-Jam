@@ -1,23 +1,26 @@
 using System;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class BossHealth : MonoBehaviour, IDamageable
 {
     [Header("Boss Health Settings")]
-    [SerializeField]
-    private float bossEnrageHealth = 75f;
-
-    [SerializeField]
-    private float maxHealth = 250f;
-    private float hp;
-    private BossAttack bossAttack;
-    private bool isEnrage = false;
+    [SerializeField] private float bossEnrageHealth = 75f;
+    [SerializeField] private float maxHealth = 250f;
+    [SerializeField] private PlayableDirector playableDirector;
 
     public event Action<float> OnHealthChanged;
     public event Action OnPlayerDeath;
 
+    private BossAttack bossAttack;
+    private Animator animator;
+
+    private float hp;
+    private bool isEnrage = false;
+
     private void Awake() {
         bossAttack = GetComponent<BossAttack>();
+        animator = GetComponent<Animator>();
     }
 
     private void Start() {
@@ -41,7 +44,16 @@ public class BossHealth : MonoBehaviour, IDamageable
 
     private void Dead()
     {
-        Debug.Log("Dead");
-        throw new NotImplementedException();
+        ResetAnimParams();
+        animator.SetBool("Dead", true);
+        playableDirector.Play();
+    }
+
+    private void ResetAnimParams() {
+        foreach (var p in animator.parameters)
+        {
+            if (p.type == AnimatorControllerParameterType.Bool) animator.SetBool(p.name, false);
+            if (p.type == AnimatorControllerParameterType.Trigger) animator.ResetTrigger(p.name);
+        }
     }
 }
