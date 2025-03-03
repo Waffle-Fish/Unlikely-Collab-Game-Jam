@@ -707,6 +707,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2251287957785696192, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: m_Color.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251287957785696192, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251287957785696192, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251287957785696192, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2251287957785696192, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3093995798077174436, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: m_IsTrigger
       value: 0
@@ -765,7 +785,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8603642795501074344, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18551,6 +18571,10 @@ PlayableDirector:
     value: {fileID: 2084223315}
   - key: {fileID: 1586064483573181925, guid: 869d7cd9a1be1af42a756fe25f93b43d, type: 2}
     value: {fileID: 1782189273}
+  - key: {fileID: -2234245172541571256, guid: 869d7cd9a1be1af42a756fe25f93b43d, type: 2}
+    value: {fileID: 1762222272}
+  - key: {fileID: 9130343926486888161, guid: 869d7cd9a1be1af42a756fe25f93b43d, type: 2}
+    value: {fileID: 1542269159}
   m_ExposedReferences:
     m_References: []
 --- !u!1 &1228326933
@@ -19168,7 +19192,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 40
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -19195,7 +19219,7 @@ Transform:
   m_GameObject: {fileID: 1361259565}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -51, y: 35.71779, z: -10}
+  m_LocalPosition: {x: -51, y: 55.404648, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19513,6 +19537,11 @@ BoxCollider2D:
 Transform:
   m_CorrespondingSourceObject: {fileID: 7239022336203730016, guid: f4767c24cf10839498ec82dca1390ad3, type: 3}
   m_PrefabInstance: {fileID: 524023340}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1542269159 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4551126575494059310, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
+  m_PrefabInstance: {fileID: 245178795}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1562334431 stripped
 Transform:
@@ -19939,6 +19968,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1762222272 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 525252009397749880, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+  m_PrefabInstance: {fileID: 2052974278}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1782189268 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6920381048164952927, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
@@ -20670,7 +20710,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2747029443339160499, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.49079746
+      value: 0.9047437
       objectReference: {fileID: 0}
     - target: {fileID: 3834293882225499734, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_IncludeLayers.m_Bits
@@ -20729,12 +20769,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8818260897827771900, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: Composition.DeadZone.Size.y
+      value: 0.389535
+      objectReference: {fileID: 0}
+    - target: {fileID: 8818260897827771900, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: Composition.ScreenPosition.x
       value: -0.06010917
       objectReference: {fileID: 0}
     - target: {fileID: 8818260897827771900, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: Composition.ScreenPosition.y
-      value: 0.19902919
+      value: 1.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
