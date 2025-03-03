@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using UnityEditor.EditorTools;
-using System.Collections.Generic;
 
 public class BossAttack : MonoBehaviour
 {
