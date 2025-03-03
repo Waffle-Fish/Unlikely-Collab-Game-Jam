@@ -20,7 +20,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float DashCooldown = 0f;
     [Tooltip("Time it takes to dash")]
     [SerializeField][Min(0.0000001f)] float DashDuration = 1f;
-    float timeDashUsed = 0;
+    float timeDashUsed;
 
     [Header("Vertical Movement")]
     [SerializeField] float jumpForce = 0f;
@@ -36,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Extra")]
     [SerializeField] private bool StartWithFall = false;
+    public event Action<float> OnDashUsed;
 
     void Awake()
     {
@@ -51,6 +52,8 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Player.Dash.performed += ProcessDash;
         originalGravScale = rb2D.gravityScale;
         animator.SetBool("Fall", StartWithFall);
+
+        timeDashUsed = -DashCooldown;
     }
 
     void OnDisable()
@@ -70,9 +73,11 @@ public class PlayerMovement : MonoBehaviour
         DetectState();
         ProcessFastFalling();
         UpdateAnimation();
+        UpdateDashHUD();
         // if(!inputActions.Player.Move.WasPerformedThisFrame() && psm.CurrentMoveState == PlayerStateManager.MoveState.Grounded) rb2D.linearVelocityX = 0;
     }
 
+   
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.rigidbody) {
@@ -161,6 +166,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
             psm.CurrentMoveState = PlayerStateManager.MoveState.Grounded;
+            
         }
     } 
 
@@ -169,4 +175,11 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("Jump", psm.CurrentMoveState == PlayerStateManager.MoveState.Jumping);
         animator.SetBool("Peak", psm.CurrentMoveState == PlayerStateManager.MoveState.Jumping && rb2D.linearVelocityY < 5 && rb2D.linearVelocityY > 0);
     }
+
+    private void UpdateDashHUD()
+    {
+        float dashPercentDone = (timeDashUsed + DashCooldown - Time.time) / DashCooldown;
+        OnDashUsed?.Invoke(dashPercentDone);
+    }
+
 }

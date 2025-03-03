@@ -44,6 +44,10 @@ public class PlayerAttack : MonoBehaviour
     float fireBallTimer = 0;
     List<GameObject> fireBalls;
 
+    // [Header("HUD")]
+    public event Action<float> OnFireballUsed;
+    public event Action<float> OnScreamUsed;
+
     ContactFilter2D enemyFilter;
     Rigidbody2D rb2d;
 
@@ -65,6 +69,15 @@ public class PlayerAttack : MonoBehaviour
             animator.ResetTrigger("Fireball");
             animator.ResetTrigger("Scream");
         }
+        UpdateDisplayTimers();
+    }
+
+    private void UpdateDisplayTimers()
+    {
+        float screamPercentDone = (screamTimer - Time.time) / screamCooldown;
+        OnScreamUsed?.Invoke(screamPercentDone);
+        float fireBallPercentDone = (fireBallTimer - Time.time) / fireBallCooldown;
+        OnFireballUsed?.Invoke(fireBallPercentDone);
     }
 
     private void Start() {

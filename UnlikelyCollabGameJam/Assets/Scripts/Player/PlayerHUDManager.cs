@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class PlayerHUDManager : MonoBehaviour
 {
+    [Header("Health")]
     PlayerHealth playerHealth;
     [SerializeField] GameObject DeathOverlay;
     [SerializeField] RectTransform healthSlider;
+
+    // [Header("Skills")]
 
     void Awake()
     {
