@@ -15,6 +15,7 @@ public class PatrolManager : MonoBehaviour
     protected GameObject ppObject;
 
     [Header("Initialize Patrol Points")]
+    [SerializeField] bool showDebugPatrolPoints = false;
     [SerializeField] int xStart = -10;
     [SerializeField] int yStart = 10;
     [SerializeField] int width = 60;
@@ -44,7 +45,7 @@ public class PatrolManager : MonoBehaviour
                     {
                         patrolPoints.Add(point);
                         // Just for visualization purposes
-                        // Instantiate(ppObject, point, Quaternion.identity);
+                        if(showDebugPatrolPoints) Instantiate(ppObject, point, Quaternion.identity);
                     }
                 }
             }
