@@ -13,6 +13,9 @@ public class BossHealth : MonoBehaviour, IDamageable
     private BossAttack bossAttack;
     private bool isEnrage = false;
 
+    public event Action<float> OnHealthChanged;
+    public event Action OnPlayerDeath;
+
     private void Awake() {
         bossAttack = GetComponent<BossAttack>();
     }
