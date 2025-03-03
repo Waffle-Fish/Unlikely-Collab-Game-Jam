@@ -34,6 +34,9 @@ public class PlayerMovement : MonoBehaviour
     SpriteRenderer spriteRenderer;
     Animator animator;
 
+    [Header("Extra")]
+    [SerializeField] private bool StartWithFall = false;
+
     void Awake()
     {
         rb2D = GetComponent<Rigidbody2D>();
@@ -47,6 +50,18 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Player.Jump.performed += ProcessJump;
         inputActions.Player.Dash.performed += ProcessDash;
         originalGravScale = rb2D.gravityScale;
+        animator.SetBool("Fall", StartWithFall);
+    }
+
+    void OnDisable()
+    {
+        // reset animator
+        foreach (var p in animator.parameters)
+        {
+            if (p.type == AnimatorControllerParameterType.Bool) animator.SetBool(p.name, false);
+            if (p.type == AnimatorControllerParameterType.Trigger) animator.ResetTrigger(p.name);
+        }
+        rb2D.linearVelocity = Vector2.zero;
     }
 
     void Update()

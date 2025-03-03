@@ -450,6 +450,7 @@ GameObject:
   - component: {fileID: 6878941695560686198}
   - component: {fileID: 3111527635850736269}
   - component: {fileID: 739538300645771396}
+  - component: {fileID: 525252009397749880}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -752,7 +753,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4362588724417458548}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd5c7e588d1398b4da9109698b15b131, type: 3}
   m_Name: 
@@ -770,11 +771,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4362588724417458548}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: acf03cbc39e40434693223b8b0caed12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SwordAttackEnabled: 1
   comboTime: 0.1
   attackCooldown: 0.0000001
   leftWeaponCollider: {fileID: 4551930453098540369}
@@ -783,14 +785,85 @@ MonoBehaviour:
   combo2damageVal: 20
   combo3damageVal: 30
   comboWindow: 60
+  ScreamAttackEnabled: 0
   screamCollider: {fileID: 7141551370590227706}
   screamDamage: 20
   screamCooldown: 5
+  FireballAttackEnabled: 0
   fireBallPrefab: {fileID: 7529089151399739999, guid: 7ca057c2e82aca045af18733f28a557a, type: 3}
   fireBallForce: 10
   rightSpawnLocation: {fileID: 4741524970044795088}
   leftSpawnLocation: {fileID: 5514839701745840231}
   fireBallCooldown: 1
+--- !u!114 &525252009397749880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4362588724417458548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 4a799dd386944984a9921e83f179ecad, type: 2}
+    - {fileID: 11400000, guid: a55e2f1b54c7704498ac1176adf571b9, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 739538300645771396}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 3111527635850736269}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 739538300645771396}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 3111527635850736269}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &6319515921578743222
 GameObject:
   m_ObjectHideFlags: 0
