@@ -20,7 +20,7 @@ public class BossAttack : MonoBehaviour
 
     private bool enraged = false;
 
-    private bool isAttacking = false;
+    private bool isAttacking = true;
     
     private Rigidbody2D swordRB;
 
@@ -117,7 +117,7 @@ public class BossAttack : MonoBehaviour
     private void Attack()
     {
         isAttacking = true;
-        switch(Random.Range(0,0))
+        switch(Random.Range(0,3))
         {
             case 0:
                 StartCoroutine(SwordAttack());
@@ -133,6 +133,12 @@ public class BossAttack : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    // Need this for boss intro
+    public void SetIsAttackingFalse() {
+        isAttacking = false;
+        ResetBossCooldownTimer();
     }
 
     #region Sword
@@ -357,6 +363,6 @@ public class BossAttack : MonoBehaviour
     }
 
     public void Enrage() {
-        
+
     }
 }
