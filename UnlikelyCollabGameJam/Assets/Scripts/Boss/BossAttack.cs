@@ -320,7 +320,7 @@ public class BossAttack : MonoBehaviour
     {
         float damageRange = screamCollider.radius * scream.transform.lossyScale.x;
         float distance = Vector2.Distance(player.transform.position, screamCollider.transform.position);
-        Debug.Log("Player distance: " + distance + "\nDamageRange: " + damageRange);
+        // Debug.Log("Player distance: " + distance + "\nDamageRange: " + damageRange);
         if (distance < damageRange) {
             player.GetComponent<PlayerHealth>().TakeDamage(screamDamage);
             screamDamageTimer = screamDamageCooldown;

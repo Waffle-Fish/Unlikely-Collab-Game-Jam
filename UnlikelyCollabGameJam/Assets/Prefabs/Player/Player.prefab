@@ -788,14 +788,14 @@ MonoBehaviour:
   comboWindow: 60
   ScreamAttackEnabled: 0
   screamCollider: {fileID: 7141551370590227706}
-  screamDamage: 20
-  screamCooldown: 5
+  screamDamage: 100
+  screamCooldown: 10
   FireballAttackEnabled: 0
   fireBallPrefab: {fileID: 7529089151399739999, guid: 7ca057c2e82aca045af18733f28a557a, type: 3}
   fireBallForce: 10
   rightSpawnLocation: {fileID: 4741524970044795088}
   leftSpawnLocation: {fileID: 5514839701745840231}
-  fireBallCooldown: 1
+  fireBallCooldown: 2.5
 --- !u!114 &525252009397749880
 MonoBehaviour:
   m_ObjectHideFlags: 0
