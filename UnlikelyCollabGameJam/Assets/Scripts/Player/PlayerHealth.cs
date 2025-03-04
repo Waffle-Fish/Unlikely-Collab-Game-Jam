@@ -16,10 +16,12 @@ public class PlayerHealth : MonoBehaviour
 
     Animator animator;
     PlayerStateManager psm;
+    PlayerSFXManager playerSFXManager;
 
     private void Awake() {
         animator = GetComponent<Animator>();
         psm = GetComponent<PlayerStateManager>();
+        playerSFXManager = GetComponent<PlayerSFXManager>();
     }
 
     private void Start()
@@ -43,7 +45,11 @@ public class PlayerHealth : MonoBehaviour
     {
         CurrentHealth -= damage;
         OnHealthChanged?.Invoke(CurrentHealth / maxHealth);
+        playerSFXManager.PlayTakeDamage();
         Debug.Log("Ouch! I only have " + CurrentHealth + " health left!");
+        if (CurrentHealth <= 0.33 * maxHealth) {
+            playerSFXManager.PlayLowHealth();
+        }
         if (CurrentHealth <= 0)
         {
             psm.InputActions.Player.Disable();
@@ -58,6 +64,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void Die()
     {
+        playerSFXManager.PlayDeath();
         gameObject.SetActive(false);
         OnPlayerDeath?.Invoke();
     }   

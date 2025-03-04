@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Extra")]
     [SerializeField] private bool StartWithFall = false;
     public event Action<float> OnDashUsed;
+    public event Action<float> OnMoving;
     PlayerSFXManager playerSFXManager;
 
     void Awake()
@@ -92,13 +93,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (psm.CurrentMoveState == PlayerStateManager.MoveState.Dashing) return;
         Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
+        
         animator.SetBool("Run", dir.x != 0f);
         if (dir.x == 0f) {
             rb2D.linearVelocityX = 0;
-            playerSFXManager.StopRunSFX();
             return;
         }
-        playerSFXManager.PlayRunSFX();
+        
         float finalMoveForce = moveForce;
         if (psm.CurrentAttackState != PlayerStateManager.AttackState.Idle) finalMoveForce = moveForce * 0.1f;
         rb2D.linearVelocityX = dir.x * finalMoveForce;
@@ -113,7 +114,6 @@ public class PlayerMovement : MonoBehaviour
         }
         if (rb2D.linearVelocityY < -0.1f) {
             psm.CurrentMoveState = PlayerStateManager.MoveState.Falling;
-            playerSFXManager.PlayFallSFX();
         }
     }
 
@@ -123,6 +123,7 @@ public class PlayerMovement : MonoBehaviour
             if (psm.CurrentMoveState == PlayerStateManager.MoveState.Falling || psm.CurrentMoveState == PlayerStateManager.MoveState.Jumping) {
                 // rb2D.linearVelocity = new(rb2D.linearVelocityX, 0f);
                 rb2D.gravityScale = fallForce;
+                playerSFXManager.PlayFallSFX();
             }
         } 
         // else if (inputActions.Player.FastFall.WasReleasedThisFrame() || psm.CurrentState == PlayerStateManager.State.Grounded) {

@@ -30,8 +30,11 @@ public class PlayerSFXManager : MonoBehaviour
     private AudioSource movementSource;
     private AudioSource attackSource;
     private AudioSource hurtSource;
+    private AudioSource lowHealthSource;
     private List<AudioSource> audioSources;
     private Rigidbody2D rb2d;
+
+    int i = 0;
 
     private void Awake() {
         audioSources = new();
@@ -41,6 +44,7 @@ public class PlayerSFXManager : MonoBehaviour
         movementSource = audioSources[0];
         attackSource = audioSources[1];
         hurtSource = audioSources[2];
+        lowHealthSource = audioSources[3];
     }
 
     void Update()
@@ -59,15 +63,19 @@ public class PlayerSFXManager : MonoBehaviour
     #region Movement SFX
     public void PlayFromMovement(AudioClip audioClip) {
         movementSource.Stop();
-        StopCoroutine(nameof(StopRunSFX));
         movementSource.PlayOneShot(audioClip);
-        isRun = false;
     }
     public void PlayRunSFX() { 
         if (isRun) return;
-        isRun = true;
         StartCoroutine(PlayRunTrack());
     }
+
+    public void PlayRunSFX1() { PlayFromMovement(run[0]); }
+    public void PlayRunSFX2() { PlayFromMovement(run[1]); }
+    public void PlayRunSFX3() { PlayFromMovement(run[2]); }
+    public void PlayRunSFX4() { PlayFromMovement(run[3]); }
+
+    
 
     public void StopRunSFX() { 
         isRun = false;
@@ -75,13 +83,12 @@ public class PlayerSFXManager : MonoBehaviour
     }
 
     IEnumerator PlayRunTrack() {
-        int i = 0;
-        while (isRun) {
-            movementSource.Stop();
-            movementSource.PlayOneShot(run[i]);
-            yield return new WaitForSeconds(run[i].length);
-            i = (i+1) % run.Count;
-        }
+        isRun = true;
+        movementSource.Stop();
+        movementSource.PlayOneShot(run[i]);
+        yield return new WaitForSeconds(run[i].length);
+        isRun = false;
+        i = (i+1) % run.Count;
     }
 
     public void PlayJumpSFX() { PlayFromMovement(jump); }
@@ -105,6 +112,8 @@ public class PlayerSFXManager : MonoBehaviour
     public void PlayAttack2SFX() { PlayFromAttack(attack2); }
     public void PlayAttack3SFX() { PlayFromAttack(attack3); }
     public void PlayScreamAttack() { PlayFromAttack(screamAttack); }
+    public void PlayFireballCharge() { PlayFromAttack(fireballCharge); }
+    public void PlayFireballAttack() { PlayFromAttack(fireballAttack); }
     #endregion
 
     #region Hurt SFX
@@ -114,10 +123,11 @@ public class PlayerSFXManager : MonoBehaviour
     }
     public void PlayTakeDamage() { PlayFromHurt(takeDamage); }
     public void PlayLowHealth() { 
-        hurtSource.Stop();
-        hurtSource.clip = lowHealth;
-        hurtSource.Play();
-        hurtSource.loop = true;
+        if (hurtSource.clip == lowHealth) return;
+        lowHealthSource.Stop();
+        lowHealthSource.clip = lowHealth;
+        lowHealthSource.Play();
+        lowHealthSource.loop = true;
     }
     public void PlayDeath() { PlayFromHurt(death); }
 

@@ -50,11 +50,13 @@ public class PlayerAttack : MonoBehaviour
 
     ContactFilter2D enemyFilter;
     Rigidbody2D rb2d;
+    PlayerSFXManager playerSFXManager;
 
     private void Awake() {
         psm = GetComponent<PlayerStateManager>();
         animator = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
+        playerSFXManager = GetComponent<PlayerSFXManager>();
         
         fireBalls = new();
         for (int i = 0; i < 11; i++)
@@ -129,7 +131,7 @@ public class PlayerAttack : MonoBehaviour
             Debug.Log(enemy.name);
             IDamageable eb = enemy.GetComponent<IDamageable>();
             if (comboNum == 1) eb.TakeDamage(combo1damageVal);
-            if (comboNum == 2) eb.TakeDamage(combo2damageVal);
+            if (comboNum == 2)  eb.TakeDamage(combo2damageVal); 
             if (comboNum == 3) eb.TakeDamage(combo3damageVal);
         }
         DisableWeapon();
