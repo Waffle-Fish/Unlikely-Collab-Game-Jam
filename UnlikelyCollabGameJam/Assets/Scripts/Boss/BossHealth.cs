@@ -14,6 +14,7 @@ public class BossHealth : MonoBehaviour, IDamageable
 
     private BossAttack bossAttack;
     private Animator animator;
+    private BossSFX bossSFX;
 
     private float hp;
     private bool isEnrage = false;
@@ -21,6 +22,7 @@ public class BossHealth : MonoBehaviour, IDamageable
     private void Awake() {
         bossAttack = GetComponent<BossAttack>();
         animator = GetComponent<Animator>();
+        bossSFX = GetComponent<BossSFX>();
     }
 
     private void Start() {
@@ -32,9 +34,11 @@ public class BossHealth : MonoBehaviour, IDamageable
     {
         hp -= damage;
         OnHealthChanged?.Invoke(hp/maxHealth);
+        bossSFX.PlayTakeDamageSFX();
         if(!isEnrage && hp <= bossEnrageHealth)
         {
             isEnrage = true;
+            bossSFX.PlayRageSFX();
             bossAttack.Enrage();
         }
         if(hp <= 0)

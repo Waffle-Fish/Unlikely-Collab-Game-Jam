@@ -87,12 +87,14 @@ public class BossAttack : MonoBehaviour
 
     Animator animator;
     ContactFilter2D playerFilter;
+    BossSFX bossSFX;
 
     void Awake()
     {
         swordRB = sword.GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         player = GameObject.FindWithTag("Player");
+        bossSFX = GetComponent<BossSFX>();
     }
 
     void Start()
@@ -187,6 +189,7 @@ public class BossAttack : MonoBehaviour
             while (swordStabCounter > 0)
             {
                 // Forward stab: move until the sword has traveled the specified reach
+                bossSFX.PlayStabsSFX();
                 while (IsSwordMovingToStabPosition(reach))
                 {
                     // Update timer
