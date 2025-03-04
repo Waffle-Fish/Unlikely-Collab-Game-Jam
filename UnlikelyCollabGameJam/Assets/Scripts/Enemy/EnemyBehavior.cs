@@ -90,6 +90,7 @@ public class EnemyBehavior : MonoBehaviour, IDamageable
     {
         target = pm.GetNextPatrolPointInPath((Vector2)transform.position);
         enemyHealth = maxEnemyHealth;
+        player = GameObject.FindWithTag("Player");
     }
 
     void Update()
@@ -137,7 +138,7 @@ public class EnemyBehavior : MonoBehaviour, IDamageable
         }
 
         // DRAW DEBUG PATH
-        pm.DrawDebugPath((Vector2)transform.position);
+        // pm.DrawDebugPath((Vector2)transform.position);
 
         // if enemy falls through ground -> it dies
         if (transform.position.y < -100f)
@@ -362,7 +363,7 @@ public class EnemyBehavior : MonoBehaviour, IDamageable
             Vector2 rayDirection = Quaternion.Euler(0, 0, angle) * forwardDir;
 
             RaycastHit2D hit = Physics2D.Raycast(origin, rayDirection, rayLength, detectionLayer);
-            Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
+            // Debug.DrawRay(origin, rayDirection * rayLength, Color.red, .1f);  // For visual debugging in the Scene view
 
             if (hit.collider != null && hit.collider.CompareTag("Player"))
             {

@@ -158,12 +158,12 @@ public class PlayerMovement : MonoBehaviour
             timeDashUsed = Time.time;
 
             Vector2 goalPos = (Vector2)transform.position + dir * DashDistance;
-            Debug.DrawLine(transform.position, goalPos, Color.red, 10f);
+            // Debug.DrawLine(transform.position, goalPos, Color.red, 10f);
             Collider2D hitCollider = Physics2D.OverlapPoint(goalPos);
             if (hitCollider) {
                 float newDist = Vector2.Distance(hitCollider.ClosestPoint(goalPos), transform.position);
                 goalPos = (Vector2)transform.position + dir * newDist;
-                Debug.DrawLine(transform.position, goalPos, Color.blue, 10f);
+                // Debug.DrawLine(transform.position, goalPos, Color.blue, 10f);
             }
 
             Vector2 curVelocity = rb2D.linearVelocity;

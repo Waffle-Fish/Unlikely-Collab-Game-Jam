@@ -65,7 +65,7 @@ public class RangedEnemyBehavior : EnemyBehavior
             GameObject projInstance = Instantiate(projectile, projectileSpawnPos.position, Quaternion.identity);
 
             Vector2 direction = (player.transform.position - transform.position).normalized;
-            Debug.Log("Firing in Direction: "+direction);
+            // Debug.Log("Firing in Direction: "+direction);
 
             projInstance.GetComponent<Projectile>().SetVelocity(
                 direction.x*projectileSpeed,

@@ -128,7 +128,6 @@ public class PlayerAttack : MonoBehaviour
         else rightWeaponCollider.Overlap(enemyFilter, OverlapResults);
         foreach (var enemy in OverlapResults)
         {
-            Debug.Log(enemy.name);
             IDamageable eb = enemy.GetComponent<IDamageable>();
             if (comboNum == 1) eb.TakeDamage(combo1damageVal);
             if (comboNum == 2)  eb.TakeDamage(combo2damageVal); 
