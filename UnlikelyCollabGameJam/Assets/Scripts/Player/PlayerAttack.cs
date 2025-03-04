@@ -85,12 +85,27 @@ public class PlayerAttack : MonoBehaviour
         rightWeaponCollider.gameObject.SetActive(false);
         screamCollider.gameObject.SetActive(false);
 
-        inputActions = psm.InputActions;
+        inputActions ??= psm.InputActions;
+        
         if (SwordAttackEnabled) inputActions.Player.Attack.performed += ProcessAttack;
         if (ScreamAttackEnabled) inputActions.Player.Scream.performed += ProcessScreamAttack;
         if (FireballAttackEnabled) inputActions.Player.Fireball.performed += StartFireballAttack;
 
         enemyFilter.SetLayerMask(LayerMask.GetMask("Enemy"));
+    }
+
+    private void OnEnable() {
+        if (inputActions == null) return;
+        if (SwordAttackEnabled) inputActions.Player.Attack.performed += ProcessAttack;
+        if (ScreamAttackEnabled) inputActions.Player.Scream.performed += ProcessScreamAttack;
+        if (FireballAttackEnabled) inputActions.Player.Fireball.performed += StartFireballAttack;
+    }
+
+    private void OnDisable() {
+        inputActions ??= psm.InputActions;
+        if (SwordAttackEnabled) inputActions.Player.Attack.performed -= ProcessAttack;
+        if (ScreamAttackEnabled) inputActions.Player.Scream.performed -= ProcessScreamAttack;
+        if (FireballAttackEnabled) inputActions.Player.Fireball.performed -= StartFireballAttack;
     }
 
     private void ProcessAttack(InputAction.CallbackContext context)
@@ -157,6 +172,7 @@ public class PlayerAttack : MonoBehaviour
     private void StartFireballAttack(InputAction.CallbackContext context)
     {
         if (Time.time < fireBallTimer) return;
+        if (psm.CurrentMoveState != PlayerStateManager.MoveState.Grounded) return;
         fireBallTimer = Time.time + fireBallCooldown;
         
         animator.SetTrigger("Fireball");

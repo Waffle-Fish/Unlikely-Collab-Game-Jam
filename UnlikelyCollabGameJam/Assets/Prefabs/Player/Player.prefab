@@ -445,12 +445,12 @@ GameObject:
   - component: {fileID: 3834293882225499734}
   - component: {fileID: 5107011049939977524}
   - component: {fileID: 4494198987102032308}
-  - component: {fileID: 6610297556898321340}
+  - component: {fileID: 525252009397749880}
   - component: {fileID: 4011661523735385067}
   - component: {fileID: 6878941695560686198}
   - component: {fileID: 3111527635850736269}
   - component: {fileID: 739538300645771396}
-  - component: {fileID: 525252009397749880}
+  - component: {fileID: 8532291943731737696}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -620,103 +620,75 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!82 &6610297556898321340
-AudioSource:
+--- !u!114 &525252009397749880
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4362588724417458548}
   m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 4a799dd386944984a9921e83f179ecad, type: 2}
+    - {fileID: 11400000, guid: a55e2f1b54c7704498ac1176adf571b9, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 739538300645771396}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 3111527635850736269}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 739538300645771396}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 3111527635850736269}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &4011661523735385067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -796,7 +768,7 @@ MonoBehaviour:
   rightSpawnLocation: {fileID: 4741524970044795088}
   leftSpawnLocation: {fileID: 5514839701745840231}
   fireBallCooldown: 2.5
---- !u!114 &525252009397749880
+--- !u!114 &8532291943731737696
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -805,66 +777,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 4362588724417458548}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Script: {fileID: 11500000, guid: 39e9945b0a83bd94e817a952b740aba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Events:
-    m_Signals:
-    - {fileID: 11400000, guid: 4a799dd386944984a9921e83f179ecad, type: 2}
-    - {fileID: 11400000, guid: a55e2f1b54c7704498ac1176adf571b9, type: 2}
-    m_Events:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 739538300645771396}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 3111527635850736269}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 739538300645771396}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 3111527635850736269}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+  run:
+  - {fileID: 8300000, guid: 0bf5ee9656fc2624eaaa7fe758bb74cd, type: 3}
+  - {fileID: 8300000, guid: f490fa5d564f15247b7a4a536dfcc966, type: 3}
+  - {fileID: 8300000, guid: 01ebafdc1b0c7db49bdc429d2f56a299, type: 3}
+  - {fileID: 8300000, guid: a57023fbc4d2eec479b8589aca70490d, type: 3}
+  jump: {fileID: 8300000, guid: 533086e91cd3bf74693db25b5369659e, type: 3}
+  fall: {fileID: 8300000, guid: f2851c963d5cbe041abf7ce5b0330822, type: 3}
+  dash: {fileID: 8300000, guid: 022fb277ad025df4d829d5b38744d34d, type: 3}
+  land: {fileID: 8300000, guid: ad2fd12bf6be21d49a0c27ade76d1ba8, type: 3}
+  attack1: {fileID: 8300000, guid: d7f8a96857a22b1439d9ba3cce3dbd7a, type: 3}
+  attack2: {fileID: 8300000, guid: 191673a2a274bbe4b8aabba79ff8413b, type: 3}
+  attack3: {fileID: 8300000, guid: 744615a296f98d04f894fc482d9939e0, type: 3}
+  screamAttack: {fileID: 8300000, guid: 9860fcfa54d7ed24a8dc5f4890a736c5, type: 3}
+  fireballCharge: {fileID: 8300000, guid: 03410c1511cdad746814762b2898eccf, type: 3}
+  fireballAttack: {fileID: 8300000, guid: 170ba7bb1b16c0b459bcfdfad18471bb, type: 3}
+  takeDamage: {fileID: 8300000, guid: aac293ac4c1349046bcb14dd36442034, type: 3}
+  lowHealth: {fileID: 8300000, guid: 81ecbb48d6bbb1b4daf4f2149ec997fc, type: 3}
+  death: {fileID: 8300000, guid: ae89e13d67f5c4f44ac0950e8e9108c9, type: 3}
 --- !u!1 &6319515921578743222
 GameObject:
   m_ObjectHideFlags: 0

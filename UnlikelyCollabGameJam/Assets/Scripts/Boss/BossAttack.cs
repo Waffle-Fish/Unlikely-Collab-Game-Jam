@@ -102,7 +102,7 @@ public class BossAttack : MonoBehaviour
         playerFilter = new();
         playerFilter.SetLayerMask(LayerMask.GetMask("Player"));
 
-        bossAttackTimer = bossAttackCoolDown;
+        bossAttackTimer = bossEnragedAttackCoolDown;
     }
 
     void Update()
@@ -249,7 +249,7 @@ public class BossAttack : MonoBehaviour
 
     private bool IsSwordMovingToInitialPosition()
     {
-        return Vector2.Distance(sword.transform.position, swordInitialPos) > 0.1f;
+        return Vector2.Distance(sword.transform.position, swordInitialPos) > 1f;
     }
 
     private bool IsSwordMovingToStabPosition(float reach)
@@ -361,6 +361,8 @@ public class BossAttack : MonoBehaviour
     }
 
     public void Enrage() {
-
+        // play boss
+        enraged = true;
+        bossAttackCoolDown = bossEnragedAttackCoolDown;
     }
 }
