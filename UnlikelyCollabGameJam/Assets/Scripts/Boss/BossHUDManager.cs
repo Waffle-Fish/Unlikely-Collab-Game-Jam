@@ -5,6 +5,7 @@ public class BossHUDManager : MonoBehaviour
 {
     TextMeshProUGUI healthTMP;
     [SerializeField] BossHealth bossHealth;
+    [SerializeField] RectTransform healthSlider;
 
     void Awake()
     {
@@ -18,13 +19,9 @@ public class BossHUDManager : MonoBehaviour
         // bossHealth.OnPlayerDeath += ProcessDeathOverlay;
     }
 
-    private void UpdateHealth(float currentHealth)
+    private void UpdateHealth(float healthPercent)
     {
-        healthTMP.text = "Health: " + currentHealth.ToString();
+        healthSlider.anchorMax = new(healthPercent, healthSlider.anchorMax.y);
+        healthSlider.offsetMax = new(0, healthSlider.offsetMax.y);
     }
-
-    // private void ProcessDeathOverlay()
-    // {
-    //     DeathOverlay.SetActive(true);
-    // }
 }

@@ -25,12 +25,14 @@ public class BossHealth : MonoBehaviour, IDamageable
 
     private void Start() {
         hp = maxHealth;
+        
     }
 
     public void TakeDamage(float damage)
     {
         Debug.Log("Boss Current heatlh: " + hp);
         hp -= damage;
+        OnHealthChanged?.Invoke(hp/maxHealth);
         if(!isEnrage && hp <= bossEnrageHealth)
         {
             isEnrage = true;
