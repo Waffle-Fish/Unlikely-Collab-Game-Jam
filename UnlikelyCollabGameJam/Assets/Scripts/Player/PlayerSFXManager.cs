@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class PlayerSFXManager : MonoBehaviour
@@ -12,6 +10,8 @@ public class PlayerSFXManager : MonoBehaviour
     [SerializeField] AudioClip fall;
     [SerializeField] AudioClip dash;
     [SerializeField] AudioClip land;
+    public enum MoveAudioClips {none,run, jump, fall, dash, land};
+    private MoveAudioClips currentMoveClip = MoveAudioClips.none;
     bool isRun = false;
 
     [Header("Attacks SFX")]
@@ -30,14 +30,22 @@ public class PlayerSFXManager : MonoBehaviour
     private AudioSource movementSource;
     private AudioSource attackSource;
     private AudioSource hurtSource;
+    private List<AudioSource> audioSources;
+    private Rigidbody2D rb2d;
 
     private void Awake() {
-        List<AudioSource> audioSources = new();
+        audioSources = new();
         GetComponents<AudioSource>(audioSources);
+        rb2d = GetComponent<Rigidbody2D>();
 
         movementSource = audioSources[0];
         attackSource = audioSources[1];
         hurtSource = audioSources[2];
+    }
+
+    void Update()
+    {
+        if (rb2d.linearVelocity == Vector2.zero) currentMoveClip = MoveAudioClips.none;
     }
 
     #region Utility
@@ -51,12 +59,19 @@ public class PlayerSFXManager : MonoBehaviour
     #region Movement SFX
     public void PlayFromMovement(AudioClip audioClip) {
         movementSource.Stop();
+        StopCoroutine(nameof(StopRunSFX));
         movementSource.PlayOneShot(audioClip);
         isRun = false;
     }
     public void PlayRunSFX() { 
+        if (isRun) return;
         isRun = true;
         StartCoroutine(PlayRunTrack());
+    }
+
+    public void StopRunSFX() { 
+        isRun = false;
+        movementSource.Stop();
     }
 
     IEnumerator PlayRunTrack() {
@@ -71,7 +86,11 @@ public class PlayerSFXManager : MonoBehaviour
 
     public void PlayJumpSFX() { PlayFromMovement(jump); }
 
-    public void PlayFallSFX() { PlayFromMovement(fall); }
+    public void PlayFallSFX() {
+        if (currentMoveClip == MoveAudioClips.fall) return;
+        currentMoveClip = MoveAudioClips.fall;
+        PlayFromMovement(fall);
+    }
     
     public void PlayDashSFX() { PlayFromMovement(dash); }
     public void PlayLandSFX() { PlayFromMovement(land); }

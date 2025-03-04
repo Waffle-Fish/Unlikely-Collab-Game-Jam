@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Extra")]
     [SerializeField] private bool StartWithFall = false;
     public event Action<float> OnDashUsed;
+    PlayerSFXManager playerSFXManager;
 
     void Awake()
     {
@@ -44,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
         psm = GetComponent<PlayerStateManager>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        playerSFXManager = GetComponent<PlayerSFXManager>();
     }
 
     private void Start() {
@@ -93,8 +95,10 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("Run", dir.x != 0f);
         if (dir.x == 0f) {
             rb2D.linearVelocityX = 0;
+            playerSFXManager.StopRunSFX();
             return;
         }
+        playerSFXManager.PlayRunSFX();
         float finalMoveForce = moveForce;
         if (psm.CurrentAttackState != PlayerStateManager.AttackState.Idle) finalMoveForce = moveForce * 0.1f;
         rb2D.linearVelocityX = dir.x * finalMoveForce;
@@ -109,6 +113,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (rb2D.linearVelocityY < -0.1f) {
             psm.CurrentMoveState = PlayerStateManager.MoveState.Falling;
+            playerSFXManager.PlayFallSFX();
         }
     }
 
@@ -131,6 +136,8 @@ public class PlayerMovement : MonoBehaviour
         if (psm.CurrentMoveState != PlayerStateManager.MoveState.Grounded) return;
         rb2D.AddForceY(jumpForce, ForceMode2D.Impulse);
         psm.CurrentMoveState = PlayerStateManager.MoveState.Jumping;
+
+        playerSFXManager.PlayJumpSFX();
     }
 
     private void ProcessDash(InputAction.CallbackContext context)
@@ -140,7 +147,8 @@ public class PlayerMovement : MonoBehaviour
         if (Time.time < timeDashUsed + DashCooldown) return;
         Vector2 dir = inputActions.Player.Move.ReadValue<Vector2>();
         if (dir == Vector2.zero) return;
-        
+
+        playerSFXManager.PlayDashSFX();
         StartCoroutine(Dash(dir));
 
         IEnumerator Dash(Vector2 dir) {
