@@ -102,7 +102,8 @@ public class BossAttack : MonoBehaviour
         playerFilter = new();
         playerFilter.SetLayerMask(LayerMask.GetMask("Player"));
 
-        bossAttackTimer = bossEnragedAttackCoolDown;
+        // 1 second after intro, intro is 33.75 secs
+        bossAttackTimer = 35f;
     }
 
     void Update()
@@ -357,7 +358,7 @@ public class BossAttack : MonoBehaviour
     }
 
     private void ResetBossCooldownTimer(){
-        bossAttackTimer = Time.time + (enraged ? bossEnragedAttackCoolDown : bossAttackCoolDown);
+        bossAttackTimer = Time.time + bossAttackCoolDown;
     }
 
     public void Enrage() {
