@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -64,6 +65,9 @@ public class EnemyBehavior : MonoBehaviour, IDamageable
     protected Animator animator;
     bool isDeadProcessing = false;
 
+    SpriteRenderer spriteRenderer;
+    EnemySFX enemySFX;
+
     protected virtual void Awake()
     {
         pm = GetComponentInChildren<PatrolManager>();
@@ -78,6 +82,8 @@ public class EnemyBehavior : MonoBehaviour, IDamageable
         Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Enemy"), LayerMask.NameToLayer("Enemy"), true);
 
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        enemySFX = GetComponent<EnemySFX>();
     }
 
     void Start()
@@ -283,7 +289,7 @@ public class EnemyBehavior : MonoBehaviour, IDamageable
         }
 
         animator.SetBool("Walk", true);
-        GetComponent<SpriteRenderer>().flipX = forwardDir == Vector2.left;
+        spriteRenderer.flipX = forwardDir == Vector2.left;
         if (enemyState == EnemyStates.Patrol)
         {
             // constant speed left / right
@@ -370,13 +376,45 @@ public class EnemyBehavior : MonoBehaviour, IDamageable
 
     public void TakeDamage(float amount)
     {
+        bool playingCoroutine = false;
+        
+        IEnumerator FlashRed() {
+            playingCoroutine = true;
+            Color flash = new(225f/255f, 155/255f, 155/255f);
+            float startDuration = 0.1f, middleDuration = 0.15f, endDuration = 0.1f;
+            float startTimer = 0f, endTimer = 0f;
+            // Start
+            while (startTimer < startDuration){
+                spriteRenderer.color = Color.Lerp(Color.white, flash, startTimer/startDuration);
+                startTimer += Time.deltaTime;
+                yield return null;
+            }
+            
+            // Middle
+            yield return new WaitForSeconds(middleDuration);
+
+            // End
+            while (endTimer < endDuration){
+                spriteRenderer.color = Color.Lerp(flash, Color.white, endTimer/endDuration);
+                endTimer += Time.deltaTime;
+                yield return null;
+            }
+            playingCoroutine = false;
+        }   
+
         enemyHealth -= amount;
         enemyState = EnemyStates.Attack;
+        if (!playingCoroutine) StartCoroutine(FlashRed());
+        enemySFX.PlayTakeDmgSFX();
+
+
         if(enemyHealth <= 0)
         {
             enemyState = EnemyStates.Dead;
         }
     }
+
+    
 
     public void TakeScreamDamage(float amount)
     {
