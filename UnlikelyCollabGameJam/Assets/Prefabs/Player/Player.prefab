@@ -796,7 +796,7 @@ MonoBehaviour:
   attack1: {fileID: 8300000, guid: d7f8a96857a22b1439d9ba3cce3dbd7a, type: 3}
   attack2: {fileID: 8300000, guid: 191673a2a274bbe4b8aabba79ff8413b, type: 3}
   attack3: {fileID: 8300000, guid: 744615a296f98d04f894fc482d9939e0, type: 3}
-  screamAttack: {fileID: 8300000, guid: 9860fcfa54d7ed24a8dc5f4890a736c5, type: 3}
+  screamAttack: {fileID: 8300000, guid: 8b37611e6fc35f942a8a269e563b7f6d, type: 3}
   fireballCharge: {fileID: 8300000, guid: 03410c1511cdad746814762b2898eccf, type: 3}
   fireballAttack: {fileID: 8300000, guid: 170ba7bb1b16c0b459bcfdfad18471bb, type: 3}
   takeDamage: {fileID: 8300000, guid: aac293ac4c1349046bcb14dd36442034, type: 3}
@@ -815,7 +815,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.2
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -912,7 +912,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.75
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1009,7 +1009,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.1
+  m_Volume: 0.3
   m_Pitch: 1
   Loop: 0
   Mute: 0

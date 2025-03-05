@@ -123,7 +123,7 @@ public class PlayerMovement : MonoBehaviour
             if (psm.CurrentMoveState == PlayerStateManager.MoveState.Falling || psm.CurrentMoveState == PlayerStateManager.MoveState.Jumping) {
                 // rb2D.linearVelocity = new(rb2D.linearVelocityX, 0f);
                 rb2D.gravityScale = fallForce;
-                playerSFXManager.PlayFallSFX();
+                // playerSFXManager.PlayFallSFX();
             }
         } 
         // else if (inputActions.Player.FastFall.WasReleasedThisFrame() || psm.CurrentState == PlayerStateManager.State.Grounded) {

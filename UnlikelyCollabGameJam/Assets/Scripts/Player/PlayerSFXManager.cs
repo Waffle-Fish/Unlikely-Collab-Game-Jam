@@ -66,8 +66,12 @@ public class PlayerSFXManager : MonoBehaviour
         movementSource.PlayOneShot(audioClip);
     }
     public void PlayRunSFX() { 
-        if (isRun) return;
-        StartCoroutine(PlayRunTrack());
+        movementSource.Stop();
+        movementSource.PlayOneShot(run[i]);
+        i = (i+1) % run.Count;
+
+        // if (isRun) return;
+        // StartCoroutine(PlayRunTrack());
     }
 
     public void PlayRunSFX1() { PlayFromMovement(run[0]); }
