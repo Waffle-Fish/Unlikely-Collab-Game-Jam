@@ -944,7 +944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4878874460380735778, guid: f4767c24cf10839498ec82dca1390ad3, type: 3}
       propertyPath: m_Events.m_Events.Array.data[0].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7239022336203730016, guid: f4767c24cf10839498ec82dca1390ad3, type: 3}
       propertyPath: m_LocalPosition.x
