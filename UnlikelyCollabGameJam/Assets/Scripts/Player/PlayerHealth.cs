@@ -39,6 +39,7 @@ public class PlayerHealth : MonoBehaviour
             ClickToDamage = false;
             TakeDamage(10);
         }
+        Heal(1 * Time.deltaTime);
     }
 
     public void TakeDamage(float damage)
