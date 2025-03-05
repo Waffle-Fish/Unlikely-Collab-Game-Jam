@@ -54,6 +54,7 @@ MonoBehaviour:
   yStart: 10
   width: 60
   height: 12
+  showPatrolPoints: 0
 --- !u!120 &5877742079220905211
 LineRenderer:
   serializedVersion: 2
@@ -455,14 +456,15 @@ MonoBehaviour:
   numberOfRays: 10
   enemySpeed: 4.5
   pursueThreshold: 2
-  maxEnemyHealth: 100
-  enemyAttackDamage: 5
+  maxEnemyHealth: 60
+  enemyAttackDamage: 10
   enemyAttackCoolDown: 0.5
   fleeTime: 2
   projectile: {fileID: 1620286926506340472, guid: afcae56c012692b4d8f11f0e51759c41, type: 3}
   projectileSpeed: 10
   projectileDamage: 5
   projectileSpawnPos: {fileID: 2880428557788102855}
+  attackWindUpTime: 1
 --- !u!114 &7141244906290187734
 MonoBehaviour:
   m_ObjectHideFlags: 0

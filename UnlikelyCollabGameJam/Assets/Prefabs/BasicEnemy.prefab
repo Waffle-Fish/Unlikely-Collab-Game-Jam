@@ -54,6 +54,7 @@ MonoBehaviour:
   yStart: 10
   width: 60
   height: 12
+  showPatrolPoints: 0
 --- !u!120 &3231216874687307845
 LineRenderer:
   serializedVersion: 2
@@ -326,7 +327,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.6, y: 0.1875}
+  m_Size: {x: 0.4, y: 0.1875}
   m_EdgeRadius: 0
 --- !u!95 &8528460489879419967
 Animator:
@@ -367,7 +368,7 @@ MonoBehaviour:
   numberOfRays: 10
   enemySpeed: 5
   pursueThreshold: 3
-  maxEnemyHealth: 100
+  maxEnemyHealth: 50
   enemyAttackDamage: 5
   enemyAttackCoolDown: 5
   fleeTime: 2
@@ -395,6 +396,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 35b9c99399a27bc43bbd2c6bdfe200ba, type: 3}
   - {fileID: 8300000, guid: cf6fa68c30a9843459977b11549ae5c0, type: 3}
   - {fileID: 8300000, guid: 0f9f6b64ec9bc924989f44ea3006c9b2, type: 3}
+  grunts: []
   death: {fileID: 8300000, guid: 649c13637e4dc2545b66199c0292553d, type: 3}
   audioRange: 10
 --- !u!82 &811438571754196408

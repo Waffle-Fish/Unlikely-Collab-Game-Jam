@@ -764,8 +764,8 @@ MonoBehaviour:
   comboWindow: 60
   ScreamAttackEnabled: 0
   screamCollider: {fileID: 7141551370590227706}
-  screamDamage: 100
-  screamCooldown: 10
+  screamDamage: 150
+  screamCooldown: 20
   FireballAttackEnabled: 0
   fireBallPrefab: {fileID: 7529089151399739999, guid: 7ca057c2e82aca045af18733f28a557a, type: 3}
   fireBallForce: 10
@@ -789,7 +789,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f490fa5d564f15247b7a4a536dfcc966, type: 3}
   - {fileID: 8300000, guid: 01ebafdc1b0c7db49bdc429d2f56a299, type: 3}
   - {fileID: 8300000, guid: a57023fbc4d2eec479b8589aca70490d, type: 3}
-  jump: {fileID: 8300000, guid: 533086e91cd3bf74693db25b5369659e, type: 3}
+  jump: {fileID: 8300000, guid: c73907a5edeb31b4bb94f1aeb6d40878, type: 3}
   fall: {fileID: 8300000, guid: f2851c963d5cbe041abf7ce5b0330822, type: 3}
   dash: {fileID: 8300000, guid: 022fb277ad025df4d829d5b38744d34d, type: 3}
   land: {fileID: 8300000, guid: ad2fd12bf6be21d49a0c27ade76d1ba8, type: 3}

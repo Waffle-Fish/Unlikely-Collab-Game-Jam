@@ -155,7 +155,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.049999997, y: 0.03108953}
+  m_Offset: {x: 0.0037868991, y: 0.0041961074}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -165,7 +165,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.35, y: 0.5628209}
+  m_Size: {x: 0.24242614, y: 0.50903404}
   m_EdgeRadius: 0
 --- !u!95 &804222615616133497
 Animator:
@@ -206,8 +206,8 @@ MonoBehaviour:
   numberOfRays: 10
   enemySpeed: 7.5
   pursueThreshold: 2
-  maxEnemyHealth: 100
-  enemyAttackDamage: 5
+  maxEnemyHealth: 120
+  enemyAttackDamage: 15
   enemyAttackCoolDown: 2
   fleeTime: 2
 --- !u!114 &8275366177939196239
@@ -389,6 +389,7 @@ MonoBehaviour:
   yStart: 10
   width: 60
   height: 12
+  showPatrolPoints: 0
 --- !u!120 &8999258150815299959
 LineRenderer:
   serializedVersion: 2

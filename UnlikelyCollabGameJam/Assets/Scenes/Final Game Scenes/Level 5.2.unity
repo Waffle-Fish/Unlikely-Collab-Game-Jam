@@ -1365,11 +1365,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 550571521209350308, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: numFireballs
-      value: 15
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 550571521209350308, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: screamDamage
-      value: 7.5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 550571521209350308, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: fireballDamage
@@ -1385,7 +1385,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 550571521209350308, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: screamGrowthRate
-      value: 10
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 550571521209350308, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: swordWindUpSpeed
@@ -1397,7 +1397,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 550571521209350308, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: bossEnragedAttackCoolDown
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 1300108484259892464, guid: 3b5095acbc1a9d1429d6d4713e936b29, type: 3}
       propertyPath: m_IsActive
@@ -28067,6 +28067,8 @@ PlayableDirector:
     value: {fileID: 242672547}
   - key: {fileID: -6132321669205253462, guid: 869d7cd9a1be1af42a756fe25f93b43d, type: 2}
     value: {fileID: 1940021367}
+  - key: {fileID: -3531768831106979552, guid: 869d7cd9a1be1af42a756fe25f93b43d, type: 2}
+    value: {fileID: 1955516430}
   m_ExposedReferences:
     m_References: []
 --- !u!1 &1228326933
@@ -32147,6 +32149,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 739538300645771396, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: screamDamage
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 739538300645771396, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: fireBallForce
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 739538300645771396, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: screamCooldown
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 739538300645771396, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: ScreamAttackEnabled
       value: 1
       objectReference: {fileID: 0}
@@ -32863,7 +32877,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 838700818063334917, guid: 53f1d82543986884da8b767b3b633d6e, type: 3}
       propertyPath: m_Alpha
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2527299368447277931, guid: 53f1d82543986884da8b767b3b633d6e, type: 3}
       propertyPath: m_Pivot.x
