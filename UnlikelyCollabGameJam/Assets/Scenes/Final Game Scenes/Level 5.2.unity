@@ -32034,6 +32034,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4494198987102032308, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: fdd6464f128508049a9558526f4cad3a, type: 2}
     - target: {fileID: 5107011049939977524, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_FlipX
       value: 0
@@ -32041,7 +32045,7 @@ PrefabInstance:
     - target: {fileID: 5107011049939977524, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 77fdd599dd9fead4ab51e4e4ced85cf7, type: 3}
+      objectReference: {fileID: 21300000, guid: 15380aa7305a76e4b960c10ae979050b, type: 3}
     - target: {fileID: 5107011049939977524, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_SortingOrder
       value: 10
