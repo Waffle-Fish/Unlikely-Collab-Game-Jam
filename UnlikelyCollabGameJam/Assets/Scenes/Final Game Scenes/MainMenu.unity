@@ -7388,6 +7388,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!320 &1581465181 stripped
+PlayableDirector:
+  m_CorrespondingSourceObject: {fileID: 8362335526538028762, guid: 2ee155cc8141a444abd05c315551ce03, type: 3}
+  m_PrefabInstance: {fileID: 3463098329087511430}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1598813337
 GameObject:
   m_ObjectHideFlags: 0
@@ -9446,10 +9451,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3904562509925158302, guid: f4767c24cf10839498ec82dca1390ad3, type: 3}
-        m_TargetAssemblyTypeName: SceneController, Assembly-CSharp
-        m_MethodName: LoadScene
-        m_Mode: 3
+      - m_Target: {fileID: 1581465181}
+        m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+        m_MethodName: Play
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
