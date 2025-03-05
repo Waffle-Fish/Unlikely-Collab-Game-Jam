@@ -43606,6 +43606,10 @@ PrefabInstance:
       propertyPath: FireballAttackEnabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1741128909375053128, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
+      propertyPath: m_Volume
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 2747029443339160499, guid: 9de058c104fbd5045b9da5bd7d6faeef, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.89707375

@@ -33,6 +33,7 @@ public class PlayerSFXManager : MonoBehaviour
     private AudioSource lowHealthSource;
     private List<AudioSource> audioSources;
     private Rigidbody2D rb2d;
+    bool isDead = false;
 
     int i = 0;
 
@@ -133,7 +134,11 @@ public class PlayerSFXManager : MonoBehaviour
         lowHealthSource.Play();
         lowHealthSource.loop = true;
     }
-    public void PlayDeath() { PlayFromHurt(death); }
+    public void PlayDeath() {
+        if (isDead) return;
+        isDead = true;
+        PlayFromHurt(death); 
+    }
 
     #endregion
 }

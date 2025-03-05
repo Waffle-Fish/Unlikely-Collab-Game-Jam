@@ -1326,6 +1326,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4598246815693144926, guid: e71ecc25e6314274fbf68bcab0cb2da3, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1497477921}
+    - target: {fileID: 4598246815693144926, guid: e71ecc25e6314274fbf68bcab0cb2da3, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: Pause
+      objectReference: {fileID: 0}
+    - target: {fileID: 4598246815693144926, guid: e71ecc25e6314274fbf68bcab0cb2da3, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: PauseGame, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4598246815693144926, guid: e71ecc25e6314274fbf68bcab0cb2da3, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6190474034313208660, guid: e71ecc25e6314274fbf68bcab0cb2da3, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -25656,6 +25672,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1645814040}
     m_Modifications:
+    - target: {fileID: 511024169796107058, guid: 2ee155cc8141a444abd05c315551ce03, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 868979761232763217, guid: 2ee155cc8141a444abd05c315551ce03, type: 3}
       propertyPath: m_Name
       value: FadeOutTransition
@@ -27275,6 +27295,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1497477921 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7365515963435770381, guid: f4767c24cf10839498ec82dca1390ad3, type: 3}
+  m_PrefabInstance: {fileID: 524023340}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690531dfd843f064f882ff3feae06b2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1562334431 stripped

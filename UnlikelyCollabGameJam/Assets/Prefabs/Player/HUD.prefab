@@ -107,11 +107,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3874234044217115574}
   - {fileID: 3446920655006252573}
   - {fileID: 5969637323069111683}
   - {fileID: 8756455133852462531}
   - {fileID: 4095963849185395209}
-  - {fileID: 3874234044217115574}
   - {fileID: 1927692611160282818}
   - {fileID: 6937431912852735707}
   m_Father: {fileID: 0}
