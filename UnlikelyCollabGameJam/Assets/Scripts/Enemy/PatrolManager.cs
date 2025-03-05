@@ -7,7 +7,7 @@ public class PatrolManager : MonoBehaviour
 {
     protected List<Vector2> patrolPoints = new List<Vector2>();
     protected List<Vector2> path = new List<Vector2>();
-
+    
     public LayerMask detectionLayer;
     public float neighborThreshold = 3.5f;
 
@@ -19,6 +19,7 @@ public class PatrolManager : MonoBehaviour
     [SerializeField] int yStart = 10;
     [SerializeField] int width = 60;
     [SerializeField] int height = 12;
+    [SerializeField] bool showPatrolPoints = false;
 
     private LineRenderer lr;
 
@@ -44,7 +45,9 @@ public class PatrolManager : MonoBehaviour
                     {
                         patrolPoints.Add(point);
                         // Just for visualization purposes
-                        // Instantiate(ppObject, point, Quaternion.identity);
+                        if (showPatrolPoints) {
+                            Instantiate(ppObject, point, Quaternion.identity);
+                        }
                     }
                 }
             }
