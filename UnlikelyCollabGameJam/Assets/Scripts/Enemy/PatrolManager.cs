@@ -25,6 +25,7 @@ public class PatrolManager : MonoBehaviour
 
     protected virtual void Awake()
     {
+        showPatrolPoints = false;
         InitializePatrolPoints(xStart, yStart, width, height);
         detectionLayer = LayerMask.GetMask("Default");
         lr = GetComponent<LineRenderer>();
